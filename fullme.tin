@@ -1,0 +1,4 @@
+#nop;
+
+#act {{^http://47.90.49.49/fullme/robot.php?filename=\d\+$}} {}
+

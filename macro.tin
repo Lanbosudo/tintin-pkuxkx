@@ -1,0 +1,46 @@
+#nop
+
+#nop Numpad 5;
+#macro {\eOu} {#send {look}}
+
+#nop Numpad 6,2,4,8;
+#macro {\eOv} {#send {e}}
+#macro {\eOr} {s}
+#macro {\eOt} {w}
+#macro {\eOx} {n}
+
+#macro {\eOy} {ne}
+#macro {\eOw} {nw}
+#macro {\eOq} {sw}
+#macro {\eOs} {se}
+
+#nop Numpad +;
+#macro {\eOk\eOk} {#send {d}}
+
+#macro {\eOk\eOv} {#send {ed}}
+#macro {\eOk\eOr} {sd}
+#macro {\eOk\eOt} {wd}
+#macro {\eOk\eOx} {nd}
+
+#macro {\eOk\eOy} {ned}
+#macro {\eOk\eOw} {nwd}
+#macro {\eOk\eOq} {swd}
+#macro {\eOk\eOs} {sed}
+
+#nop Numpad 0;
+#macro {\eOp\eOp} {#send {u}}
+
+#macro {\eOp\eOv} {#send {eu}}
+#macro {\eOp\eOr} {su}
+#macro {\eOp\eOt} {wu}
+#macro {\eOp\eOx} {nu}
+
+#macro {\eOp\eOy} {neu}
+#macro {\eOp\eOw} {nwu}
+#macro {\eOp\eOq} {swu}
+#macro {\eOp\eOs} {seu}
+
+#nop Numpad /;
+#macro {\eOo} {enter}
+#nop Numpad *;
+#macro {\eOj} {out}

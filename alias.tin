@@ -1,0 +1,65 @@
+#nop LoQ debug alias;
+#ali {^t+%1} {#class %1 read %1.tin}
+#ali {^t-%1} {#class %1 kill}
+
+#ali {^p %1} {#echo $%1}
+#ali {^plist %1} {
+    #local tmp 0;
+    #list %1 sim tmp;
+    #echo $tmp;
+}
+#func plist {
+    #echo {plist: %1};
+    #list %1 sim result;
+}
+#func length {
+    #format result %L %1;
+}
+#func sizeof {
+    #list %1 size result;
+}
+#func eval {
+    #math result {%1};
+}
+
+
+#ali {^func %1} {#echo @%1}
+
+#nop full skills;
+#ali {{^lian (\S+)$}} {
+    #class lian read lian.tin;
+    #var type_lian %2;
+
+    skbrief %2;lian $type_lian 50;
+}
+#ali {{^xue (\S+) (\S+)$}} {
+    #class lian read lian.tin;
+    #var type_lian %3;
+
+    skbrief %3;xue %2 for $type_lian 20;
+}
+
+#nop map related;
+#ali {^lmap %1} {localmaps %1}
+#ali {^map} {help map-pkuxkx}
+
+#nop walk;
+#ali {^gt$} {walk -c}
+#ali {^gt %1} {
+    #class walk_trigger read walk_trigger.tin;
+    #var dst_walk %1;
+    #send {walk -c};
+}
+#ali {^gt?%1} {
+    #local index $locationIndex[%1];
+    #echo {%s-%s} $locationCNName[$index] $locationPY[$index];
+}
+
+#ali {^yzqlc} {
+    set walk_path do_enter shudong|do_say 天堂有路你不走|down|1|north|northwest|northwest|northwest|north|northwest|up|east;
+    walk path;
+}
+#ali {^qlcyz} {
+    set walk_path west|do_enter dong|southeast|south|southeast|southeast|southeast|south|south|up|out;
+    walk path;
+}

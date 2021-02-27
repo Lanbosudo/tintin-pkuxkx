@@ -1,0 +1,56 @@
+#nop staus check & reaction;
+
+#tic hp_perf {
+    #if {$inBattle == 0} {
+        hpbrief;
+    } {
+        #send {yun powerup};
+        #list perform cre {blade.daoying;parry.douzhuan};
+        #foreach $perform[%*] zhaoshi {perform $zhaoshi};
+        #unvar zhaoshi perform;
+    };
+} {2}
+
+#eve {VARIABLE UPDATE qi} {
+    #local percent 100;
+    #math percent {$qi_efft*100/$qi_max};
+    #if {$percent < 50 && $inBattle == 1} {
+        #send {eat yao};
+    } {};
+
+    #math percent {$qi*100/$qi_efft};
+    #if {$percent < 50 && $inBattle == 1} {
+        #send {yun recover};
+    } {};
+}
+
+#eve {VARIABLE UPDATE jing} {
+    #local percent 100;
+    #math percent {$qi_efft*100/$qi_max};
+    #if {$percent < 50 && $inBattle == 1} {
+        #send {eat dan};
+    } {};
+
+    #math percent {$jing*100/$jing_efft};
+    #if {$percent < 50 && $inBattle == 1} {
+        #send {yun inspire};
+    } {};
+}
+
+#eve {VARIABLE UPDATE food} {
+    #if {$inBattle == 0 && $isBusy == 0} {
+        #if {$food < 100} {
+            #echo {<aff>开饭ヾ('﹃')<eee>};
+            #send {eat jitui};
+        }{};
+        #if {$drink < 100} {
+            #send {drink};
+        } {}
+    };
+}
+
+#act {{^这里没有jitui这种食物。}} {#line gag; #echo {<fdd>饿(⊙﹏⊙)。。。<eee>};}
+#act {{^你所在的环境没有水源，你身上也没有容器可以解渴。}} {#line gag}
+#act {{^你将剩下的烤鸡腿吃得干干净净。}} {drop bone}
+#act {{^\s+\S+黄金\(Gold\)$}} {get gold}
+#act {{^\s+\S+两白银\(Silver\)$}} {get silver}

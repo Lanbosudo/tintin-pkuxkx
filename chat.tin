@@ -1,0 +1,72 @@
+#nop;
+
+#var height_chat 11;
+#if {@sizeof{list_chat} == 0} {
+    #var list_chat {};
+    #loop 1 {$height_chat-1} cnt {#list list_chat insert $cnt {}};
+};
+
+
+#split $height_chat 2;
+#local tmp @paint_chat{};
+
+
+#function push_chat {
+    #format time %t {%H:%M};
+
+    #nop #list list_chat delete 1;
+    #list list_chat insert -1 {[$time]%1<eee>};
+
+    #local tmp @paint_chat{};
+}
+
+#function get_colour {
+    #switch {"%1"} {
+        #case {"闲聊"} {#format result <acf>};
+        #case {"谣言"} {#format result <fac>};
+        #default {#format result <eee>};
+    }
+}
+
+#function paint_chat {
+    #nop #math -10 is not valid...;
+    #loop -1 @eval{0-($height_chat-1)} cnt {
+        #echo {{%s} {$cnt}} {$list_chat[@eval{0-$height_chat-$cnt}]};
+    };
+}
+
+
+#nop triggers---------------------------------------------------------;
+#EVENT {SCREEN RESIZE} {#local tmp @paint_chat{}}
+#eve {SCROLLED <MOUSE>} {#echo scroll event %2 %4 %5};
+
+#act {{^[> ]*$}} {#line gag}
+
+#act {{^【求助】.+\((\w+)(\s\|\|\s\w+)?\).*$}} {
+    #line gag;
+
+    #regexp {%2} {{[Ll]anbosudo\w?}} {
+        #local tmp @push_chat{%0};
+    };
+};
+
+#nop #act {{^【(闲聊|北侠QQ群|谣言)】.*$}} {
+    #line gag;
+    #local tmp @push_chat{%0; %2};
+};
+
+#act {~\e[{[0-9;]*}m【{谣言|闲聊|北侠QQ群}】%*$} {
+    #line gag;
+    #local tmp @push_chat{%0};
+    #system {touch log.txt;echo '%0' > log.txt};
+}
+
+
+#nop comments---------------------------------------------------------;
+#nop 【江湖】公孙止、韩世忠、心上人、胡一刀、破阵、万安塔等任务奖励下降，苗疆所有主流、护镖、都府刺杀、偷学、韩员外等任务奖励不变，萧峰、慕容仆人、宋远桥、谍报等任务奖励上升，天珠及见性成佛奖励最佳。;
+#nop 【江湖】经推算，本周为掉落之周，掉宝率增加26%！;
+
+#nop {~{^\e[0m\e[1;35m【谣言】.*}};
+#nop {\e[0m\e[37m【北侠QQ群】};
+#nop {\e[0m\e[1;36m【闲聊】};
+#nop #act {~\e[0m\e[1;37m【求助】%*} {#echo %s {%0}};

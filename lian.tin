@@ -1,0 +1,87 @@
+#nop tip for avoiding multiple firing;
+#nop    one reaction for one trigger;
+
+#nop prepare;
+#act {{^你必须空手才能练习}} {uw all; lian $type_lian 50;}
+#act {{^你要装备 (\w+) 类武器才能练习}} {uw all; wi %2; lian $type_lian 50;}
+
+#action {{^你需要提高基本功，不然练得再多也没有用。}} {
+    #if {"$type_lian" == "parry"} { out};
+    lingwu $type_lian 50;
+};
+
+#action {{^你领悟了\S+次\S+。}} {lingwu $type_lian 50}
+
+#action {{^你的基本功夫比你的高级功夫还高！}} {lian $type_lian 50}
+
+#act {{^你\S+练习\S+，获得了\S+进步！}} {lian $type_lian 50}
+
+#act {{^(你的体力不够练|你现在气血虚浮，练习不了|你太累了，没有办法练习)}} {yun recover}
+
+#act {{^你深深吸了几口气，脸色看起来好多了。}} {lian $type_lian 50}
+
+#act {{^(你现在过于疲倦,无法静下心来领悟功夫！|你现在过于疲倦，无法专心下来研读新知。|你的精神太低了。|你今天太累了，结果什么也没有学到。)}} {yun regenerate}
+
+#act {{^你略一凝神，精神看起来好多了。}} {
+    #if {@get_percent{$neili;$neili_max} < 20 && @get_percent{$qi;$qi_max} > 80} {
+        dazuo max;
+    } {
+        lian $type_lian 50
+    }
+}
+#act {{^你只能练习用 enable 指定的特殊技能。}} {xue bo for shenyuan-gong 20;}
+
+#act {{^(你(的)?内力不够|\( 你的内力已经枯竭，不能施用内功。\))}} {
+    #if {@get_percent{$qi;$qi_max} < 5} {
+
+        #if {"$type_lian" == "parry"} { out};
+        #if {"$type_lian" == "shenyuan-gong"} { west};
+        hp;w;w;n;n;e;sleep
+    } {
+        dazuo max
+    }
+}
+
+#act {{^(你现在精不够，无法控制内息的流动！|你现在气血严重不足，无法满足打坐最小要求。)}} {
+    #if {"$type_lian" == "parry"} { out};
+    #if {"$type_lian" == "shenyuan-gong"} { west};
+    hp;w;w;n;n;e;sleep;
+}
+
+#act {{^你一觉醒来，精神抖擞地活动了几下手脚。}} {w;s;s;e;e;dazuo max}
+
+#act {{^你将真气在体内沿脉络运行了一圈，缓缓纳入丹田，放下手，长吐了一口气。}} {
+    #if {"$type_lian" == "shenyuan-gong"} {bo huacao; xue bo for shenyuan-gong 20;};
+    #else {lian $type_lian 50};
+}
+
+#nop douzhuan-xingyi;
+#act {{^你正在研习斗转星移的武功图谱，似乎有点心得。}} {du shu}
+#act {{^斗转星移初期只能通过研读图谱学习。}} {cai huanshi; du shu}
+
+#nop force;
+#act {{^特殊内功无法练习，你可以通过\(learn\)或者\(xiulian\)来提高。}} {lingwu $type_lian 50}
+#act {{^其中二十次对答你颇有所感，你听了\S+的指导，似乎有些心得。}} {xue bo for shenyuan-gong 20;}
+
+#act {{^你的\S+进步了！}} {skbrief $type_lian}
+#act {{^#(\d+)/\d+$}} {
+    #local FULLSKILL 260;
+    #list list_skill cre {shenyuan-gong;force;blade;leg;dodge;parry};
+    #var lvl_lian %2;
+    #if {%2 >= $FULLSKILL} {
+        #class lian kill;
+        halt;
+        #if {"$type_lian" == "shenyuan-gong"} { west};
+
+        #var index;
+        #list list_skill find $type_lian index;
+        #if {$index < @sizeof{list_skill}} {
+            #line quiet #math index {$index+1};
+            #delay 5 {lian $list_skill[$index]};
+        } {
+            #nop start dazuo script;
+            #class dazuo read dazuo.tin;
+            dazuo max;
+        }
+    };
+}

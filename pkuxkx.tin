@@ -1,0 +1,20 @@
+#nop
+
+#CONFIG {COLOR PATCH} ON
+
+#class login read login.tin
+
+#EVENT {PROGRAM START} {#session pkuxkx hk.pkuxkx.com 8080}
+/*
+#nop #EVENT {SESSION DISCONNECTED} {#session pkuxkx hk.pkuxkx.com 8080};
+#nop #act {...disconnected..} {};
+ */
+
+#EVENT {SESSION CONNECTED} {
+    #class alias read alias.tin;
+    #class chat read chat.tin;
+    #class prompt read prompt.tin;
+    #class status read status.tin;
+    #class macro read macro.tin;
+    #class walk read walk.tin;
+}
