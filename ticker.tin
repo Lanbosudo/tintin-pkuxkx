@@ -1,0 +1,10 @@
+#tic hp_perf {
+    #if {$inBattle == 0} {
+        hpbrief;
+    } {
+        #send {yun powerup};
+        #list perform cre {blade.daoying;parry.douzhuan};
+        #foreach $perform[%*] zhaoshi {perform $zhaoshi};
+        #unvar zhaoshi perform;
+    };
+} {2}

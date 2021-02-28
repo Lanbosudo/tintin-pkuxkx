@@ -3,14 +3,14 @@
 #ali {^t-%1} {#class %1 kill}
 
 #ali {^p %1} {#echo $%1}
-#ali {^plist %1} {
-    #local tmp 0;
-    #list %1 sim tmp;
-    #echo $tmp;
-}
+#ali {^plist %1} { #local tmp @plist{%1}; }
+
 #func plist {
-    #echo {plist: %1};
-    #list %1 sim result;
+    #local simpList {};
+    #foreach $%1[%*] tmp {
+        #format simpList {%s;%s} $simpList $tmp;
+    };
+    #echo %s $simpList;
 }
 #func length {
     #format result %L %1;

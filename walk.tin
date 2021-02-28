@@ -112,7 +112,7 @@
         #var dist[$count] 1000;
         #var prev[$count] 0;
         #var unvisited[$count] $count;
-    }
+    };
 
     #var dist[%1] 0;
 
@@ -162,10 +162,10 @@
     #while {$prev[$index] != 0} {
         #list list_path insert 1 $locationName[$index];
         #format index $prev[$index];
-    }
+    };
     #list list_path ins 1 $locationName[$index];
 
-    #list list_path simplify result;
+    #nop #list list_path simplify result;
 
 
     #nop line quiet is not working... leave the var now;
@@ -196,7 +196,7 @@
         #class walk_trigger kill;
         #echo {<cfa>µ½´ï%s!<eee>} $locationCNName[$locationIndex[$list_path[1]]];
         #return;
-    }
+    };
 
     #local src_step $list_path[1];
     #local dst_step $list_path[2];
@@ -207,9 +207,8 @@
 #func doStep { #nop %1 src_step, %2 dst_step;
     #echo {doStep: %s %s} %1 %2;
 
-    #nop string comparison:
-    #if {("fjdkaslfjdka" == "fdjkajdfla")} false
-    #if {(fjdkaslfjdka == fdjkajdfla)} true;
+    #nop string comparison: #if {("fjdkaslfjdka" == "fdjkajdfla")} false;
+    #nop #if {(fjdkaslfjdka == fdjkajdfla)} true;
 
 
     #nop andao 9--------------------------------------------------------------------------;

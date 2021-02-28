@@ -1,9 +1,28 @@
 #nop;
 
-#act {{^你将真气在体内沿脉络运行了一圈，缓缓纳入丹田，放下手，长吐了一口气。}} {dazuo max}
+#act {{^你将真气在体内沿脉络运行了一圈，缓缓纳入丹田，放下手，长吐了一口气。}} {
+    #if {$qi*100/$qi_max < 20} {yun recover} {$type_lian max};
+}
 
-#act {{^你现在气血严重不足，无法满足打坐最小要求。}} {yun recover}
+#act {{^(你现在气血严重不足，无法满足打坐最小要求。|你现在身体状况太差了，无法集中精神！)}} {yun recover}
+#act {{^你现在精不够，无法控制内息的流动！}} {yun regenerate}
 
-#act {{^你深深吸了几口气，脸色看起来好多了。}} {dazuo max}
+#act {{^(你深深吸了几口气，脸色看起来好多了。|你略一凝神，精神看起来好多了。)}} {$type_lian max;}
 
-#act {{^你现在内力接近圆满状态。}} {dazuo 10}
+#act {^你现在%*力接近圆满状态。} {$type_lian 10}
+
+#act {^│【走火入魔】%*【极限内力】{\s(\d+)}} {#var lvl_lian %2}
+#act {^你的内力增加了！！} {
+    #if {$neili_max >= $lvl_lian-1} {
+        #nop start tuna;
+        #var type_lian tuna;
+        halt;
+        #delay 2 {tuna max};
+    }
+}
+
+#act {^你吐纳完毕，睁开双眼，站了起来。} {
+    #if {$jing*100/$jing_max < 20} {yun regenerate};
+    #elseif {$neili*100/$neili_max < 20 } {dazuo max};
+    tuna max;
+}

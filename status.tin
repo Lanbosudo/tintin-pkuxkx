@@ -1,16 +1,5 @@
 #nop staus check & reaction;
 
-#tic hp_perf {
-    #if {$inBattle == 0} {
-        hpbrief;
-    } {
-        #send {yun powerup};
-        #list perform cre {blade.daoying;parry.douzhuan};
-        #foreach $perform[%*] zhaoshi {perform $zhaoshi};
-        #unvar zhaoshi perform;
-    };
-} {2}
-
 #eve {VARIABLE UPDATE qi} {
     #local percent 100;
     #math percent {$qi_efft*100/$qi_max};
@@ -54,3 +43,6 @@
 #act {{^你将剩下的烤鸡腿吃得干干净净。}} {drop bone}
 #act {{^\s+\S+黄金\(Gold\)$}} {get gold}
 #act {{^\s+\S+两白银\(Silver\)$}} {get silver}
+#act {^春来茶馆 -} {fillall}
+
+#act {{^(重新连线完毕。|您上次是在.*连线进入，请及时核对。)}} {#class ticker read ticker.tin}

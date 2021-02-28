@@ -46,7 +46,7 @@
 
 #prompt {{^#(\d+),(\d+),(-?\d+),(-?\d+),(0|1),(0|1)$}} {
     ---<faa>$qi/$qi_max($percent_qi%%)<eee>-<adf>$jing/$jing_max($percent_jing%%)<eee>-<ffa>$neili/$neili_max<eee>-<aff>$jingli/$jingli_max<eee>---Exp:$exp|Poten:$poten--Busy:$isBusy--$type_lian:$lvl_lian---
-}
+} {-2}
 
 #fun get_percent {
     #local percent 100;

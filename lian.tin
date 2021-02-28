@@ -66,7 +66,7 @@
 #act {{^你的\S+进步了！}} {skbrief $type_lian}
 #act {{^#(\d+)/\d+$}} {
     #local FULLSKILL 260;
-    #list list_skill cre {shenyuan-gong;force;blade;leg;dodge;parry};
+    #list list_skill cre {shenyuan-gong;force;blade;parry;leg;dodge};
     #var lvl_lian %2;
     #if {%2 >= $FULLSKILL} {
         #class lian kill;
@@ -81,6 +81,8 @@
         } {
             #nop start dazuo script;
             #class dazuo read dazuo.tin;
+            #format type_lian dazuo;
+            hp -neili;
             dazuo max;
         }
     };

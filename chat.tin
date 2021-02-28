@@ -5,6 +5,7 @@
     #var list_chat {};
     #loop 1 {$height_chat-1} cnt {#list list_chat insert $cnt {}};
 };
+#var row_paint_chat @eval{1-$height_chat};
 
 
 #split $height_chat 2;
@@ -30,15 +31,34 @@
 
 #function paint_chat {
     #nop #math -10 is not valid...;
-    #loop -1 @eval{0-($height_chat-1)} cnt {
-        #echo {{%s} {$cnt}} {$list_chat[@eval{0-$height_chat-$cnt}]};
+    #loop 1 @eval{$height_chat-1} cnt {
+        #echo {{%s} {$cnt}} {$list_chat[@eval{$row_paint_chat+ $cnt-1}]};
     };
 }
 
+#func scroll_chat { #nop %1 up/down;
+    #if {"%1" == "up"} {
+        #math row_paint_chat {$row_paint_chat-($height_chat-1)};
+        #local tmp @paint_chat{};
+    };
+    #elseif {"%1" == "down"} {
+        #math row_paint_chat {$row_paint_chat+($height_chat-1)};
+        #if {$row_paint_chat > 1-$height_chat} {#var row_paint_chat @eval{1-$height_chat}};
+        #local tmp @paint_chat{};
+    };
+}
 
 #nop triggers---------------------------------------------------------;
 #EVENT {SCREEN RESIZE} {#local tmp @paint_chat{}}
-#eve {SCROLLED <MOUSE>} {#echo scroll event %2 %4 %5};
+#eve {SCROLLED MOUSE WHEEL UP} {
+    #if {%0 < $height_chat} {#local tmp @scroll_chat{up}};
+    #else {#buffer up};
+};
+#eve {SCROLLED MOUSE WHEEL DOWN} {
+    #if {%0 < $height_chat} {#local tmp @scroll_chat{down}};
+    #else {#buffer down};
+};
+#nop #eve {SCREEN FOCUS} {#echo %s {focused %0}};
 
 #act {{^[> ]*$}} {#line gag}
 
@@ -55,7 +75,7 @@
     #local tmp @push_chat{%0; %2};
 };
 
-#act {~\e[{[0-9;]*}m¡¾{Ò¥ÑÔ|ÏÐÁÄ|±±ÏÀQQÈº}¡¿%*$} {
+#act {~^\e[0m\e[{[0-9;]*}m¡¾{Ò¥ÑÔ|ÏÐÁÄ|±±ÏÀQQÈº}¡¿%*$} {
     #line gag;
     #local tmp @push_chat{%0};
     #system {touch log.txt;echo '%0' > log.txt};

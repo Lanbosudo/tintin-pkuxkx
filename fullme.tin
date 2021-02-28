@@ -1,4 +1,8 @@
 #nop;
 
-#act {{^http://47.90.49.49/fullme/robot.php?filename=\d\+$}} {}
+#act {^http://47.90.49.49/fullme/robot.php?filename={\d+$}} {
+    #var url_fullme %0;
+    #system ./fullme.sh %0;
+};
 
+#alias {^fullme2} {#system ./fullme.sh $url_fullme}

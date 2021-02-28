@@ -1,6 +1,9 @@
 #nop
 
 #CONFIG {COLOR PATCH} ON
+#CONFIG {CHARSET} GBK
+#CONFIG {MOUSE} ON
+#CONFIG {WORDWRAP} OFF
 
 #class login read login.tin
 
