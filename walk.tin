@@ -180,7 +180,7 @@
         #echo {dst %s is not found} $dst_walk;
 
         #class walk_trigger kill;
-        #var class_opened -;
+        #repl class_opened {|walk_trigger} {};
 
         #return;
     };
@@ -188,20 +188,26 @@
     #if {%1 != $index_dst} { #nop not going to current node;
         #local tmp {@getPath{%1; $index_dst}};
         #line quiet #local tmp @plist{list_path};
+
+        #send {set brief 3};
         #local tmp @getStep{};
-    } {
+    };
+    #else {
         #class walk_trigger kill;
-        #var class_opened -;
-    }
+        #repl class_opened {|walk_trigger} {};
+    };
 }
 
 #func getStep { #nop;
     #nop #echo %s {@plist{list_path}};
+
     #if {@sizeof{list_path} < 2} {
 
         #class walk_trigger kill;
-        #var class_opened -;
+        #repl class_opened {|walk_trigger} {};
 
+        #send {set brief 1};
+        look;
         #echo {<cfa>µ½´ï%s!<eee>} $locationCNName[$locationIndex[$list_path[1]]];
         #return;
     };
@@ -290,6 +296,7 @@
 
         #local dst %2;
         #if {"%2" == "tianlong"} {#local dst tianlongsi};
+        #elseif {"%2" == "huijiang"} {#local dst huizuxiaozhen};
 
         #if {$walk_pause != 1} {
             #var walk_pause 1;
@@ -318,7 +325,7 @@
         #if {"%1" == "yueyang"} {#format result {do_xia|west|south}};
         #elseif {"%1" == "chengdu"} {#format result {do_xia|south|southeast|southeast}};
         #elseif {"%1" == "dalunsi"} {#format result {do_xia|west}};
-        #elseif {"%1" == "jingguang"} {#format result {do_xia|south|west}};
+        #elseif {"%1" == "jinguang"} {#format result {do_xia|south|west}};
         #elseif {"%1" == "huijiang"} {#format result {do_xia|southwest}};
         #elseif {"%1" == "tianlong"} {#format result {do_xia|east}};
     };
@@ -326,7 +333,7 @@
         #if {"%1" == "yueyang"} {#format result {north|east|do_gu|do_qu}};
         #elseif {"%1" == "chengdu"} {#format result {northwest|northwest|north|do_gu|do_qu}};
         #elseif {"%1" == "dalunsi"} {#format result {east|do_gu|do_qu}};
-        #elseif {"%1" == "jingguang"} {#format result {east|north|do_gu|do_qu}};
+        #elseif {"%1" == "jinguang"} {#format result {east|north|do_gu|do_qu}};
         #elseif {"%1" == "huijiang"} {#format result {northeast|do_gu|do_qu}};
         #elseif {"%1" == "tianlong"} {#format result {west|do_gu|do_qu}};
     };

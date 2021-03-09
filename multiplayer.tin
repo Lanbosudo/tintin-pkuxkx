@@ -9,17 +9,38 @@
     };
 }
 
-#func getPerform { #nop use $myId;
+#func getWeapon {
     #if {"$myId" == "lanbosudo"} {
-        #var result {blade.daoying;parry.douzhuan};
+        #var result dao;
     };
     #elseif {"$myId" == "lanbosudoc"} {
-        #var result {strike.daoqi;hammer.wushuai};
     }
+}
+
+#func getPerform { #nop use $myId;
+    #if {"$myId" == "lanbosudo"} {
+        #var result {wi|blade;perform|blade.daoying;perform|finger.canshang;perform|parry.bishen;perform|dodge.yanling};
+    };
+    #elseif {"$myId" == "lanbosudoc"} {
+        #var result {wi|lun;perform|strike.daoqi;perform|hammer.wushuai};
+    }
+}
+
+#func getSpecial { #nop;
+    #if {"$myId" == "lanbosudo"} {
+        #var result {sp +agile;sp +ironskin;sp agile;sp ironskin};
+    };
+    #elseif {"$myId" == "lanbosudoc"} {
+        #var result {sp +greedy};
+    }
+    #else {#return consider2}
 }
 
 #nop info;
 #act {^°‘©•©•©•©•°Ú»ÀŒÔœÍ«È°Ú©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•°‘} {
-    #line oneshot #act {{^ °æ.*°ø(\S+\s)?(\S*°∏\S+°π)?\S+\((\w+)\)$}} {#format myId %l %%4};
+    #line oneshot #act {{^ °æ.*°ø(\S+\s)?(\S*°∏\S+°π)?(\S+)\((\w+)\)$}} {
+        #format myId %l %%5;
+        #var myName %%4;
+    };
 }
 

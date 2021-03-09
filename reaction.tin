@@ -1,4 +1,5 @@
 #nop staus check & reaction;
+#nop include prompt;
 
 #list list_descrpt cre {
     "不堪一击";"毫不足虑";"不足挂齿";"初学乍练";"勉勉强强";
@@ -46,41 +47,46 @@
 #eve {VARIABLE UPDATED food} {
     #if {$inBattle == 0 && $isBusy == 0} {
         #if {$food < 100 } {
-            #if {$food > 90} {#echo {<aff>开饭ヾ('﹃')<eee>}};
-            #send {eat jitui};
+            #if {$food == 45 || $food == 44} {#echo {<aff>饿啊ヾ('﹃')<eee>}};
+            #send {do 3 eat jitui};
         };
         #if {$drink < 100} {
-            #send {drink};
+            #send {do 3 drink};
         };
     };
 }
 
 #act {{^(重新连线完毕。|您上次是在.*连线进入，请及时核对。)}} {#class ticker read ticker.tin;sc}
+#eve {VARIABLE UPDATED myId} {@getSpecial{}}
 
 #nop life;
 #act {{^这里没有jitui这种食物。}} {#line gag;}
 #act {{^你所在的环境没有水源，你身上也没有容器可以解渴。}} {#line gag}
 #act {{^你将剩下的烤鸡腿吃得干干净净。}} {drop bone}
+#act {^你有很长一段时间没有备份档案了，请使用backup命令来备份。} {backup}
 
 #act {{^\s+\S+黄金\(Gold\)$}} {get gold} {4}
 #act {{^\s+\S+两白银\(Silver\)$}} {get silver} {4}
-#act {{^\s+\S+的尸体\(Corpse\)}} {get gold from corpse; get silver from corpse; get cash from corpse;} {4}
-#act {{^\s+\S+的骸骨\(Skeleton\)}} {get gold from skeleton; get silver from skeleton; get cash from skeleton;} {4}
 #act {{^\s+\S+之\S+\((Waist|Shield|Ring|Cape|Bracer|Necklace|Cuirass|Gauntlet|Boots|Armor|Cuisse|Armet|Mask|Pauldron|Cloth|Head)\)$}} {#format id %l {%2}; get $id; #line quiet #unvar id;} {4}
 #act {{^\s+\S+【(普通|优秀|完美)】\(([^()]+)\)}} {#format id %l {%3}; get $id; #line quiet #unvar id;} {4};
 #act {{^\s+\S+(玄冰空青|锰晶|金刚砂)【瑕疵】\(([^()]+)\)}} {#format id %l {%3}; get $id; #line quiet #unvar id;} {4};
+#nop not right to do...;
+#nop #act {{^\s+\S+的尸体\(Corpse\)}} {get gold from corpse; get silver from corpse; get cash from corpse;} {4}
+#nop #act {{^\s+\S+的骸骨\(Skeleton\)}} {get gold from skeleton; get silver from skeleton; get cash from skeleton;} {4}
+
 #act {^%s杂耍人(Zashua ren)$} {north} {4};
-
 #act {^春来茶馆 -} {fillall}
-#act {{^(你拿起船桨用力划了起来。|你跃上小舟，船就划了起来。|黄河渡船 -|羊皮筏 -)}} {dazuo max;}
-#act {{^(不知过了多久，船终于靠岸了，你累得满头大汗。|小舟终于划到近岸，你从船上走了出来。)}} {halt;yun recover}
+#act {{^(你拿起船桨用力划了起来。|你跃上小舟，船就划了起来。|(黄河|长江)渡船 -|羊皮筏 -|(小)?木船 -)}} {dazuo max;}
+#act {{^(不知过了多久，船终于靠岸了，你累得满头大汗。|小舟终于划到近岸，你从船上走了出来。|你朝船夫挥了挥手便跨上岸去。|你沿着踏板走了上去。)}} {halt;yun recover}
 #act {^你突然感到精神一振，浑身似乎又充满了力量！} {tuna 10}
+#act {^陆大有喝道：你不是华山弟子，不得入内。} {yun powerup;hit lu dayou}
 
 
-#nop target, match everything of look, low priority;
+#nop target, match everything of look, low priority--------------------------------------------------------------;
 #nop     江湖新星「开局一双手,打怪升级虐成狗」桃花大西瓜(Guzhuthf);
 #nop    广寒宫 堂主 侠之大者 ☆日行千里☆ 「太空堂」太空人(Astronaut);
-#act {{^\s+([^0-9a-zA-Z;:()]+\s)?(\S*「\S+」)?((一|二|三|四|五|六|七|八|九|十)+位)?([^;:()]+)\(([^()]+)\)( <\S+>)?$}} {
+#act {{^\s{4}([^0-9a-zA-Z;:() ]+\s)*(\S*「\S+」)?((一|二|三|四|五|六|七|八|九|十)+位)?([^;:()]+)\(([^()]+)\)( <\S+>)?$}} {
+    #nop #echo {reaction,match id: %6};
     #if {"%6" == "$job_name"} {
         #format id %l {%7};
         follow $id;
@@ -91,12 +97,19 @@
         look $target_id;
     };
 } {5};
+
+#nop battle-------------------------------------------------------------------------------------------------------;
+#act {^你战胜了%+!} {
+    #echo <faa>=====================;
+    #echo <faa>%0;
+    #echo <faa>=====================;
+}
 #act {^看起来%1想杀死你！} {
     #var target_name %1;
 
     #nop deprecate now...;
-    #nop 张金鳌               = zhang jinao, zhang, jinao
-    #line oneshot #act {^$target_name{\s+=\s(\S[^,]+)(,[^,]+)+}} {
+    #nop 张金鳌               = zhang jinao, zhang, jinao;
+    #nop #line oneshot #act {^$target_name{\s+=\s(\S[^,]+)(,[^,]+)+}} {
         #nop #echo %s {id: %%2 %%3};
         #var target_id {%%2};
     };
@@ -140,6 +153,86 @@
     };
 }
 
-#act {^你从怀中掏出信交给%+，道：「这是岳不群先生托不才送给您的信，请收好。」} {
+#act {^你从怀中掏出信交给%+，道：「这是岳不群先生托%+送给您的信，请收好。」} {
     #line oneshot #act {^    武林名宿 华山派掌门「君子剑」岳不群(Yue buqun)} {ask yue about finish} {4};
+}
+
+#nop job flower-----------------------------------------------------------------------------;
+#act {^你道：“听说花姑娘正在制作一种特殊的酱料，不止在下可否效力一二？”} {
+    #line oneshot #act {{^花小贱说道：「我正在制作一种叫做\S+，主料需要(\S+?)(各)?一朵，辅料需要(\S+?)(各)?一朵，你去帮我弄来吧。」}} {
+        #var job_name {%%2;%%4};
+        #repl job_name {、} {;};
+        #list list_flower cre $job_name;
+        #local tmp @plist{list_flower};
+
+        #repl job_name {;} {|};
+    };
+
+    #line oneshot #act {^    花痴 花老板(Hua laoban)} {
+        ask hua about $list_flower[1];
+    };
+}
+#act {^你向花老板打听有关『%+』的消息。} {
+    #line oneshot #act {^花老板说道：「%+可以在%+等地被挖到。」} {
+        #var job_loc %%2;
+    };
+
+    #act {^你挖出来了一株{($job_name)}。} {
+        #echo <aff>========================;
+        #echo 挖到！;
+        #echo <aff>========================<eee>;
+
+        #line oneshot #act {^    「流民」花小贱(Hua xiaojian)} {give hua flower};
+    };
+
+    #act {^{($job_name)}渐渐地枯萎了。} {
+        #unact {^    「流民」花小贱(Hua xiaojian)};
+    }
+}
+
+#act {^花小贱说道：「%+正是我想要的，谢谢$myName啦。」} {
+    #list list_flower find %1 tmp_index;
+    #list list_flower del $tmp_index;
+
+    #unact {^你挖出来了一株{($job_name)}。};
+    #unact {^{($job_name)}渐渐地枯萎了。};
+
+    #line oneshot #act {^    花痴 花老板(Hua laoban)} {
+        ask hua about $list_flower[1];
+    };
+};
+
+#act {^完成海棠任务后，你被奖励了} {
+    #unact {^    花痴 花老板(Hua laoban)};
+}
+
+#nop job pu ren------------------------------------------------------------------------------;
+#act {^你从慕容世家家贼的尸体身上搜出一封信件。} {
+    #line oneshot #act {^    姑苏慕容 仆人(Pu ren)} {
+        give ren xin;
+    };
+}
+
+#nop job hubiao------------------------------------------------------------------------------;
+#act {^林震南在你的耳边悄声说道：你把这批红货送到%+那里，他已经派了个伙计名叫%+到%+附近接你，把镖车送到他那里就行了。} {
+    #var job_loc %3,%1;
+    #var job_name %2;
+}
+#act {^你累了个半死，终于把镖运到了地头。} {
+    #line oneshot #act {^    林震南(Lin zhennan)} {
+        ask lin about finish;
+    };
+}
+#act {^劫匪突然从暗处跳了出来，阴笑道：“红货和人命都留下来吧！。”} {
+    tar $myId's robber;
+}
+
+#nop juewei--------------------------------------------------------------------------------;
+#act {^你%+了%*罪犯，%*的金吾卫%*，可以去衙门领%*奖%*了。} {
+    #line oneshot #act {^    京兆少尹 郭隆(Jingzhao shaoyin)} {
+        ask shaoyin about 领赏;
+        ask shaoyin about 任务信息;
+        #class juewei kill;
+        #repl class_opened {|juewei} {};
+    } {4};
 }

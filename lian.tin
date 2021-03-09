@@ -36,7 +36,14 @@
             {lian $type_lian 50};
     }
 }
-#act {{^你只能练习用 enable 指定的特殊技能。}} {xue bo for shenyuan-gong 20;}
+#act {{^你只能练习用 enable 指定的特殊技能。}} {
+    #if {"type_lian" == "shenyuan-gong"} {
+        xue bo for shenyuan-gong 20;
+    };
+    #elseif {"type_lian" == "parry"} {
+        du douzhuan xingyi;
+    }
+}
 
 #act {{^(你(的)?内力不够|\( 你的内力已经枯竭，不能施用内功。\))}} {
     #if {@get_percent{$qi;$qi_max} < 5} {
@@ -65,8 +72,8 @@
 }
 
 #nop douzhuan-xingyi;
-#act {{^你正在研习斗转星移的武功图谱，似乎有点心得。}} {du shu}
-#act {{^斗转星移初期只能通过研读图谱学习。}} {cai huanshi; du shu}
+#act {{^你正在研习斗转星移的武功图谱，似乎有点心得。}} {du douzhuan xingyi}
+#act {{^斗转星移初期只能通过研读图谱学习。}} {cai huanshi; du douzhuan xingyi}
 
 #nop force;
 #act {{^特殊内功无法练习，你可以通过\(learn\)或者\(xiulian\)来提高。}} {lingwu $type_lian 50}
@@ -74,12 +81,12 @@
 
 #act {{^你的\S+进步了！}} {skbrief $type_lian}
 #act {{^#(\d+)/\d+$}} {
-    #local FULLSKILL 250;
+    #local FULLSKILL 270;
     #list list_skill cre {shenyuan-gong;force;blade;parry;leg;dodge;sword;finger};
     #var lvl_lian %2;
     #if {%2 >= $FULLSKILL} {
         #class lian kill;
-        #var class_opened -;
+        #repl class_opened {|lian} {};
         halt;
         #if {"$type_lian" == "shenyuan-gong"} { west};
 
@@ -91,7 +98,7 @@
         } {
             #nop start dazuo script;
             #class dazuo read dazuo.tin;
-            #var class_opened dazuo;
+            #var class_opened $class_opened|dazuo;
             #format type_lian dazuo;
             hp -neili;
             dazuo max;

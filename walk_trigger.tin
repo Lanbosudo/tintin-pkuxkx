@@ -5,12 +5,17 @@
     #if {$walk_pause == 1} {yell boat};
 } {4};
 
-#act {{^(一叶扁舟缓缓地驶了过来，艄公将一块踏脚板搭上堤岸，以便乘客上下。|岸边一只渡船上的艄公说道：正等着你呢，上来吧。)}} {enter};
-#act {{^只听得江面上隐隐传来：“别急嘛，这儿正忙着呐……”}} {#delay 2 {yell boat}};
-#act {{^艄公说“到啦，上岸吧”，随即把一块踏脚板搭上堤岸。}} {
-    halt;yun recover;out;
-    #local tmp @getStep{};
+#act {{^(一叶扁舟缓缓地驶了过来，艄公将一块踏脚板搭上堤岸，以便乘客上下。|岸边一只渡船上的艄公说道：正等着你呢，上来吧。)}} {
+    enter;
+
+    #line oneshot #act {{^艄公说“到啦，上岸吧”，随即把一块踏脚板搭上堤岸。}} {
+        halt;yun recover;out;
+        #local tmp @getStep{};
+    };
 };
+#act {^你吸了口气，一声“船家”，声音中正平和地远远传了出去。} {
+    #line oneshot #act {{^只听得江面上隐隐传来：“别急嘛，这儿正忙着呐……”}} {#delay 2 {yell boat}};
+}
 #act {{^大车停稳了下来，你可以下车\(xia\)了。}} {#local tmp @getStep{}};
 
 #var walk_pause 0;

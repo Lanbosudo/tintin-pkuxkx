@@ -21,11 +21,11 @@
 #act {{^你只觉神元归一，全身精力弥漫，无以复加，忍不住长啸一声，徐徐站了起来。}} {yun recover}
 #act {^你深深吸了几口气，脸色看起来好多了。} {
     #if {$neili*100/$neili_max > 190} {
-        #class neili kill;
-        #var class_opened -;
-        #echo <faf>=====================<eee>;
+        #class daman kill;
+        #repl class_opened {|daman} {};
+        #echo <aff>=====================<eee>;
         #echo %s {<aff>打满啦<900>!};
-        #echo <faf>=====================<eee>;
+        #echo <aff>=====================<eee>;
     } {dazuo max};
 }
 

@@ -7,7 +7,11 @@
         @getPowerUp{};
 
         #list perform cre @getPerform{};
-        #foreach $perform[%*] zhaoshi {perform $zhaoshi};
+        #foreach $perform[%*] zhaoshi {
+            #repl zhaoshi {|} { };
+            $zhaoshi;
+        };
+
 
         #unvar zhaoshi perform;
     };

@@ -1,7 +1,5 @@
 #nop
 
-#class login read login.tin
-
 #EVENT {PROGRAM START} {#session pkuxkx hk.pkuxkx.com 8080}
 #EVENT {SESSION DISCONNECTED} {#gts #delay 5 {#session pkuxkx hk.pkuxkx.com 8080}};
 /*

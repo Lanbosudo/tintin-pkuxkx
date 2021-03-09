@@ -1,11 +1,17 @@
 #nop
-#func findExit { #nop %1 simple direction;
+#func findExit { #nop %1 simple direction, %2 prefix, e.g., gan che;
     #foreach $list_exit[%*] direction {
-        #regexp {$direction} {{^%1(up|down)?$}} {
-            #echo go:%s $direction;
-            #send {$direction};
-            #break;
+        #local flag 0;
+        #regex {$direction} {{^%1(up|down)?$}} {
+            #echo go:%s {%2 $direction};
+            #nop send {%2 $direction} won't work, escaping space might be problem...;
+            %2 $direction;
+            #format flag 1;
+
+            #nop break inside regexp doesn't work...;
+            #nop break;
         };
+        #if {$flag} {#break};
     };
 }
 
@@ -18,11 +24,21 @@
 #macro {\eOt} {#local tmp @findExit{west}}
 #macro {\eOx} {#local tmp @findExit{north}}
 
+#macro {\e[1;5v} {#local tmp @findExit{east;gan che to}}
+#macro {\e[1;5r} {#local tmp @findExit{south;gan che to}}
+#macro {\e[1;5t} {#local tmp @findExit{west;gan che to}}
+#macro {\e[1;5x} {#local tmp @findExit{north;gan che to}}
+
 #nop Numpad 9,3,1,7;
 #macro {\eOy} {#local tmp @findExit{northeast}}
 #macro {\eOs} {#local tmp @findExit{southeast}}
 #macro {\eOq} {#local tmp @findExit{southwest}}
 #macro {\eOw} {#local tmp @findExit{northwest}}
+
+#macro {\e[1;5y} {#local tmp @findExit{northeast;gan che to}}
+#macro {\e[1;5s} {#local tmp @findExit{southeast;gan che to}}
+#macro {\e[1;5q} {#local tmp @findExit{southwest;gan che to}}
+#macro {\e[1;5w} {#local tmp @findExit{northwest;gan che to}}
 
 #nop Numpad +;
 #macro {\eOk\eOk} {#send {d}}

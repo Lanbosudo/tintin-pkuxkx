@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
 
 cd .tintin;
-tt++ -r pkuxkx.tin && cd;
+
+if [ $@ == 2 ]; then
+    tt++ -r login2.tin && cd
+else
+    tt++ -r login.tin && cd
+fi

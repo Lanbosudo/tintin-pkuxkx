@@ -33,6 +33,10 @@
     #line gag;
 }
 
+#var target_name -;
+#var target_lvl -;
+#var job_name -;
+#var job_loc -;
 #act {{^#(\d+),(\d+),(-?\d+),(-?\d+),(0|1),(0|1)$}} {
     #var zhenqi %2;
     #var will_fight %3;
@@ -47,7 +51,7 @@
 
 #var type_lian -;
 #var lvl_lian -;
-#var class_opened -;
+#var class_opened {};
 #prompt {{^#(\d+),(\d+),(-?\d+),(-?\d+),(0|1),(0|1)$}} {
     ---<faa>$qi/$qi_max(@eval{$qi*100/$qi_efft}^$percent_qi%%)<eee>-<adf>$jing/$jing_max(@eval{$jing*100/$jing_efft}^$percent_jing%%)<eee>-<ffa>$neili/$neili_max<eee>-<aff>$jingli/$jingli_max<eee>---Exp:$exp|Poten:$poten--$type_lian:$lvl_lian--Busy:<faf>$isBusy<eee>--[$class_opened]---
 } {-2}
@@ -59,17 +63,24 @@
 }
 
 #eve {VARIABLE UPDATED target_name} {
+    @getPowerUp{};
     #line oneshot #act {^$target_name死了} {#var target_name -; get all from corpse}
 }
 
-#act {{^(【江湖】经推算，)?本周为(\S+)，}} {#var week %3}
+#act {{^(【江湖】经推算，)?本周为(\S+?)，}} {#var week %3}
 #act {^阿碧对你说道：去把将%1杀掉！} {#var job_name %1}
 #act {^岳不群交给你一封盖着火漆印戳的密函。} {
-    #line oneshot #act {{^(岳不群对你道：「我这里正好有封密函，麻烦你跑一趟，交给(\S+)附近的(\S+)。」|岳不群道：「多谢壮士，你赶紧把它送到(\S+)附近的(\S+)手中。」)}} {
-        #var job_name %%4;
-        #var job_loc %%3;
+    #line oneshot #act {{^(岳不群对你道：「我这里正好有封密函，麻烦你跑一趟，交给(\S+)附近的(\S+)。」|岳不群道：「多谢\S+，你赶紧把它送到(\S+)附近的(\S+)手中。」|岳不群在你的耳边悄声说道：这封机密函件，火速送给(.+)附近的(.+)，好处少不了你的。)}} {
+        #var job_name %%4%%6%%8;
+        #var job_loc %%3%%5%%7;
     };
 }
 #act {{^你对陆乘风道：“听闻近来有人冒名桃花岛弟子在(\S+)布下迷阵行恶，我愿代劳除去此獠。”}} {
     #var job_loc %2;
 };
+#act {^你向仆人打听有关『job』的消息。} {
+    #line oneshot #act {^仆人叹道：家贼难防，有人偷走了少爷的信件，据传曾在『%+』附近出现，你去把它找回来吧！} {
+        #var job_name {慕容世家家贼};
+        #var job_loc {%1};
+    };
+}
