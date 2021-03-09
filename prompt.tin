@@ -1,4 +1,24 @@
 #nop;
+#var color_bg <B004040>;
+
+#func getBar { #nop %1: value, #2: max value, %3 color;
+    #format result %u {%3};
+    #format result {$result%l} {%3};
+    #math count  %1*10/%2;
+    #if {$count > 0} {
+        #loop 1 $count tmp {
+            #var result $result|;
+        };
+    };
+}
+#func paint_bar { #nop %1: current value, %2: effective max, %3: max value, %4, %5, %6 colors;
+    #var result @getBar{%1;%3;%4};
+    #var result $result@getBar{@eval{%2-%1};%3;%5};
+    #var result $result@getBar{@eval{%3-%2};%3;%6};
+    #var result $result<B004040>;
+    #nop #echo $result;
+}
+
 /*
 #2.44M,480766,3440,33,3440,3440
 #1934,1934,136,1275,1275,1275
@@ -6,7 +26,7 @@
 【江湖】宋远桥、心上人、破阵、公孙止、万安塔、苗疆所有主流等任务奖励下降，韩员外、天珠及见性成佛、萧峰、胡一刀、韩世忠等任务奖励不变，慕容仆人、都府刺杀、偷学、谍报等任务奖励上升，护镖奖励最佳。
 【江湖】经推算，本周为平静之周，无特殊效果！
  */
-#act {{^#([0-9.]+(M|K)),(\d+),(\d+),(\d+),(\d+),(\d+)$}} {
+#act {{^#([0-9.]+(M|K)),(\d+),(-?\d+),(\d+),(-?\d+),(\d+)$}} {
     #nop #echo %2, %4, %5, %6, %7, %8;
     #var neili %6;
     #var neili_max %5;
@@ -29,6 +49,9 @@
 
     #format percent_qi @get_percent{$qi_efft;$qi_max};
     #format percent_jing @get_percent{$jing_efft;$jing_max};
+
+    #var bar_qi @paint_bar{$qi;$qi_efft;$qi_max;<faa>;<fcc>;<fee>};
+    #var bar_jing @paint_bar{$jing;$jing_efft;$jing_max;<aaf>;<ccf>;<eef>};
 
     #line gag;
 }
@@ -53,7 +76,7 @@
 #var lvl_lian -;
 #var class_opened {};
 #prompt {{^#(\d+),(\d+),(-?\d+),(-?\d+),(0|1),(0|1)$}} {
-    ---<faa>$qi/$qi_max(@eval{$qi*100/$qi_efft}^$percent_qi%%)<eee>-<adf>$jing/$jing_max(@eval{$jing*100/$jing_efft}^$percent_jing%%)<eee>-<ffa>$neili/$neili_max<eee>-<aff>$jingli/$jingli_max<eee>---Exp:$exp|Poten:$poten--$type_lian:$lvl_lian--Busy:<faf>$isBusy<eee>--[$class_opened]---
+    ---[$bar_qi]-[$bar_jing]-<faa>$qi/$qi_max(@eval{$qi*100/$qi_efft}^$percent_qi%%)<eee>-<adf>$jing/$jing_max(@eval{$jing*100/$jing_efft}^$percent_jing%%)<eee>-<ffa>$neili/$neili_max<eee>-<aff>$jingli/$jingli_max<eee>---Exp:$exp|Poten:$poten--$type_lian:$lvl_lian--Busy:<faf>$isBusy<eee>--[$class_opened]---
 } {-2}
 
 #fun get_percent {

@@ -28,6 +28,11 @@
     #math percent {$qi*100/$qi_efft};
     #if {$percent < 70 && $inBattle == 1} {
         #send {yun recover};
+
+        #if {$percent <15 && $inBattle == 1} {
+            halt;
+            $list_exit[1];
+        };
     } {};
 }
 
@@ -41,6 +46,11 @@
     #math percent {$jing*100/$jing_efft};
     #if {$percent < 70 && $inBattle == 1} {
         #send {yun inspire};
+
+        #if {$percent <15 && $inBattle == 1} {
+            halt;
+            $list_exit[1];
+        };
     } {};
 }
 
