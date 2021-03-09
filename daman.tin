@@ -1,0 +1,32 @@
+#nop;
+#act {^你全身放松，运转真气进行疗伤。} {
+    #if {$jing_efft*100/$jing_max < 98} {
+        #delay 1 {yun inspire}};
+    #else {yun heal};
+}
+#act {^你根本就没有受伤} {yun heal}
+
+
+#act {^你全身放松，坐下来开始运功疗伤。} {
+    #if {$qi_efft*100/$qi_max < 98} {
+        #delay 1 {yun heal}};
+    #else {#delay 1 {dazuo max}};
+}
+#act {^你并没有受伤！} {dazuo max;}
+#act {^你已经受伤过重，只怕一运真气便有生命危险！} {yun lifeheal $myId}
+#act {^你双掌相交护于胸前，双目微闭，运起内功开始疗伤。} {#delay 1 {yun heal}}
+
+
+#act {{^你将真气在体内沿脉络运行了一圈，缓缓纳入丹田，放下手，长吐了一口气。}} {yun recover}
+#act {{^你只觉神元归一，全身精力弥漫，无以复加，忍不住长啸一声，徐徐站了起来。}} {yun recover}
+#act {^你深深吸了几口气，脸色看起来好多了。} {
+    #if {$neili*100/$neili_max > 190} {
+        #class neili kill;
+        #var class_opened -;
+        #echo <faf>=====================<eee>;
+        #echo %s {<aff>打满啦<900>!};
+        #echo <faf>=====================<eee>;
+    } {dazuo max};
+}
+
+#act {^你现在精不够，无法控制内息的流动！} {yun regenerate}

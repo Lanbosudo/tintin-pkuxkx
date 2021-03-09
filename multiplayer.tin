@@ -1,0 +1,25 @@
+#nop;
+
+#func getPowerUp { #nop use $myId;
+    #if {"$myId" == "lanbosudo"} {
+        #var result {yun powerup};
+    };
+    #elseif {"$myId" == "lanbosudoc"} {
+        #var result {yun longxiang};
+    };
+}
+
+#func getPerform { #nop use $myId;
+    #if {"$myId" == "lanbosudo"} {
+        #var result {blade.daoying;parry.douzhuan};
+    };
+    #elseif {"$myId" == "lanbosudoc"} {
+        #var result {strike.daoqi;hammer.wushuai};
+    }
+}
+
+#nop info;
+#act {^°‘©•©•©•©•°Ú»ÀŒÔœÍ«È°Ú©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•°‘} {
+    #line oneshot #act {{^ °æ.*°ø(\S+\s)?(\S*°∏\S+°π)?\S+\((\w+)\)$}} {#format myId %l %%4};
+}
+

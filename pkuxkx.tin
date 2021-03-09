@@ -1,23 +1,27 @@
 #nop
 
-#CONFIG {COLOR PATCH} ON
-#CONFIG {CHARSET} GBK
-#CONFIG {MOUSE} ON
-#CONFIG {WORDWRAP} OFF
-
 #class login read login.tin
 
 #EVENT {PROGRAM START} {#session pkuxkx hk.pkuxkx.com 8080}
+#EVENT {SESSION DISCONNECTED} {#gts #delay 5 {#session pkuxkx hk.pkuxkx.com 8080}};
 /*
-#nop #EVENT {SESSION DISCONNECTED} {#session pkuxkx hk.pkuxkx.com 8080};
 #nop #act {...disconnected..} {};
  */
 
 #EVENT {SESSION CONNECTED} {
+
+    #nop this part will fail rendering sixel pic if put at beginning...;
+    #CONFIG {COLOR PATCH} ON;
+    #CONFIG {CHARSET} GBK;
+    #CONFIG {MOUSE} ON;
+    #CONFIG {WORDWRAP} OFF;
+
+    #class multiplayer read multiplayer.tin;
     #class alias read alias.tin;
     #class chat read chat.tin;
     #class prompt read prompt.tin;
-    #class status read status.tin;
+    #class reaction read reaction.tin;
     #class macro read macro.tin;
     #class walk read walk.tin;
+    #class fullme read fullme.tin;
 }

@@ -1,2 +1,2 @@
-montage -geometry 400x200 -background white .*jpg gif:- |convert - -colors 256 sixel:-
+montage -geometry 400x100 -background '#000040404040' .*jpg $@ jpeg:- |convert - -colors 256 sixel:-
 #colors -background #000040404040 -fill #eeeee8e8d5d5 

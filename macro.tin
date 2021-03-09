@@ -1,18 +1,28 @@
 #nop
+#func findExit { #nop %1 simple direction;
+    #foreach $list_exit[%*] direction {
+        #regexp {$direction} {{^%1(up|down)?$}} {
+            #echo go:%s $direction;
+            #send {$direction};
+            #break;
+        };
+    };
+}
 
 #nop Numpad 5;
 #macro {\eOu} {#send {look}}
 
 #nop Numpad 6,2,4,8;
-#macro {\eOv} {#send {e}}
-#macro {\eOr} {s}
-#macro {\eOt} {w}
-#macro {\eOx} {n}
+#macro {\eOv} {#local tmp @findExit{east}}
+#macro {\eOr} {#local tmp @findExit{south}}
+#macro {\eOt} {#local tmp @findExit{west}}
+#macro {\eOx} {#local tmp @findExit{north}}
 
-#macro {\eOy} {ne}
-#macro {\eOw} {nw}
-#macro {\eOq} {sw}
-#macro {\eOs} {se}
+#nop Numpad 9,3,1,7;
+#macro {\eOy} {#local tmp @findExit{northeast}}
+#macro {\eOs} {#local tmp @findExit{southeast}}
+#macro {\eOq} {#local tmp @findExit{southwest}}
+#macro {\eOw} {#local tmp @findExit{northwest}}
 
 #nop Numpad +;
 #macro {\eOk\eOk} {#send {d}}

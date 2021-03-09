@@ -12,21 +12,28 @@
 
 #action {{^你领悟了\S+次\S+。}} {lingwu $type_lian 50}
 
+#act {^你研读了五十次%+} {du $type_lian for 50}
+#act {^%1上面没有记载什么值得学习的东西。} {read $type_lian 20}
+#act {^你思索着%+中关于%+，对%+有一些新的理解。} {du $type_lian for 50}
+#act {^你看着看着觉得书中人物的%+也不过如此。} {du $type_lian for 50}
+
 #action {{^你的基本功夫比你的高级功夫还高！}} {lian $type_lian 50}
 
 #act {{^你\S+练习\S+，获得了\S+进步！}} {lian $type_lian 50}
 
-#act {{^(你的体力不够练|你现在气血虚浮，练习不了|你太累了，没有办法练习)}} {yun recover}
+#act {{^(你的体力不够练|你现在气血虚浮，练习不了|你太累了，没有办法练习|你的体力太低了)}} {yun recover}
 
 #act {{^你深深吸了几口气，脸色看起来好多了。}} {lian $type_lian 50}
 
-#act {{^(你现在过于疲倦,无法静下心来领悟功夫！|你现在过于疲倦，无法专心下来研读新知。|你的精神太低了。|你今天太累了，结果什么也没有学到。)}} {yun regenerate}
+#act {{^(你现在过于疲倦,无法静下心来领悟功夫！|你现在过于疲倦，无法专心下来研读新知。|你的精神太低了。|你今天太累了，结果什么也没有学到。|你已经很累了，歇歇再读吧，身体要紧。)}} {yun regenerate}
 
 #act {{^你略一凝神，精神看起来好多了。}} {
     #if {@get_percent{$neili;$neili_max} < 20 && @get_percent{$qi;$qi_max} > 80} {
         dazuo max;
     } {
-        lian $type_lian 50
+        #regexp {$type_lian} {{book|tianlong}}
+            {du $type_lian for 50}
+            {lian $type_lian 50};
     }
 }
 #act {{^你只能练习用 enable 指定的特殊技能。}} {xue bo for shenyuan-gong 20;}
@@ -52,7 +59,9 @@
 
 #act {{^你将真气在体内沿脉络运行了一圈，缓缓纳入丹田，放下手，长吐了一口气。}} {
     #if {"$type_lian" == "shenyuan-gong"} {bo huacao; xue bo for shenyuan-gong 20;};
-    #else {lian $type_lian 50};
+    #regexp {$type_lian} {{book|tianlong}}
+        {du $type_lian for 50}
+        {lian $type_lian 50};
 }
 
 #nop douzhuan-xingyi;
@@ -65,15 +74,16 @@
 
 #act {{^你的\S+进步了！}} {skbrief $type_lian}
 #act {{^#(\d+)/\d+$}} {
-    #local FULLSKILL 260;
-    #list list_skill cre {shenyuan-gong;force;blade;parry;leg;dodge};
+    #local FULLSKILL 250;
+    #list list_skill cre {shenyuan-gong;force;blade;parry;leg;dodge;sword;finger};
     #var lvl_lian %2;
     #if {%2 >= $FULLSKILL} {
         #class lian kill;
+        #var class_opened -;
         halt;
         #if {"$type_lian" == "shenyuan-gong"} { west};
 
-        #var index;
+        #line quiet #local index;
         #list list_skill find $type_lian index;
         #if {$index < @sizeof{list_skill}} {
             #line quiet #math index {$index+1};
@@ -81,6 +91,7 @@
         } {
             #nop start dazuo script;
             #class dazuo read dazuo.tin;
+            #var class_opened dazuo;
             #format type_lian dazuo;
             hp -neili;
             dazuo max;

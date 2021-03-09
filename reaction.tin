@@ -1,0 +1,145 @@
+#nop staus check & reaction;
+
+#list list_descrpt cre {
+    "不堪一击";"毫不足虑";"不足挂齿";"初学乍练";"勉勉强强";
+    "初窥门径";"初出茅庐";"略知一二";"普普通通";"平平淡淡";
+    "平淡无奇";"粗通皮毛";"半生不熟";"马马虎虎";"略有小成";
+    "已有小成";"鹤立鸡群";"驾轻就熟";"青出于蓝";"融会贯通";
+    "心领神会";"炉火纯青";"了然于胸";"略有大成";"已有大成";
+    "豁然贯通";"出类拔萃";"无可匹敌";"技冠群雄";"神乎其技";
+    "出神入化";"非同凡响";"傲视群雄";"登峰造极";"无与伦比";
+    "所向披靡";"一代宗师";"精深奥妙";"神功盖世";"举世无双";
+    "惊世骇俗";"撼天动地";"震古铄今";"超凡入圣";"威镇寰宇";
+    "空前绝后";"天人合一";"深藏不露";"深不可测";"返璞归真";
+    "不出深浅"};
+#func desc2lvl { #nop %1 desc;
+    #list list_descrpt find {"%1"} index;
+    #math result {$index*30};
+}
+
+#eve {VARIABLE UPDATED qi} {
+    #local percent 100;
+    #math percent {$qi_efft*100/$qi_max};
+    #if {$percent < 80 && $inBattle == 1} {
+        #send {eat yao};
+    } {};
+
+    #math percent {$qi*100/$qi_efft};
+    #if {$percent < 70 && $inBattle == 1} {
+        #send {yun recover};
+    } {};
+}
+
+#eve {VARIABLE UPDATED jing} {
+    #local percent 100;
+    #math percent {$qi_efft*100/$qi_max};
+    #if {$percent < 80 && $inBattle == 1} {
+        #send {eat dan};
+    } {};
+
+    #math percent {$jing*100/$jing_efft};
+    #if {$percent < 70 && $inBattle == 1} {
+        #send {yun inspire};
+    } {};
+}
+
+#eve {VARIABLE UPDATED food} {
+    #if {$inBattle == 0 && $isBusy == 0} {
+        #if {$food < 100 } {
+            #if {$food > 90} {#echo {<aff>开饭ヾ('﹃')<eee>}};
+            #send {eat jitui};
+        };
+        #if {$drink < 100} {
+            #send {drink};
+        };
+    };
+}
+
+#act {{^(重新连线完毕。|您上次是在.*连线进入，请及时核对。)}} {#class ticker read ticker.tin;sc}
+
+#nop life;
+#act {{^这里没有jitui这种食物。}} {#line gag;}
+#act {{^你所在的环境没有水源，你身上也没有容器可以解渴。}} {#line gag}
+#act {{^你将剩下的烤鸡腿吃得干干净净。}} {drop bone}
+
+#act {{^\s+\S+黄金\(Gold\)$}} {get gold} {4}
+#act {{^\s+\S+两白银\(Silver\)$}} {get silver} {4}
+#act {{^\s+\S+的尸体\(Corpse\)}} {get gold from corpse; get silver from corpse; get cash from corpse;} {4}
+#act {{^\s+\S+的骸骨\(Skeleton\)}} {get gold from skeleton; get silver from skeleton; get cash from skeleton;} {4}
+#act {{^\s+\S+之\S+\((Waist|Shield|Ring|Cape|Bracer|Necklace|Cuirass|Gauntlet|Boots|Armor|Cuisse|Armet|Mask|Pauldron|Cloth|Head)\)$}} {#format id %l {%2}; get $id; #line quiet #unvar id;} {4}
+#act {{^\s+\S+【(普通|优秀|完美)】\(([^()]+)\)}} {#format id %l {%3}; get $id; #line quiet #unvar id;} {4};
+#act {{^\s+\S+(玄冰空青|锰晶|金刚砂)【瑕疵】\(([^()]+)\)}} {#format id %l {%3}; get $id; #line quiet #unvar id;} {4};
+#act {^%s杂耍人(Zashua ren)$} {north} {4};
+
+#act {^春来茶馆 -} {fillall}
+#act {{^(你拿起船桨用力划了起来。|你跃上小舟，船就划了起来。|黄河渡船 -|羊皮筏 -)}} {dazuo max;}
+#act {{^(不知过了多久，船终于靠岸了，你累得满头大汗。|小舟终于划到近岸，你从船上走了出来。)}} {halt;yun recover}
+#act {^你突然感到精神一振，浑身似乎又充满了力量！} {tuna 10}
+
+
+#nop target, match everything of look, low priority;
+#nop     江湖新星「开局一双手,打怪升级虐成狗」桃花大西瓜(Guzhuthf);
+#nop    广寒宫 堂主 侠之大者 ☆日行千里☆ 「太空堂」太空人(Astronaut);
+#act {{^\s+([^0-9a-zA-Z;:()]+\s)?(\S*「\S+」)?((一|二|三|四|五|六|七|八|九|十)+位)?([^;:()]+)\(([^()]+)\)( <\S+>)?$}} {
+    #if {"%6" == "$job_name"} {
+        #format id %l {%7};
+        follow $id;
+        #line quiet #unvar id;
+    };
+    #if {"%6" == "$target_name"} {
+        #format target_id %l {%7};
+        look $target_id;
+    };
+} {5};
+#act {^看起来%1想杀死你！} {
+    #var target_name %1;
+
+    #nop deprecate now...;
+    #nop 张金鳌               = zhang jinao, zhang, jinao
+    #line oneshot #act {^$target_name{\s+=\s(\S[^,]+)(,[^,]+)+}} {
+        #nop #echo %s {id: %%2 %%3};
+        #var target_id {%%2};
+    };
+    #nop id here;
+
+    look;
+}
+#act {{^\s.*\s(他|你|她)看起来约\S+多岁。}} {
+
+    #nop  ▌         他的武功看上去不堪一击，出手似乎极轻。;
+    #nop  ▌         你的武功看上去鹤立鸡群，出手似乎很轻。;
+    #nop  ▌ ══    他的境界完全看不出深浅。;
+    #line oneshot #act {{^\s.*的(武功|境界)(看上去|完全看)(\S+?)(，出手|。)}} {
+        #local desc %%4;
+        #var target_lvl @desc2lvl{$desc};
+    }
+}
+
+#nop #act {{^(你未选定攻击对手|未有对手或者你和对方未处于战斗中|你刚欲动作，突然感到一阵烦闷|慢慢地你终于又有了知觉...)}} {hpbrief};
+
+#act {{^[> ]*$}} {#line gag}
+
+#nop job pozhen----------------------------------------------------------------------------;
+#act {{^(?!【)\S+道：想不到我最终还是失败了！哎！}} {
+    #echo =====================;
+    #echo <aff>破阵成功聊~<900>;
+    #echo =====================;
+
+    #line oneshot #act {^    镇守者 归云庄庄主「五湖废人」陆乘风(Lu chengfeng)} {ask lu about 破阵奖励} {4};
+}
+#act {^这里似乎就是迷阵布下的地点了。} {
+    #class pozhen read pozhen.tin;
+    #line oneshot #act {^你回到了%+。} {jiali none; unset ForcedAct;#class pozhen kill;}
+}
+
+#nop job songxin----------------------------------------------------------------------------;
+#act {^你伸手向怀中一摸，发现密函已经不翼而飞！} {
+    #line oneshot #act {{^(?!【)(\S+)说道：「嘿嘿，让本大爷来教训教训你！」}} {
+        #var target_name %%2;
+        #nop #line oneshot #act {^%%2死了} {#var target_name -;get han from corpse;look;};
+    };
+}
+
+#act {^你从怀中掏出信交给%+，道：「这是岳不群先生托不才送给您的信，请收好。」} {
+    #line oneshot #act {^    武林名宿 华山派掌门「君子剑」岳不群(Yue buqun)} {ask yue about finish} {4};
+}

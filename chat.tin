@@ -1,4 +1,4 @@
-#nop;
+#nop include multiplayer;
 
 #var height_chat 11;
 #if {@sizeof{list_chat} == 0} {
@@ -18,6 +18,7 @@
     #nop #list list_chat delete 1;
     #list list_chat insert -1 {[$time]%1<eee>};
 
+    #line quiet #unvar time;
     #local tmp @paint_chat{};
 }
 
@@ -48,6 +49,13 @@
     };
 }
 
+#func log { #nop %1 string;
+    #format log_file %t {%m-%d-log.txt};
+    #system {touch $log_file; echo '%1' >> $log_file};
+    #line quiet #unvar log_file;
+}
+
+
 #nop triggers---------------------------------------------------------;
 #EVENT {SCREEN RESIZE} {#local tmp @paint_chat{}}
 #eve {SCROLLED MOUSE WHEEL UP} {
@@ -60,9 +68,14 @@
 };
 #nop #eve {SCREEN FOCUS} {#echo %s {focused %0}};
 
-#act {{^[> ]*$}} {#line gag}
+#nop in reaction.tin;
+#nop #act {{^[> ]*$}} {#line gag};
 
 #act {{^【求助】.+\((\w+)(\s\|\|\s\w+)?\).*$}} {
+
+    #nop <del>only log once, so close for other ids<del>, just tune off channels;
+    #nop #if {"$myId" != "lanbosudo"} {#class chat kill};
+
     #line gag;
 
     #regexp {%2} {{[Ll]anbosudo\w?}} {
@@ -75,18 +88,34 @@
     #local tmp @push_chat{%0; %2};
 };
 
-#act {~^\e[0m\e[{[0-9;]*}m【{谣言|闲聊|北侠QQ群}】%*$} {
+#act {~^\e{[\em0-9;\[]+}m【{谣言|闲聊|北侠QQ群}】%*$} {
     #line gag;
     #local tmp @push_chat{%0};
-    #system {touch log.txt;echo '%0' > log.txt};
+    #format log_file %t {%m-%d-log.txt};
+    #system {touch $log_file; echo '%0' >> $log_file};
+    #line quiet #unvar log_file;
+} {4};
+#act {~^\e%+m【江湖】%+{((地点|传闻)：|参与宴会的朋友)}%+$} {
+    #local tmp @push_chat{%0};
+    #format log_file %t {%m-%d-log.txt};
+    #system {touch $log_file; echo '%0' >> $log_file};
+    #line quiet #unvar log_file;
+}
+#act {~^\e%+{m(?!【)(\S+\(\w+\)告诉你|你告诉\S+)}：%+$} {
+    #line gag;
+    #local tmp @push_chat{%0};
+    #local tmp @log{%0};
 }
 
 
 #nop comments---------------------------------------------------------;
 #nop 【江湖】公孙止、韩世忠、心上人、胡一刀、破阵、万安塔等任务奖励下降，苗疆所有主流、护镖、都府刺杀、偷学、韩员外等任务奖励不变，萧峰、慕容仆人、宋远桥、谍报等任务奖励上升，天珠及见性成佛奖励最佳。;
 #nop 【江湖】经推算，本周为掉落之周，掉宝率增加26%！;
+#nop 【江湖】洛阳城传闻：铜块据说在扬州出现过！;
 
+#nop 休莱格(suineg)告诉你：【宁中则(Ning zhongze)】目前在【华山的书房】,快去摁死它吧!;
 #nop {~{^\e[0m\e[1;35m【谣言】.*}};
 #nop {\e[0m\e[37m【北侠QQ群】};
 #nop {\e[0m\e[1;36m【闲聊】};
+#nop {\e[0m\e[2;37;0m\e[1;37m【江湖】};
 #nop #act {~\e[0m\e[1;37m【求助】%*} {#echo %s {%0}};

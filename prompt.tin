@@ -1,10 +1,10 @@
-#nop
+#nop;
 /*
 #2.44M,480766,3440,33,3440,3440
 #1934,1934,136,1275,1275,1275
 #0,101,0,0,0,1
-ã€æ±Ÿæ¹–ã€‘å®‹è¿œæ¡¥ã€å¿ƒä¸Šäººã€ç ´é˜µã€å…¬å­™æ­¢ã€ä¸‡å®‰å¡”ã€è‹—ç–†æ‰€æœ‰ä¸»æµç­‰ä»»åŠ¡å¥–åŠ±ä¸‹é™ï¼ŒéŸ©å‘˜å¤–ã€å¤©ç åŠè§æ€§æˆä½›ã€è§å³°ã€èƒ¡ä¸€åˆ€ã€éŸ©ä¸–å¿ ç­‰ä»»åŠ¡å¥–åŠ±ä¸å˜ï¼Œæ…•å®¹ä»†äººã€éƒ½åºœåˆºæ€ã€å·å­¦ã€è°æŠ¥ç­‰ä»»åŠ¡å¥–åŠ±ä¸Šå‡ï¼ŒæŠ¤é•–å¥–åŠ±æœ€ä½³ã€‚
-ã€æ±Ÿæ¹–ã€‘ç»æ¨ç®—ï¼Œæœ¬å‘¨ä¸ºå¹³é™ä¹‹å‘¨ï¼Œæ— ç‰¹æ®Šæ•ˆæœï¼
+¡¾½­ºş¡¿ËÎÔ¶ÇÅ¡¢ĞÄÉÏÈË¡¢ÆÆÕó¡¢¹«ËïÖ¹¡¢Íò°²Ëş¡¢Ãç½®ËùÓĞÖ÷Á÷µÈÈÎÎñ½±ÀøÏÂ½µ£¬º«Ô±Íâ¡¢ÌìÖé¼°¼ûĞÔ³É·ğ¡¢Ïô·å¡¢ºúÒ»µ¶¡¢º«ÊÀÖÒµÈÈÎÎñ½±Àø²»±ä£¬Ä½ÈİÆÍÈË¡¢¶¼¸®´ÌÉ±¡¢ÍµÑ§¡¢µı±¨µÈÈÎÎñ½±ÀøÉÏÉı£¬»¤ïÚ½±Àø×î¼Ñ¡£
+¡¾½­ºş¡¿¾­ÍÆËã£¬±¾ÖÜÎªÆ½¾²Ö®ÖÜ£¬ÎŞÌØÊâĞ§¹û£¡
  */
 #act {{^#([0-9.]+(M|K)),(\d+),(\d+),(\d+),(\d+),(\d+)$}} {
     #nop #echo %2, %4, %5, %6, %7, %8;
@@ -26,7 +26,7 @@
     #var jing_max %5;
     #var jing_efft %6;
     #var jing %7;
-    
+
     #format percent_qi @get_percent{$qi_efft;$qi_max};
     #format percent_jing @get_percent{$jing_efft;$jing_max};
 
@@ -42,10 +42,14 @@
     #var isBusy %7;
 
     #line gag;
+    #echo {{--=%s=--%s--%s--%d--%s@%s---} {-3}} $myId $week $target_name $target_lvl $job_name $job_loc;
 }
 
+#var type_lian -;
+#var lvl_lian -;
+#var class_opened -;
 #prompt {{^#(\d+),(\d+),(-?\d+),(-?\d+),(0|1),(0|1)$}} {
-    ---<faa>$qi/$qi_max($percent_qi%%)<eee>-<adf>$jing/$jing_max($percent_jing%%)<eee>-<ffa>$neili/$neili_max<eee>-<aff>$jingli/$jingli_max<eee>---Exp:$exp|Poten:$poten--Busy:$isBusy--$type_lian:$lvl_lian---
+    ---<faa>$qi/$qi_max(@eval{$qi*100/$qi_efft}^$percent_qi%%)<eee>-<adf>$jing/$jing_max(@eval{$jing*100/$jing_efft}^$percent_jing%%)<eee>-<ffa>$neili/$neili_max<eee>-<aff>$jingli/$jingli_max<eee>---Exp:$exp|Poten:$poten--$type_lian:$lvl_lian--Busy:<faf>$isBusy<eee>--[$class_opened]---
 } {-2}
 
 #fun get_percent {
@@ -53,3 +57,19 @@
     #math percent {%1*100/%2};
     #format result $percent;
 }
+
+#eve {VARIABLE UPDATED target_name} {
+    #line oneshot #act {^$target_nameËÀÁË} {#var target_name -; get all from corpse}
+}
+
+#act {{^(¡¾½­ºş¡¿¾­ÍÆËã£¬)?±¾ÖÜÎª(\S+)£¬}} {#var week %3}
+#act {^°¢±Ì¶ÔÄãËµµÀ£ºÈ¥°Ñ½«%1É±µô£¡} {#var job_name %1}
+#act {^ÔÀ²»Èº½»¸øÄãÒ»·â¸Ç×Å»ğÆáÓ¡´ÁµÄÃÜº¯¡£} {
+    #line oneshot #act {{^(ÔÀ²»Èº¶ÔÄãµÀ£º¡¸ÎÒÕâÀïÕıºÃÓĞ·âÃÜº¯£¬Âé·³ÄãÅÜÒ»ÌË£¬½»¸ø(\S+)¸½½üµÄ(\S+)¡£¡¹|ÔÀ²»ÈºµÀ£º¡¸¶àĞ»×³Ê¿£¬Äã¸Ï½ô°ÑËüËÍµ½(\S+)¸½½üµÄ(\S+)ÊÖÖĞ¡£¡¹)}} {
+        #var job_name %%4;
+        #var job_loc %%3;
+    };
+}
+#act {{^Äã¶ÔÂ½³Ë·çµÀ£º¡°ÌıÎÅ½üÀ´ÓĞÈËÃ°ÃûÌÒ»¨µºµÜ×ÓÔÚ(\S+)²¼ÏÂÃÔÕóĞĞ¶ñ£¬ÎÒÔ¸´úÀÍ³ıÈ¥´Ëâ²¡£¡±}} {
+    #var job_loc %2;
+};

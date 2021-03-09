@@ -1,10 +1,14 @@
+#nop include multiplayer;
+
 #tic hp_perf {
-    #if {$inBattle == 0} {
-        hpbrief;
-    } {
-        #send {yun powerup};
-        #list perform cre {blade.daoying;parry.douzhuan};
+    hpbrief;
+
+    #if {$inBattle == 1} {
+        @getPowerUp{};
+
+        #list perform cre @getPerform{};
         #foreach $perform[%*] zhaoshi {perform $zhaoshi};
+
         #unvar zhaoshi perform;
     };
 } {2}

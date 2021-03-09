@@ -1,45 +1,111 @@
-#nop LoQ debug alias;
-#ali {^t+%1} {#class %1 read %1.tin}
-#ali {^t-%1} {#class %1 kill}
+#nop LoQ debug alias---------------------------------------------;
+#ali {^t+%1} {#class %1 read %1.tin; #var class_opened %1;}
+#ali {^t-%1} {#class %1 kill; #var class_opened -;}
+#ali {^t@%1} {#class %1 kill; #class %1 read %1.tin;}
 
 #ali {^p %1} {#echo $%1}
 #ali {^plist %1} { #local tmp @plist{%1}; }
+#ali {^func %1} {#echo @%1}
 
-#func plist {
+#func plist { #nop %1 plain list_name;
     #local simpList {};
     #foreach $%1[%*] tmp {
-        #format simpList {%s;%s} $simpList $tmp;
+        #if {@length{$simpList} == 0} {
+            #format simpList {%s} $tmp;
+        };
+        #else {
+            #format simpList {%s;%s} $simpList $tmp;
+        };
     };
     #echo %s $simpList;
 }
-#func length {
+#func length { #nop %1 string;
     #format result %L %1;
 }
-#func sizeof {
+#func sizeof { #nop %1 list name;
     #list %1 size result;
 }
-#func eval {
+#func eval { #nop %1 string;
     #math result {%1};
 }
 
 
-#ali {^func %1} {#echo @%1}
-
-#nop full skills;
+#nop full skills-----------------------------------------------------;
 #ali {{^lian (\S+)$}} {
     #class lian read lian.tin;
+    #var class_opened lian;
     #var type_lian %2;
 
     skbrief %2;lian $type_lian 50;
 }
 #ali {{^xue (\S+) (\S+)$}} {
     #class lian read lian.tin;
+    #var class_opened lian;
     #var type_lian %3;
 
     skbrief %3;xue %2 for $type_lian 20;
 }
+#ali {{^du (\S+)$}} {
+    #class lian read lian.tin;
+    #var class_opened lian;
+    #var type_lian %2;
+    du %2 for 50;
+}
 
-#nop map related;
+#ali {^neili$} {
+    #class neili read neili.tin;
+    #var class_opened neili;
+    yun inspire;
+}
+
+#nop battle----------------------------------------------------------;
+#ali {^k %1$} {
+    @getPowerUp{};
+    kill %1;
+}
+#ali {^ka%1$} {killall%1}
+#ali {^h %1} {
+    @getPowerUp{};
+    hit %1;
+}
+#ali {^laozhen %1} {
+    yun powerup;
+    yun laozhen %1;
+}
+#ali {^es$} {
+    halt;
+    $list_exit[1];
+}
+
+#ali {^fa %1} {
+    #if {%1 == 1} {
+        set ForcedAct %1;
+    } {
+        unset ForcedAct;
+    }
+}
+
+#ali {^tar %1} {
+    id here;
+    #line oneshot #act {{^(\S+)\s+=\s(\S[^,]+,\s)*%1(,[^,]+)*$}} {
+        #var target_name %%2;
+        #var target_id %1;
+    };
+    look;
+}
+#ali {^k$} {
+    @getPowerUp{};
+    kill $target_id;
+}
+
+#nop LoQ---------------------------------------------------------------;
+#ali {^hf %1} {
+    helpme find %1;
+    helpme* thanks;
+}
+#ali {^home$} {enter $myId};
+
+#nop map related-------------------------------------------------------;
 #ali {^lmap %1} {localmaps %1}
 #ali {^map} {help map-pkuxkx}
 
@@ -47,6 +113,7 @@
 #ali {^gt$} {walk -c}
 #ali {^gt %1} {
     #class walk_trigger read walk_trigger.tin;
+    #var class_opened walk_trigger;
     #var dst_walk %1;
     #send {walk -c};
 }
@@ -55,11 +122,20 @@
     #echo {%s-%s} $locationCNName[$index] $locationPY[$index];
 }
 
-#ali {^yzqlc} {
+#nop #ali {^yzqlc} {
     set walk_path do_enter shudong|do_say 天堂有路你不走|down|1|north|northwest|northwest|northwest|north|northwest|up|east;
     walk path;
-}
-#ali {^qlcyz} {
+};
+#nop #ali {^qlcyz} {
     set walk_path west|do_enter dong|southeast|south|southeast|southeast|southeast|south|south|up|out;
     walk path;
+};
+#ali {^mz$} {knock gate 4;knock gate 2;knock gate 5;knock gate 3};
+#ali {^gb$} {enter shudong;say 天堂有路你不走呀;d};
+#ali {^px$} {ask wu about 射月弓;give wu gong;
+    #delay 1 {push desk;d;light lampn;light lamps;light lampe;light lampw;d;break men;d}
 }
+#ali {^fm$} {w;e;s;e;n;n;e;w;s}
+#ali {^sandu$} {ask du nan about 菩提子;ask du e about 伏魔刀;ask du jie about 金刚罩}
+#ali {^ch$} {w;n;w;s;s;e;e;w}
+#ali {^chb$} {e;s;n;w;n;n;e;s;e}

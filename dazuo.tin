@@ -12,7 +12,7 @@
 #act {^你现在%*力接近圆满状态。} {$type_lian 10}
 
 #act {^│【走火入魔】%*【极限内力】{\s(\d+)}} {#var lvl_lian %2}
-#act {^你的内力增加了！！} {
+#act {{^(你的内力增加了！！|你的内力修为似乎已经达到了瓶颈。)}} {
     #if {$neili_max >= $lvl_lian-1} {
         #nop start tuna;
         #var type_lian tuna;
@@ -23,6 +23,6 @@
 
 #act {^你吐纳完毕，睁开双眼，站了起来。} {
     #if {$jing*100/$jing_max < 20} {yun regenerate};
-    #elseif {$neili*100/$neili_max < 20 } {dazuo max};
+    #if {$neili*100/$neili_max < 20 } {dazuo max};
     tuna max;
 }
