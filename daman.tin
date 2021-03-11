@@ -23,9 +23,14 @@
     #if {$neili*100/$neili_max > 190} {
         #class daman kill;
         #repl class_opened {|daman} {};
+
         #echo <aff>=====================<eee>;
         #echo %s {<aff>´òÂúÀ²<900>!};
         #echo <aff>=====================<eee>;
+
+        yun recover;
+        yun regenerate;
+
     } {dazuo max};
 }
 

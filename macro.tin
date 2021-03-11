@@ -68,5 +68,7 @@
 
 #nop Numpad /;
 #macro {\eOo} {enter}
+#macro {\eO5o} {gan che to enter}
 #nop Numpad *;
 #macro {\eOj} {out}
+#macro {\eO5j} {gan che to out}

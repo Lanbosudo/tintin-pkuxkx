@@ -94,18 +94,18 @@
     #format log_file %t {%m-%d-log.txt};
     #system {touch $log_file; echo '%0' >> $log_file};
     #line quiet #unvar log_file;
-} {4};
+} {3};
 #act {~^\e%+m【江湖】%+{((地点|传闻)：|参与宴会的朋友)}%+$} {
     #local tmp @push_chat{%0};
     #format log_file %t {%m-%d-log.txt};
     #system {touch $log_file; echo '%0' >> $log_file};
     #line quiet #unvar log_file;
-}
+} {3};
 #act {~^\e%+{m(?!【)(\S+\(\w+\)告诉你|你告诉\S+)}：%+$} {
     #line gag;
     #local tmp @push_chat{%0};
     #local tmp @log{%0};
-}
+} {3};
 
 
 #nop comments---------------------------------------------------------;

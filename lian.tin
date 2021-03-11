@@ -37,10 +37,10 @@
     }
 }
 #act {{^你只能练习用 enable 指定的特殊技能。}} {
-    #if {"type_lian" == "shenyuan-gong"} {
+    #if {"$type_lian" == "shenyuan-gong"} {
         xue bo for shenyuan-gong 20;
     };
-    #elseif {"type_lian" == "parry"} {
+    #elseif {"$type_lian" == "parry"} {
         du douzhuan xingyi;
     }
 }
@@ -81,7 +81,7 @@
 
 #act {{^你的\S+进步了！}} {skbrief $type_lian}
 #act {{^#(\d+)/\d+$}} {
-    #local FULLSKILL 270;
+    #local FULLSKILL 275;
     #list list_skill cre {shenyuan-gong;force;blade;parry;leg;dodge;sword;finger};
     #var lvl_lian %2;
     #if {%2 >= $FULLSKILL} {

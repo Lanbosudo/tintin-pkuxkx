@@ -32,7 +32,7 @@
     };
     #elseif {"$myId" == "lanbosudoc"} {
         #var result {sp +greedy};
-    }
+    };
     #else {#return consider2}
 }
 

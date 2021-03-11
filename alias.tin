@@ -90,8 +90,8 @@
     #line oneshot #act {{^(\S+)\s+=\s(\S[^,]+,\s)*%1(,[^,]+)*$}} {
         #var target_name %%2;
         #var target_id %1;
+        look;
     };
-    look;
 }
 #ali {^k$} {
     @getPowerUp{};
@@ -165,3 +165,7 @@
 #ali {^lurend %1$} {
     ask %1 about µ¡‘Ù;
 }
+
+#nop aobai-------------------------------------------------------;
+#ali {^aobai %1$} {#tick aobai {t-daman;halt;w;k ao;#delay 30 {get duan;e;open men;daman}} %1};
+#ali {^chanh$} {chanhui;#tick chanhui {chanhui} 59};

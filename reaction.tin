@@ -90,20 +90,26 @@
 #act {{^(不知过了多久，船终于靠岸了，你累得满头大汗。|小舟终于划到近岸，你从船上走了出来。|你朝船夫挥了挥手便跨上岸去。|你沿着踏板走了上去。)}} {halt;yun recover}
 #act {^你突然感到精神一振，浑身似乎又充满了力量！} {tuna 10}
 #act {^陆大有喝道：你不是华山弟子，不得入内。} {yun powerup;hit lu dayou}
+#act {^一阵风吹过，把枯乾的骸骨化成骨灰吹散了。} {look}
 
+#act {^王夫人说道：「大理有一种名种茶花，是天下的极品，一株上共开十八朵花} {#delay 2 {#send {answer 十八学士}}}
+#act {^王夫人说道：「大理有一种名种茶花，八朵异色同株} {#delay 2 {#send {answer 八仙过海}}}
+#act {^王夫人说道：「大理有一种名种茶花，三朵异色同株} {#delay 2 {#send {answer 风尘三侠}}}
+#act {^王夫人说道：「这一种茶花，论颜色，比十八学士少了一色，偏又是驳而不纯} {#delay 2 {#send {answer 落第秀才}}}
 
 #nop target, match everything of look, low priority--------------------------------------------------------------;
 #nop     江湖新星「开局一双手,打怪升级虐成狗」桃花大西瓜(Guzhuthf);
 #nop    广寒宫 堂主 侠之大者 ☆日行千里☆ 「太空堂」太空人(Astronaut);
-#act {{^\s{4}([^0-9a-zA-Z;:() ]+\s)*(\S*「\S+」)?((一|二|三|四|五|六|七|八|九|十)+位)?([^;:()]+)\(([^()]+)\)( <\S+>)?$}} {
-    #nop #echo {reaction,match id: %6};
-    #if {"%6" == "$job_name"} {
-        #format id %l {%7};
+#nop #act {{^\s{4}([^0-9a-zA-Z;:() ]+\s)*(\S*「\S+」)?((一|二|三|四|五|六|七|八|九|十)+位)?([^;:()]+)\(([^()]+)\)( <\S+>)?$}};
+#act {{^\s{4}(\S.+)\(([^()]+)\)( (<|\[)\S+(>|\]))?$}} {
+    #nop #echo {reaction,match id: %3};
+    #regexp {%2} {{\S*$job_name}} {
+        #format id %l {%3};
         follow $id;
         #line quiet #unvar id;
     };
-    #if {"%6" == "$target_name"} {
-        #format target_id %l {%7};
+    #regexp {%2} {{\S*$target_name}} {
+        #format target_id %l {%3};
         look $target_id;
     };
 } {5};
@@ -204,6 +210,9 @@
     #list list_flower find %1 tmp_index;
     #list list_flower del $tmp_index;
 
+    #repl job_name {%1|} {};
+    #repl job_name {|%1} {};
+
     #unact {^你挖出来了一株{($job_name)}。};
     #unact {^{($job_name)}渐渐地枯萎了。};
 
@@ -234,10 +243,23 @@
     };
 }
 #act {^劫匪突然从暗处跳了出来，阴笑道：“红货和人命都留下来吧！。”} {
-    tar $myId's robber;
+    #var target_name {$myName的 劫匪};
+    look;
+}
+#act {^你按照%+的指示，打开密信……} {
+    #line oneshot #act {^    卷走%1财物的伙计 %+(%+)} {
+        #format tmp_id %l %%2;
+        ask $tmp_id about 要;
+
+    } {4};
+
+    #line oneshot #act {^    %1(%+)} {
+        #format tmp_id %l %%1;
+        give $tmp_id cai wu;
+    } {4};
 }
 
-#nop juewei--------------------------------------------------------------------------------;
+#nop job juewei--------------------------------------------------------------------------------;
 #act {^你%+了%*罪犯，%*的金吾卫%*，可以去衙门领%*奖%*了。} {
     #line oneshot #act {^    京兆少尹 郭隆(Jingzhao shaoyin)} {
         ask shaoyin about 领赏;
@@ -245,4 +267,9 @@
         #class juewei kill;
         #repl class_opened {|juewei} {};
     } {4};
+}
+
+#nop aobai camp------------------------------------------------------------------------------;
+#act {^ 道    德：  %+                     杀    气：  紊乱} {
+    #untick aobai;
 }

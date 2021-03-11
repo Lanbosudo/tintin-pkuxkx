@@ -14,5 +14,10 @@
 
 
         #unvar zhaoshi perform;
+
+        #if {$isBusy == 1} {
+            #echo <aff>ฑปbusyมห(จpฃþร๓ฃþ)อน<eee>;
+        };
     };
+
 } {2}
