@@ -26,12 +26,61 @@
         #case {"女"} {#return "女"};
 
         #default {
-            #regexp {"%1"} {"身穿{.+}的"} {#return "胖"};
-            #regexp {"%1"} {"身穿.+?，"} {#return "胖"};
-            #regexp {"%1"} {"穿着一双.+的"} {#return "胖"};
-            #regexp {"%1"} {"穿着.+色鞋子的"} {#return "胖"};
-        }
+            #regexp {"%1"} {"身穿{.+}的"} {
+                #var result %1;
+                #repl result {身穿} {};
+                #repl result {的} {};
+            };
+            #regexp {"%1"} {"身穿{.+?}，"} {
+                #var result %1;
+                #repl result {身穿} {};
+                #repl result {，} {};
+                #return $result;
+            };
+            #regexp {"%1"} {"穿着一双{.+}的"} {
+                #var result %1;
+                #repl result {穿着一双} {};
+                #repl result {的} {};
+                #return $result;
+            };
+            #regexp {"%1"} {"穿着{.+}色鞋子的"} {
+                #var result %1;
+                #repl result {穿着} {};
+                #repl result {的} {};
+                #return $result;
+            };
+        };
     }
+}
+
+#func age2LogicToken { #nop %1, age;
+    #local age %1;
+    #repl age {约} {};
+    #repl age {多} {};
+
+    #if {"%1" == "十" || "%1" == "二十" || "%1" == "三十"} {#return 青年;};
+    #if {"%1" == "四十" || "%1" == "五十"} {#return 中年;};
+    #else {#return 老年;};
+}
+
+#func shape2LogicToken { #nop %1, shape description;
+    #nop 这是一位身材异常魁梧高大的行人。:女人、高、胖;
+    #nop 这是一位娇小玲珑的行人。:女人、矮、廋;
+    #nop 这是一位身材丰满矮小的行人。:女人、矮、胖;
+    #nop 这是一个丰胸细腰，身材苗条挺拔的行人。:女人、高、廋;
+    #nop 这是一位宛如一根竹竿的行人。:男人、高、廋;
+    #nop 这是一位矮小粗胖的行人。:男人、矮、胖;
+    #nop 这是一位高大魁梧的行人。:男人、高、胖;
+    #nop 这是一位矮小灵活的行人。:男人、矮、廋;
+
+    #regexp {%1} {%*异常魁梧高大%*} {#var result {女高胖};};
+    #regexp {%1} {%*娇小玲珑%*} {#var result {女矮瘦};};
+    #regexp {%1} {%*丰满矮小%*} {#var result {女矮胖};};
+    #regexp {%1} {%*丰胸细腰%*} {#var result {女高瘦};};
+    #regexp {%1} {%*一根竹竿%*} {#var result {男高瘦};};
+    #regexp {%1} {%*矮小粗胖%*} {#var result {男矮胖};};
+    #regexp {%1} {%*高大魁梧%*} {#var result {男高胖};};
+    #regexp {%1} {%*矮小灵活%*} {#var result {男矮瘦};};
 }
 
 #act {^    京兆少尹 郭隆(Jingzhao shaoyin)} {
@@ -42,7 +91,6 @@
 #var list_juewei_name {};
 #var list_juewei_age {};
 #var list_juewei_shape {};
-#var list_juewei_sex {};
 #var list_juewei_cloth {};
 #var list_juewei_shoe {};
 
@@ -54,7 +102,7 @@
     };
 
     #line oneshot #act {^%1说道：「{\S+?(有点发胖|偏瘦|高个子|发福|矮个子|个子不太高|竹竿|猴子|有点胖|身穿.+的|身穿.+?，|穿着一双.+的|穿着.+色鞋子的|花白|白发苍苍|半只脚埋入棺材|老大不小|中年|青年|非常年轻|年轻人|流浪汉|男|女)\S+}」} {
-        #list list_juewei_suspect add {%%2};
+        #list list_juewei_suspect add {%%2: @suspect2LogicToken{%%2}};
     };
 }
 
@@ -81,11 +129,11 @@
 #nop 令狐惠六说道：「我感觉这些路边的流浪汉嫌疑非常大。」;
 
 #act {^%s%+看起来%+岁。} {
-    #list list_juewei_age add {%3};
+    #list list_juewei_age add {%3 @age2LogicToken{%3}};
 } {2}
 
 #act {^这是一%+的行人。} {
-    #list list_juewei_shape add {%1};
+    #list list_juewei_shape add {%1 @shape2LogicToken{%1}};
 } {2}
 #act {~%s%+身穿一件%+(%+)} {
     #list list_juewei_cloth add {%3};

@@ -19,7 +19,7 @@
 
 #act {{^你将真气在体内沿脉络运行了一圈，缓缓纳入丹田，放下手，长吐了一口气。}} {yun recover}
 #act {{^你只觉神元归一，全身精力弥漫，无以复加，忍不住长啸一声，徐徐站了起来。}} {yun recover}
-#act {^你深深吸了几口气，脸色看起来好多了。} {
+#act {^{(你现在气力充沛。|你深深吸了几口气，脸色看起来好多了。)}} {
     #if {$neili*100/$neili_max > 190} {
         #class daman kill;
         #repl class_opened {|daman} {};
@@ -28,10 +28,9 @@
         #echo %s {<aff>打满啦<900>!};
         #echo <aff>=====================<eee>;
 
-        yun recover;
         yun regenerate;
 
     } {dazuo max};
 }
 
-#act {^你现在精不够，无法控制内息的流动！} {yun regenerate}
+#act {^你现在精不够，无法控制内息的流动！} {yun regenerate; #delay 2 {dazuo max};}

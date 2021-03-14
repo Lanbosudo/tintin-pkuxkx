@@ -57,6 +57,15 @@
     #var class_opened $class_opened|daman;
     yun inspire;
 }
+#ali {^dazhu$} {
+    #class daman kill;
+    #repl class_opened {daman} {};
+    #repl class_opened {||} {};
+
+    halt;
+    yun recover;
+}
+
 
 #nop battle----------------------------------------------------------;
 #ali {^k %1$} {
@@ -116,6 +125,9 @@
 }
 #ali {^ls$} {#system ./lsix};
 
+#ali {^sto$} {status_me -o};
+#ali {^stf$} {status_me -f};
+
 #nop map related-------------------------------------------------------;
 #ali {^map} {help map-pkuxkx}
 
@@ -167,5 +179,16 @@
 }
 
 #nop aobai-------------------------------------------------------;
-#ali {^aobai %1$} {#tick aobai {t-daman;halt;w;k ao;#delay 30 {get duan;e;open men;daman}} %1};
+#ali {^aobai %1$} {
+    #format class_opened $class_opened|aobai;
+    #tick aobai {
+        t-daman;halt;w;k ao;
+        #delay 30 {sc;get duan;e;open men;daman}
+    } %1;
+};
 #ali {^chanh$} {chanhui;#tick chanhui {chanhui} 59};
+#ali {^noaobai$} {
+    #untic {aobai%*};
+    #repl class_opened {aobai} {};
+    #repl class_opened {||} {};
+}

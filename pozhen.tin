@@ -1,16 +1,5 @@
 #nop;
 /*
-\e[0m÷Ò÷Ò\e[5m\e[42;1m\e[1;31m«¨\e[2;37;0m÷Ò÷Ò÷Ò÷Ò\e[5m\e[42;1m\e[1;31mÙﬁ\e[2;37;0m÷Ò÷Ò÷Ò÷Ò\e[5m\e[42;1m\e[1;31mÎx\e[2;37;0m÷Ò÷Ò\e[0m
-\e[0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[0m
-\e[0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[0m
-\e[0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[0m
-\e[0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[0m
-\e[0m÷Ò÷Ò\e[5m\e[42;1m\e[1;31m’\e[2;37;0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[5m\e[42;1m\e[1;31mÉ∂\e[2;37;0m÷Ò÷Ò\e[0m
-\e[0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[0m
-\e[0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[0m
-\e[0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[0m
-\e[0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[0m
-\e[0m÷Ò÷Ò\e[5m\e[42;1m\e[1;31mŸ„\e[2;37;0m÷Ò÷Ò÷Ò÷Ò\e[5m\e[42;1m\e[1;31mø≤\e[2;37;0m÷Ò÷Ò÷Ò÷Ò\e[5m\e[42;1m\e[1;31m¿§\e[2;37;0m÷Ò÷Ò\e[0m
 
 \e[0;31m\e[2;37;0m÷Ò÷Ò÷Ò\e[5m\e[42;1m\e[1;31mŸ„\e[2;37;0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[5m\e[42;1m\e[1;31mÙﬁ\e[2;37;0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[5m\e[42;1m\e[1;31mø≤\e[2;37;0m÷Ò÷Ò÷Ò\e[0m
 \e[0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[0m
@@ -27,5 +16,123 @@
 \e[0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[0m
 \e[0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[0m
 \e[0m÷Ò÷Ò÷Ò\e[5m\e[42;1m\e[1;31m’\e[2;37;0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[5m\e[42;1m\e[1;31mÎx\e[2;37;0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[5m\e[42;1m\e[1;31m«¨\e[2;37;0m÷Ò÷Ò÷Ò\e[0m
+
+\e[0m\e[5m\e[42;1m\e[1;31m«¨, \e[5m\e[42;1m\e[1;31mÙﬁ, \e[5m\e[42;1m\e[1;31mÎx\e[0m
+\e[0m÷Ò÷Ò÷Ò\e[1;35m«¨\e[2;37;0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[1;35mÙﬁ\e[2;37;0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[1;35mÎx\e[2;37;0m÷Ò÷Ò÷Ò\e[0m
+\e[0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[0m
+\e[0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[0m
+\e[0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[0m
+\e[0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[0m
+\e[0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[0m
+\e[0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[0m
+\e[0m\e[5m\e[42;1m\e[1;31mø≤, \e[5m\e[42;1m\e[1;31m¿§\e[0m
+\e[0m÷Ò÷Ò÷Ò\e[1;35mø≤\e[2;37;0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[1;35m¿§\e[2;37;0m÷Ò÷Ò÷Ò\e[0m
+\e[0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[0m
+\e[0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[0m
+\e[0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[0m
+\e[0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[0m
+\e[0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[0m
+\e[0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[0m
+\e[0m\e[5m\e[42;1m\e[1;31mÉ∂, \e[42;1m\e[1;31m’, \e[42;1m\e[1;31mŸ„\e[0m
+\e[0m÷Ò÷Ò÷Ò\e[1;35mÉ∂\e[2;37;0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[42;1m\e[1;31m’\e[2;37;0m÷Ò÷Ò÷Ò÷Ò÷Ò÷Ò\e[42;1m\e[1;31mŸ„\e[2;37;0m÷Ò÷Ò÷Ò\e[0m
 */
+
+#list list_pozhen_direction cre {nw;n;ne;w;e;sw;s;se};
+#list list_pozhen cre {o;o;o;o;o;o;o;o};
+
+#func setPozhenDirection { #nop %1: direction, %2: color code;
+
+    #nop string matching... no need to escape backslash???;
+    #nop #if {"%2" == "\e[42;1m\e[1;31m"} {#echo {plain match};};
+    #nop #if {{%2} == {\e[42;1m%+}} {#echo {if match};};
+    #nop #regex {%2} {\e[42%+} {#echo {match reg without esc};};
+    #nop #regex {%2} {{\e\[42.+}} {#echo {match regexp with esc};};
+
+    #regex {%2} {\e[5m%+} {} {
+        #list list_pozhen_direction find %1 tmp_index;
+        #echo {setting %1@$tmp_index to x};
+        #if {$tmp_index} {
+            #var list_pozhen[$tmp_index] x;
+        };
+    };
+}
+
+#func print_pozhen { #nop using list_pozhen;
+    #echo {<aff> %s %s %s} $list_pozhen[1] $list_pozhen[2] $list_pozhen[3];
+    #echo {<aff> %s   %s} $list_pozhen[4] $list_pozhen[5];
+    #echo {<aff> %s %s %s} $list_pozhen[6] $list_pozhen[7] $list_pozhen[8];
+}
+
+#foreach $list_pozhen_direction[%*] direction {
+    #ali {^$direction$} {#var direction_pz %0; #send {%0};}
+}
+
 #sub {~\e[5m\e[42;1m\e[1;31m} {\e[1;35m}
+
+#nop (Ÿ„|Ùﬁ|ø≤|É∂|¿§|’|Îx|«¨);
+
+#act {~{^\e.+(?<!m)(\e.+m)(Ÿ„|Ùﬁ|ø≤|É∂|¿§|’|Îx|«¨)\e.+(?<!m)(\e.+m)(Ÿ„|Ùﬁ|ø≤|É∂|¿§|’|Îx|«¨)\e.+(?<!m)(\e.+m)(Ÿ„|Ùﬁ|ø≤|É∂|¿§|’|Îx|«¨).+}} {
+    #nop #echo {%2%3, %4%5, %6%7};
+    #local tmp @setPozhenDirection{nw;%2};
+    #local tmp @setPozhenDirection{n;%4};
+    #local tmp @setPozhenDirection{ne;%6};
+}
+#act {~{^\e.+(?<!m)(\e.+m)(Ÿ„|Ùﬁ|ø≤|É∂|¿§|’|Îx|«¨)\e[^1]+(?<!m)(\e.+m)(Ÿ„|Ùﬁ|ø≤|É∂|¿§|’|Îx|«¨)[^1]+$}} {
+    #nop #echo {%2%3, %4%5};
+    #local tmp @setPozhenDirection{w;%2};
+    #local tmp @setPozhenDirection{e;%4};
+
+
+    #line oneshot
+        #act {~{^\e.+(?<!m)(\e.+m)(Ÿ„|Ùﬁ|ø≤|É∂|¿§|’|Îx|«¨)\e.+(?<!m)(\e.+m)(Ÿ„|Ùﬁ|ø≤|É∂|¿§|’|Îx|«¨)\e.+(?<!m)(\e.+m)(Ÿ„|Ùﬁ|ø≤|É∂|¿§|’|Îx|«¨)}} {
+            #nop #echo {%%2%%3, %%4%%5, %%6%%7};
+            #local tmp @setPozhenDirection{sw;%%2};
+            #local tmp @setPozhenDirection{s;%%4};
+            #local tmp @setPozhenDirection{se;%%6};
+
+            #delay 1 {#local tmp @print_pozhen{}};
+        } {4};
+}
+
+#act {^ƒ„≥¢ ‘∆∆’Û£¨ø…œß—°‘Ò¡À¥ÌŒÛµƒ∑ΩœÚ£¨À ß¡À“ª–©∆¯—™∫Õƒ⁄¡¶°£} {
+    #list list_pozhen_direction find $direction_pz tmp_index;
+    #echo {setting $direction_pz@$tmp_index to x};
+    #if {$tmp_index} {
+        #var list_pozhen[$tmp_index] x;
+    };
+}
+#act {^’‚¿Ôµƒ√‘’Û‘⁄ƒ„—€÷–»ÁÕ¨∂˘œ∑“ª∞„°£} {
+    #list list_pozhen cre {o;o;o;o;o;o;o;o};
+}
+
+#act {{^(?!°æ)\S+µ¿£∫œÎ≤ªµΩŒ“◊Ó÷’ªπ « ß∞‹¡À£°∞•£°}} {
+    #echo =====================;
+    #echo <aff>∆∆’Û≥…π¶¡ƒ~<900>;
+    #echo =====================;
+
+    #line oneshot #act {^    ’Ú ÿ’ﬂ πÈ‘∆◊Ø◊Ø÷˜°∏ŒÂ∫˛∑œ»À°π¬Ω≥À∑Á(Lu chengfeng)} {ask lu about ∆∆’ÛΩ±¿¯} {4};
+}
+#act {^∆∆’Û ß∞‹£°’‚¿Ôµƒ’Êœ‡ø÷≈¬”¿‘∂±ª—⁄∏«°£} {
+    #echo =====================;
+    #echo <faa>∆∆’Û ß∞‹~<900>;
+    #echo =====================;
+
+    jiali none; unset ForcedAct;
+    #class pozhen kill;
+    #repl class_opened {pozhen} {};
+    #repl class_opened {||} {};
+
+    #line oneshot #act {^    ’Ú ÿ’ﬂ πÈ‘∆◊Ø◊Ø÷˜°∏ŒÂ∫˛∑œ»À°π¬Ω≥À∑Á(Lu chengfeng)} {ask lu about ∆∆’Û ß∞‹} {4};
+}
+
+#act {^’‚¿ÔÀ∆∫ıæÕ «√‘’Û≤ºœ¬µƒµÿµ„¡À°£} {
+    #class pozhen read pozhen.tin;
+    #format class_opened {%s|pozhen} $class_opened;
+    #line oneshot #act {^ƒ„ªÿµΩ¡À%+°£} {
+        jiali none; unset ForcedAct;
+        #class pozhen kill;
+        #repl class_opened {pozhen} {};
+        #repl class_opened {||} {};
+    };
+}
+

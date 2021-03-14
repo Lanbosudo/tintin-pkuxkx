@@ -74,6 +74,8 @@
 #act {{^你所在的环境没有水源，你身上也没有容器可以解渴。}} {#line gag}
 #act {{^你将剩下的烤鸡腿吃得干干净净。}} {drop bone}
 #act {^你有很长一段时间没有备份档案了，请使用backup命令来备份。} {backup}
+#act {^你获得了%+份石炭【{瑕疵|劣质}】。} {drop shi tan}
+#act {^你获得了%+份玄冰【{瑕疵|劣质}】。} {drop xuan bing}
 
 #act {{^\s+\S+黄金\(Gold\)$}} {get gold} {4}
 #act {{^\s+\S+两白银\(Silver\)$}} {get silver} {4}
@@ -89,7 +91,8 @@
 #act {{^(你拿起船桨用力划了起来。|你跃上小舟，船就划了起来。|(黄河|长江)渡船 -|羊皮筏 -|(小)?木船 -)}} {dazuo max;}
 #act {{^(不知过了多久，船终于靠岸了，你累得满头大汗。|小舟终于划到近岸，你从船上走了出来。|你朝船夫挥了挥手便跨上岸去。|你沿着踏板走了上去。)}} {halt;yun recover}
 #act {^你突然感到精神一振，浑身似乎又充满了力量！} {tuna 10}
-#act {^陆大有喝道：你不是华山弟子，不得入内。} {yun powerup;hit lu dayou}
+#act {^陆大有喝道：你不是华山弟子，不得入内。} {@getPowerUp{};hit lu dayou}
+#act {^中年道长拦住你说道：后面是本派重地，你不是武当弟子，此去多有不便，请留步。} {@getPowerUp{}; hit zhongnian daozhang;}
 #act {^一阵风吹过，把枯乾的骸骨化成骨灰吹散了。} {look}
 
 #act {^王夫人说道：「大理有一种名种茶花，是天下的极品，一株上共开十八朵花} {#delay 2 {#send {answer 十八学士}}}
@@ -103,12 +106,12 @@
 #nop #act {{^\s{4}([^0-9a-zA-Z;:() ]+\s)*(\S*「\S+」)?((一|二|三|四|五|六|七|八|九|十)+位)?([^;:()]+)\(([^()]+)\)( <\S+>)?$}};
 #act {{^\s{4}(\S.+)\(([^()]+)\)( (<|\[)\S+(>|\]))?$}} {
     #nop #echo {reaction,match id: %3};
-    #regexp {%2} {{\S*$job_name}} {
+    #regexp {%2} {{\S*$job_name$}} {
         #format id %l {%3};
         follow $id;
         #line quiet #unvar id;
     };
-    #regexp {%2} {{\S*$target_name}} {
+    #regexp {%2} {{\S*$target_name$}} {
         #format target_id %l {%3};
         look $target_id;
     };
@@ -147,19 +150,6 @@
 #nop #act {{^(你未选定攻击对手|未有对手或者你和对方未处于战斗中|你刚欲动作，突然感到一阵烦闷|慢慢地你终于又有了知觉...)}} {hpbrief};
 
 #act {{^[> ]*$}} {#line gag}
-
-#nop job pozhen----------------------------------------------------------------------------;
-#act {{^(?!【)\S+道：想不到我最终还是失败了！哎！}} {
-    #echo =====================;
-    #echo <aff>破阵成功聊~<900>;
-    #echo =====================;
-
-    #line oneshot #act {^    镇守者 归云庄庄主「五湖废人」陆乘风(Lu chengfeng)} {ask lu about 破阵奖励} {4};
-}
-#act {^这里似乎就是迷阵布下的地点了。} {
-    #class pozhen read pozhen.tin;
-    #line oneshot #act {^你回到了%+。} {jiali none; unset ForcedAct;#class pozhen kill;}
-}
 
 #nop job songxin----------------------------------------------------------------------------;
 #act {^你伸手向怀中一摸，发现密函已经不翼而飞！} {
@@ -210,8 +200,11 @@
     #list list_flower find %1 tmp_index;
     #list list_flower del $tmp_index;
 
-    #repl job_name {%1|} {};
-    #repl job_name {|%1} {};
+    #list list_flower find %1 tmp_index;
+    #if {$tmp_index == 0} {
+        #repl job_name {%1|} {};
+        #repl job_name {|%1} {};
+    };
 
     #unact {^你挖出来了一株{($job_name)}。};
     #unact {^{($job_name)}渐渐地枯萎了。};
@@ -270,6 +263,14 @@
 }
 
 #nop aobai camp------------------------------------------------------------------------------;
-#act {^ 道    德：  %+                     杀    气：  紊乱} {
+#act {^ 道    德：  %+                     杀    气：  {(紊乱|疯狂|嗜血)}} {
     #untick aobai;
+
+    #regexp $class_opened {aobai} {
+        #delay {aobaisc} {sc} 1800;
+        #delay {aobaiNext} {aobai 300} 1860;
+    };
+}
+#act {^你心中已没有丝毫杀气，如果真的一心向善，不如皈依我佛。} {
+    #untick chanhui;
 }
