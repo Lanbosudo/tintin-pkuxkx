@@ -1,4 +1,5 @@
-#nop
+#nop include chat;
+
 #func findExit { #nop %1 simple direction, %2 prefix, e.g., gan che;
     #foreach $list_exit[%*] direction {
         #local flag 0;
@@ -17,6 +18,7 @@
 
 #nop Numpad 5;
 #macro {\eOu} {#send {look}}
+#macro {\eOE} {look;}
 
 #nop Numpad 6,2,4,8;
 #macro {\eOv} {#local tmp @findExit{east}}
@@ -24,10 +26,20 @@
 #macro {\eOt} {#local tmp @findExit{west}}
 #macro {\eOx} {#local tmp @findExit{north}}
 
+#macro {\e[C} {#local tmp @findExit{east}}
+#macro {\e[B} {#local tmp @findExit{south}}
+#macro {\e[D} {#local tmp @findExit{west}}
+#macro {\e[A} {#local tmp @findExit{north}}
+
 #macro {\e[1;5v} {#local tmp @findExit{east;gan che to}}
 #macro {\e[1;5r} {#local tmp @findExit{south;gan che to}}
 #macro {\e[1;5t} {#local tmp @findExit{west;gan che to}}
 #macro {\e[1;5x} {#local tmp @findExit{north;gan che to}}
+
+#macro {\e[1;5C} {#local tmp @findExit{east;gan che to}}
+#macro {\e[1;5B} {#local tmp @findExit{south;gan che to}}
+#macro {\e[1;5D} {#local tmp @findExit{west;gan che to}}
+#macro {\e[1;5A} {#local tmp @findExit{north;gan che to}}
 
 #nop Numpad 9,3,1,7;
 #macro {\eOy} {#local tmp @findExit{northeast}}
@@ -35,11 +47,20 @@
 #macro {\eOq} {#local tmp @findExit{southwest}}
 #macro {\eOw} {#local tmp @findExit{northwest}}
 
+#macro {\e[5~} {#local tmp @findExit{northeast}}
+#macro {\e[6~} {#local tmp @findExit{southeast}}
+#macro {\e[4~} {#local tmp @findExit{southwest}}
+#macro {\e[1~} {#local tmp @findExit{northwest}}
+
 #macro {\e[1;5y} {#local tmp @findExit{northeast;gan che to}}
 #macro {\e[1;5s} {#local tmp @findExit{southeast;gan che to}}
 #macro {\e[1;5q} {#local tmp @findExit{southwest;gan che to}}
 #macro {\e[1;5w} {#local tmp @findExit{northwest;gan che to}}
 
+#macro {\e[5;5~} {#local tmp @findExit{northeast;gan che to}}
+#macro {\e[6;5~} {#local tmp @findExit{southeast;gan che to}}
+#macro {\e[1;5F} {#local tmp @findExit{southwest;gan che to}}
+#macro {\e[1;5H} {#local tmp @findExit{northwest;gan che to}}
 #nop Numpad +;
 #macro {\eOk\eOk} {#send {d}}
 
@@ -55,6 +76,7 @@
 
 #nop Numpad 0;
 #macro {\eOp\eOp} {#send {u}}
+#macro {\e[2~\e[2~} {u}
 
 #macro {\eOp\eOv} {#send {eu}}
 #macro {\eOp\eOr} {su}
@@ -69,6 +91,14 @@
 #nop Numpad /;
 #macro {\eOo} {enter}
 #macro {\eO5o} {gan che to enter}
+
 #nop Numpad *;
 #macro {\eOj} {out}
 #macro {\eO5j} {gan che to out}
+
+#nop buffer/chat scroll, F1~F4;
+#macro {\eOP} {#buffer up};
+#macro {\eOQ} {#buffer down};
+
+#macro {\eOR} {#local tmp @scroll_chat{up}};
+#macro {\eOS} {#local tmp @scroll_chat{down}};

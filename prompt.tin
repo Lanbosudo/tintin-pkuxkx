@@ -26,8 +26,8 @@
 【江湖】宋远桥、心上人、破阵、公孙止、万安塔、苗疆所有主流等任务奖励下降，韩员外、天珠及见性成佛、萧峰、胡一刀、韩世忠等任务奖励不变，慕容仆人、都府刺杀、偷学、谍报等任务奖励上升，护镖奖励最佳。
 【江湖】经推算，本周为平静之周，无特殊效果！
  */
-#act {{^#([0-9.]+(M|K)),(\d+),(-?\d+),(\d+),(-?\d+),(\d+)$}} {
-    #nop #echo %2, %4, %5, %6, %7, %8;
+#act {{^#([0-9.]+(M|K)?),(\d+),(-?\d+),(\d+),(-?\d\d+),(\d+)$}} {
+    #nop #echo {%2, %4, %5, %6, %7, %8};
     #var neili %6;
     #var neili_max %5;
     #var jingli %8;
@@ -36,24 +36,26 @@
     #var poten %4;
 
     #line gag;
-}
 
-#act {{^#(\d+),(\d+),(\d+),(\d+),(\d\d+),(\d+)$}} {
-    #var qi_max %2;
-    #var qi_efft %3;
-    #var qi %4;
+    #line oneshot
+        #act {{^#(\d+),(\d+),(\d+),(\d+),(\d\d+),(\d+)$}} {
+            #var qi_max %%2;
+            #var qi_efft %%3;
+            #var qi %%4;
+        
+            #var jing_max %%5;
+            #var jing_efft %%6;
+            #var jing %%7;
+        
+            #format percent_qi @get_percent{$qi_efft;$qi_max};
+            #format percent_jing @get_percent{$jing_efft;$jing_max};
+        
+            #var bar_qi @paint_bar{$qi;$qi_efft;$qi_max;<faa>;<fcc>;<fee>};
+            #var bar_jing @paint_bar{$jing;$jing_efft;$jing_max;<aaf>;<ccf>;<eef>};
+        
+            #line gag;
+        } {4};
 
-    #var jing_max %5;
-    #var jing_efft %6;
-    #var jing %7;
-
-    #format percent_qi @get_percent{$qi_efft;$qi_max};
-    #format percent_jing @get_percent{$jing_efft;$jing_max};
-
-    #var bar_qi @paint_bar{$qi;$qi_efft;$qi_max;<faa>;<fcc>;<fee>};
-    #var bar_jing @paint_bar{$jing;$jing_efft;$jing_max;<aaf>;<ccf>;<eef>};
-
-    #line gag;
 }
 
 #var target_name -;
@@ -69,14 +71,20 @@
     #var isBusy %7;
 
     #line gag;
-    #echo {{--=%s=--%s--%s--%d--%s@%s---} {-3}} $myId $week $target_name $target_lvl $job_name $job_loc;
+    #echo {{--=%s=--%s--%s--%d--%s@%s---} {-4}} $myId $week $target_name $target_lvl $job_name $job_loc;
+    #echo {{---<faa>%s<eee>-<adf>%s<eee>-<ffa>%s<eee>-<aff>%s<eee>---Exp:%s|Poten:%s--%s:%s---} {-3}}
+
+        $qi/$qi_max(@eval{$qi*100/$qi_efft}^$percent_qi%%)
+        $jing/$jing_max(@eval{$jing*100/$jing_efft}^$percent_jing%%)
+        $neili/$neili_max $jingli/$jingli_max
+        $exp $poten $type_lian $lvl_lia;
 }
 
 #var type_lian -;
 #var lvl_lian -;
 #var class_opened {};
 #prompt {{^#(\d+),(\d+),(-?\d+),(-?\d+),(0|1),(0|1)$}} {
-    ---[$bar_qi]-[$bar_jing]-<faa>$qi/$qi_max(@eval{$qi*100/$qi_efft}^$percent_qi%%)<eee>-<adf>$jing/$jing_max(@eval{$jing*100/$jing_efft}^$percent_jing%%)<eee>-<ffa>$neili/$neili_max<eee>-<aff>$jingli/$jingli_max<eee>---Exp:$exp|Poten:$poten--$type_lian:$lvl_lian--Busy:<faf>$isBusy<eee>--[$class_opened]---
+    ---[$bar_qi]-[$bar_jing]--Busy:<faf>$isBusy<eee>--[$class_opened]---
 } {-2}
 
 #fun get_percent {

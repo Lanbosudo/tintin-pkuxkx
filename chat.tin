@@ -1,6 +1,7 @@
 #nop include multiplayer;
 
 #var height_chat 11;
+#var height_prompt 3;
 #if {@sizeof{list_chat} == 0} {
     #var list_chat {};
     #loop 1 {$height_chat-1} cnt {#list list_chat insert $cnt {}};
@@ -8,7 +9,7 @@
 #var row_paint_chat @eval{1-$height_chat};
 
 
-#split $height_chat 2;
+#split $height_chat $height_prompt;
 #local tmp @paint_chat{};
 
 
