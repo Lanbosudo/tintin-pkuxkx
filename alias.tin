@@ -178,6 +178,20 @@
     ask %1 about µ¡‘Ù;
 }
 
+#ali {^pozhen$} {
+    #class pozhen read pozhen.tin;
+    #format class_opened {%s|pozhen} $class_opened;
+
+    yun recover;
+    #nop set ForcedAct 1;
+    jiali max;
+
+    @getPowerUp{};
+    yun qi;
+
+    zhanbu -maze;
+}
+
 #nop aobai-------------------------------------------------------;
 #ali {^aobai %1$} {
     #format class_opened $class_opened|aobai;

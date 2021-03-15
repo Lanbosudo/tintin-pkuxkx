@@ -126,8 +126,6 @@
 }
 
 #act {^这里似乎就是迷阵布下的地点了。} {
-    #class pozhen read pozhen.tin;
-    #format class_opened {%s|pozhen} $class_opened;
     #line oneshot #act {^你回到了%+。} {
         jiali none; unset ForcedAct;
         #class pozhen kill;
