@@ -77,7 +77,7 @@
         $qi/$qi_max(@eval{$qi*100/$qi_efft}^$percent_qi%%)
         $jing/$jing_max(@eval{$jing*100/$jing_efft}^$percent_jing%%)
         $neili/$neili_max $jingli/$jingli_max
-        $exp $poten $type_lian $lvl_lia;
+        $exp $poten $type_lian $lvl_lian;
 }
 
 #var type_lian -;
