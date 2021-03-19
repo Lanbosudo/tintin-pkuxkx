@@ -82,6 +82,8 @@
 #act {{^\s+\S+之\S+\((Waist|Shield|Ring|Cape|Bracer|Necklace|Cuirass|Gauntlet|Boots|Armor|Cuisse|Armet|Mask|Pauldron|Cloth|Head)\)$}} {#format id %l {%2}; get $id; #line quiet #unvar id;} {4}
 #act {{^\s+\S+【(普通|优秀|完美)】\(([^()]+)\)}} {#format id %l {%3}; get $id; #line quiet #unvar id;} {4};
 #act {{^\s+\S+(玄冰空青|锰晶|金刚砂)【瑕疵】\(([^()]+)\)}} {#format id %l {%3}; get $id; #line quiet #unvar id;} {4};
+#act {{^\s+\S+包袱\(Bao fu\)$}} {get bao fu} {4}
+
 #nop not right to do...;
 #nop #act {{^\s+\S+的尸体\(Corpse\)}} {get gold from corpse; get silver from corpse; get cash from corpse;} {4}
 #nop #act {{^\s+\S+的骸骨\(Skeleton\)}} {get gold from skeleton; get silver from skeleton; get cash from skeleton;} {4}
@@ -254,6 +256,9 @@
 
 #nop job juewei--------------------------------------------------------------------------------;
 #act {^你%+了%*罪犯，%*的金吾卫%*，可以去衙门领%*奖%*了。} {
+    #echo <aff>========================<eee>;
+    #echo {找到罪犯！};
+    #echo <aff>========================<eee>;
     #line oneshot #act {^    京兆少尹 郭隆(Jingzhao shaoyin)} {
         ask shaoyin about 领赏;
         ask shaoyin about 任务信息;
@@ -261,6 +266,17 @@
         #repl class_opened {|juewei} {};
     } {4};
 }
+#act {^{你寻找线索消耗了太多的时间，引起了盗贼的怀疑，盗贼逃离了长安城。|你向附近的金吾卫错误地指证上铺的盗劫犯，惊动了真正的盗贼，使得他立即逃离长安城。}} {
+    #echo <aff>========================<eee>;
+    #echo {失败！};
+    #echo <aff>========================<eee>;
+    #line oneshot #act {^    京兆少尹 郭隆(Jingzhao shaoyin)} {
+        ask shaoyin about 任务信息;
+        #class juewei kill;
+        #repl class_opened {|juewei} {};
+    } {4};
+}
+
 
 #nop aobai camp------------------------------------------------------------------------------;
 #act {^ 道    德：  %+                     杀    气：  {(紊乱|疯狂|嗜血)}} {

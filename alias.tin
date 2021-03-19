@@ -173,9 +173,14 @@
         ask luren $tmp_index about ÏûÏ¢;
         look luren $tmp_index;
     };
+
+    #delay 2 {#echo {asked <faf>@sizeof{list_juewei_name}<eee> suspects~}};
 }
 #ali {^lurend %1$} {
     ask %1 about µÁÔô;
+}
+#ali {^lurenc$} {
+    #var tmp @print_juewei{};
 }
 
 #ali {^pozhen$} {

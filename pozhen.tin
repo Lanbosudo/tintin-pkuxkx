@@ -50,7 +50,7 @@
 
     #regex {%2} {\e[5m%+} {} {
         #list list_pozhen_direction find %1 tmp_index;
-        #echo {setting %1@$tmp_index to x};
+        #nop #echo {setting %1@$tmp_index to x};
         #if {$tmp_index} {
             #var list_pozhen[$tmp_index] x;
         };

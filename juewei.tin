@@ -2,28 +2,29 @@
 
 #func suspect2LogicToken { #nop %1: suspect line;
     #switch {"%1"} {
-        #case {"ÓĞµã·¢ÅÖ"} {#return "ÅÖ"};
-        #case {"Æ«Êİ"} {#return "Êİ"};
-        #case {"¸ß¸ö×Ó"} {#return "¸ß"};
-        #case {"·¢¸£"} {#return "ÅÖ"};
-        #case {"°«¸ö×Ó"} {#return "°«"};
-        #case {"¸ö×Ó²»Ì«¸ß"} {#return "°«"};
-        #case {"Öñ¸Í"} {#return "Êİ"};
-        #case {"ºï×Ó"} {#return "Êİ"};
-        #case {"ÓĞµãÅÖ"} {#return "ÅÖ"};
+        #case {"ÓĞµã·¢ÅÖ"} {#return ÅÖ};
+        #case {"Æ«Êİ"} {#return Êİ};
+        #case {"C"} {#return Êİ};
+        #case {"¸ß¸ö×Ó"} {#return ¸ß};
+        #case {"·¢¸£"} {#return ÅÖ};
+        #case {"°«¸ö×Ó"} {#return °«};
+        #case {"¸ö×Ó²»Ì«¸ß"} {#return °«};
+        #case {"Öñ¸Í"} {#return Êİ};
+        #case {"ºï×Ó"} {#return Êİ};
+        #case {"ÓĞµãÅÖ"} {#return ÅÖ};
 
-        #case {"»¨°×"} {#return "ÀÏÄê"};
-        #case {"°×·¢²Ô²Ô"} {#return "ÀÏÄê"};
-        #case {"°ëÖ»½ÅÂñÈë¹×²Ä"} {#return "ÀÏÄê"};
-        #case {"ÀÏ´ó²»Ğ¡"} {#return "ÖĞÄê"};
-        #case {"ÖĞÄê"} {#return "ÖĞÄê"};
-        #case {"ÇàÄê"} {#return "ÇàÄê"};
-        #case {"·Ç³£ÄêÇá"} {#return "ÇàÄê"};
-        #case {"ÄêÇáÈË"} {#return "ÇàÄê"};
+        #case {"»¨°×"} {#return ÀÏÄê};
+        #case {"°×·¢²Ô²Ô"} {#return ÀÏÄê};
+        #case {"°ëÖ»½ÅÂñÈë¹×²Ä"} {#return ÀÏÄê};
+        #case {"ÀÏ´ó²»Ğ¡"} {#return ÖĞÄê};
+        #case {"ÖĞÄê"} {#return ÖĞÄê};
+        #case {"ÇàÄê"} {#return ÇàÄê};
+        #case {"·Ç³£ÄêÇá"} {#return ÇàÄê};
+        #case {"ÄêÇáÈË"} {#return ÇàÄê};
 
-        #case {"Á÷ÀËºº"} {#return "ÄĞ"};
-        #case {"ÄĞ"} {#return "ÄĞ"};
-        #case {"Å®"} {#return "Å®"};
+        #case {"Á÷ÀËºº"} {#return ÄĞ};
+        #case {"ÄĞ"} {#return ÄĞ};
+        #case {"Å®"} {#return Å®};
 
         #default {
             #regexp {"%1"} {"Éí´©{.+}µÄ"} {
@@ -37,10 +38,11 @@
                 #repl result {£¬} {};
                 #return $result;
             };
-            #regexp {"%1"} {"´©×ÅÒ»Ë«{.+}µÄ"} {
+            #regexp {"%1"} {"´©×ÅÒ»Ë«{.+}{µÄ|£¬}"} {
                 #var result %1;
                 #repl result {´©×ÅÒ»Ë«} {};
                 #repl result {µÄ} {};
+                #repl result {£¬} {};
                 #return $result;
             };
             #regexp {"%1"} {"´©×Å{.+}É«Ğ¬×ÓµÄ"} {
@@ -58,8 +60,8 @@
     #repl age {Ô¼} {};
     #repl age {¶à} {};
 
-    #if {"%1" == "Ê®" || "%1" == "¶şÊ®" || "%1" == "ÈıÊ®"} {#return ÇàÄê;};
-    #if {"%1" == "ËÄÊ®" || "%1" == "ÎåÊ®"} {#return ÖĞÄê;};
+    #if {"$age" == "Ê®" || "$age" == "¶şÊ®" || "$age" == "ÈıÊ®"} {#return ÇàÄê;};
+    #if {"$age" == "ËÄÊ®" || "$age" == "ÎåÊ®"} {#return ÖĞÄê;};
     #else {#return ÀÏÄê;};
 }
 
@@ -83,6 +85,96 @@
     #regexp {%1} {%*°«Ğ¡Áé»î%*} {#var result {ÄĞ°«Êİ};};
 }
 
+#func cloth2LogicToken { #nop %1: color and cloth/shoe;
+    #nop {[30m±¡µ×¿ìÑ¥[2;37;0m};
+
+    #echo {%1};
+    #if {{%1} == {\e[{(1;)?(30|31|34|35)}m%+} } {
+        #var result ÉîÉ«;
+    }; #elseif {{%1} == {\e[{(1;)?(32|33|36|37)}m%+} } {
+        #var result Ç³É«;
+    };
+
+    #if {{%1} == {%+{Ë¿Ö¯³¤ÉÀ|Ë¿³ñ¶Ìñà|³ñÅÛ|Ë¿Ö¯ÈåÉÀ|ÇáÂŞÉ´|ÆìÅÛ}%+} } {
+        #var result {$resultÒÂ·şË¿³ñÒÂ·ş};
+    }; #elseif {{%1} == {%+{¿²¼ç|Ô²ÁìÉÀ|»Ò²¼ÉÀ|»ÒÂí¹Ó|°ÙñŞÈ¹|À¶Âí¹Ó|¶Ì´ò¾¢×°|ÌìÀ¶½õÅÛ}%+} } {
+        #var result {$resultÒÂ·ş²¼ÒÂ};
+    }; #elseif {{%1} == {%+{º×ë©|³¤°À|ÃŞ°À|ÀÇÆ¤°À|¶Ì°À|±È¼×}%+} } {
+        #var result {$resultÒÂ·ş¼Ğ°À};
+    };
+
+    #if {{%1} == {%+{Å£Æ¤¶ÌÑ¥|ÂíÑ¥|Å®Ê½¶ÌÑ¥|Å®Ê½³¤Ñ¥|±¡µ×¿ìÑ¥|ÆßĞÇ½£Ñ¥}%+} } {
+        #var result {$resultĞ¬×ÓÑ¥×Ó};
+    }; #elseif {{%1} == {%+{Ğå»¨Ğ¬|½õĞ¬|·ïĞ¬|²¼Ğ¬|ÂéĞ¬|Ç§²ãµ×²¼Ğ¬}%+} } {
+        #var result {$resultĞ¬×Ó²¼Ğ¬};
+    }; #elseif {{%1} == {%+{Ä¾åì|²İĞ¬|ÆÆĞ¬}%+} } {
+        #var result {$resultĞ¬×ÓÁ¹Ğ¬};
+    };
+
+}
+
+#func print_juewei { #nop;
+    #local size @sizeof{list_juewei_name};
+    #if {$size < 1} {#return};
+
+    #loop 1 $size tmp_index {
+
+        #local feature {$list_juewei_age[$tmp_index]$list_juewei_shape[$tmp_index]$list_juewei_cloth[$tmp_index]$list_juewei_shoe[$tmp_index]};
+        #var list_juewei_feature[$tmp_index] {$feature};
+    };
+
+    #local tmp @checkSuspect{0;list_juewei_good};
+    #local tmp @checkSuspect{1;list_juewei_good_sex};
+    #local tmp @checkSuspect{2;list_juewei_good_age};
+
+    #echo <aff>========================================<eee>;
+    #loop 1 $size tmp_index {
+        #echo {%s: <faa>%s<eee> %s, %s, %s, %s, %s, %s, %s} $list_juewei_name[$tmp_index] $list_juewei_suspect[$tmp_index] $list_juewei_age[$tmp_index] $list_juewei_shape[$tmp_index] $list_juewei_cloth[$tmp_index] $list_juewei_shoe[$tmp_index] $list_juewei_good[$tmp_index] $list_juewei_good_sex[$tmp_index] $list_juewei_good_age[$tmp_index];
+
+    };
+    #echo <aff>========================================<eee>;
+
+}
+
+#func checkSuspect { #nop %1: if 1 use sex, if 2 use age, otherwise nothing, %2: good list name;
+    #local size @sizeof{list_juewei_name};
+    #if {$size < 1} {#return};
+
+    #var %2 {};
+    #loop 1 $size tmp_index { #list %2 add {?}; };
+
+    #loop 1 $size tmp_index {
+
+        #if {"$list_juewei_suspect[$tmp_index]" == "None"} {#continue};
+        #if {"$list_juewei_suspect[$tmp_index]" == "Wrong"} {
+            #var %2[$tmp_index] o;
+            #continue;
+        };
+        #if {%1 == 0 && ({$list_juewei_suspect[$tmp_index]} == {{Å®|ÄĞ}} || {$list_juewei_suspect[$tmp_index]} == {{\S+Äê}} )} {#continue};
+        #if {%1 == 1 && ({$list_juewei_suspect[$tmp_index]} == {{\S+Äê}} )} {#continue};
+        #if {%1 == 2 && ({$list_juewei_suspect[$tmp_index]} == {{Å®|ÄĞ}} )} {#continue};
+
+        #if {{$list_juewei_feature[$tmp_index]} == {%*$list_juewei_suspect[$tmp_index]%*}} {
+            #nop #echo {loop $tmp_index feature match: $list_juewei_feature[$tmp_index] and $list_juewei_suspect[$tmp_index]};
+            #nop #echo {setting suspect $tmp_index as good};
+            #var %2[$tmp_index] o;
+        };
+
+        #loop 1 $size tmp_index2 {
+            #if {$tmp_index2 == $tmp_index} {#continue};
+
+            #if {{$list_juewei_feature[$tmp_index2]} != {%*$list_juewei_suspect[$tmp_index]%*}} {
+                #nop #echo {loop $tmp_index feature not match: $list_juewei_feature[$tmp_index2] and $list_juewei_suspect[$tmp_index]};
+                #nop #echo {setting suspect $tmp_index2 as good};
+                #var %2[$tmp_index2] o;
+            };
+        };
+    };
+
+}
+
+#nop act--------------------------------------;
+
 #act {^    ¾©Õ×ÉÙÒü ¹ùÂ¡(Jingzhao shaoyin)} {
     ask shaoyin about ÈÎÎñĞÅÏ¢;
 }
@@ -93,17 +185,23 @@
 #var list_juewei_shape {};
 #var list_juewei_cloth {};
 #var list_juewei_shoe {};
+#var list_juewei_feature {};
 
 #act {^ÄãÏò%+ÎÊµÀ£º%+£¬²»Öª×î½üÓĞÃ»ÓĞÌıËµÊ²Ã´ÏûÏ¢£¿} {
     #list list_juewei_name add %1;
 
-    #line oneshot #act {^%1ËµµÀ£º¡¸ÎÒÉ¶ÏûÏ¢Ò²²»ÁË½â°¡¡£¡¹} {
-        #list list_juewei_suspect add {None};
+    #act {^%1ËµµÀ£º¡¸ÎÒÉ¶ÏûÏ¢Ò²²»ÁË½â°¡¡£¡¹} {
+        #var list_juewei_suspect[@sizeof{list_juewei_name}] {None};
+    } {4};
+
+    #act {^%1ËµµÀ£º¡¸{\S+?(ÓĞµã·¢ÅÖ|C|Æ«Êİ|¸ß¸ö×Ó|·¢¸£|°«¸ö×Ó|¸ö×Ó²»Ì«¸ß|Öñ¸Í|ºï×Ó|ÓĞµãÅÖ|Éí´©.+µÄ|Éí´©.+?£¬|´©×ÅÒ»Ë«.+?(µÄ|£¬)|´©×Å.+É«Ğ¬×ÓµÄ|»¨°×|°×·¢²Ô²Ô|°ëÖ»½ÅÂñÈë¹×²Ä|ÀÏ´ó²»Ğ¡|ÖĞÄê|ÇàÄê|·Ç³£ÄêÇá|ÄêÇáÈË|Á÷ÀËºº|ÄĞ|Å®)\S+}¡¹} {
+        #var list_juewei_suspect[@sizeof{list_juewei_name}] {@suspect2LogicToken{%%2}};
+    } {4};
+
+    #act {^%1ËµµÀ£º¡¸} {
+        #var list_juewei_suspect[@sizeof{list_juewei_name}] {Wrong};
     };
 
-    #line oneshot #act {^%1ËµµÀ£º¡¸{\S+?(ÓĞµã·¢ÅÖ|Æ«Êİ|¸ß¸ö×Ó|·¢¸£|°«¸ö×Ó|¸ö×Ó²»Ì«¸ß|Öñ¸Í|ºï×Ó|ÓĞµãÅÖ|Éí´©.+µÄ|Éí´©.+?£¬|´©×ÅÒ»Ë«.+µÄ|´©×Å.+É«Ğ¬×ÓµÄ|»¨°×|°×·¢²Ô²Ô|°ëÖ»½ÅÂñÈë¹×²Ä|ÀÏ´ó²»Ğ¡|ÖĞÄê|ÇàÄê|·Ç³£ÄêÇá|ÄêÇáÈË|Á÷ÀËºº|ÄĞ|Å®)\S+}¡¹} {
-        #list list_juewei_suspect add {%%2: @suspect2LogicToken{%%2}};
-    };
 }
 
 #nop ÄãÏò¹ËÇÚÎÊµÀ£ºÕâÎ»ÉñÏÉ½ã½ã£¬²»Öª×î½üÓĞÃ»ÓĞÌıËµÊ²Ã´ÏûÏ¢£¿;
@@ -129,27 +227,22 @@
 #nop Áîºü»İÁùËµµÀ£º¡¸ÎÒ¸Ğ¾õÕâĞ©Â·±ßµÄÁ÷ÀËººÏÓÒÉ·Ç³£´ó¡£¡¹;
 
 #act {^%s%+¿´ÆğÀ´%+Ëê¡£} {
-    #list list_juewei_age add {%3 @age2LogicToken{%3}};
+    #echo {juewei age match};
+    #var list_juewei_age[@sizeof{list_juewei_name}] {@age2LogicToken{%3}};
 } {2}
 
 #act {^ÕâÊÇÒ»%+µÄĞĞÈË¡£} {
-    #list list_juewei_shape add {%1 @shape2LogicToken{%1}};
+    #var list_juewei_shape[@sizeof{list_juewei_name}] {@shape2LogicToken{%1}};
 } {2}
 #act {~%s%+Éí´©Ò»¼ş%+(%+)} {
-    #list list_juewei_cloth add {%3};
-    #sys {touch juewei.txt; echo '%3' >> juewei.txt};
+    #nop #echo {act: %3};
+    #var list_juewei_cloth[@sizeof{list_juewei_name}] {@cloth2LogicToken{%3}};
+    #nop #sys {touch juewei.txt; echo '%3' >> juewei.txt};
 } {2}
 #act {~%s%+½ÅµÅÒ»Ë«%+(%+)} {
-    #list list_juewei_shoe add {%3};
-    #sys {touch juewei.txt; echo '%3' >> juewei.txt};
+    #var list_juewei_shoe[@sizeof{list_juewei_name}] {@cloth2LogicToken{%3}};
+    #nop #sys {touch juewei.txt; echo '%3' >> juewei.txt};
 
-    #delay 1 {
-        #echo ========================================;
-        #loop 1 @sizeof{list_juewei_name} tmp_index {
-            #echo {%s: <faa>%s<eee> %s, %s, %s, %s} $list_juewei_name[$tmp_index] $list_juewei_suspect[$tmp_index] $list_juewei_age[$tmp_index] $list_juewei_shape[$tmp_index] $list_juewei_cloth[$tmp_index] $list_juewei_shoe[$tmp_index];
-        };
-        #echo ========================================;
-    };
 } {2}
 
 #nop    ¨„¡«¡«¡î Ëı¿´ÆğÀ´Ô¼ËÄÊ®¶àËê¡£;
@@ -159,3 +252,8 @@
 
 #nop ¹ùÕ÷ÃñËµµÀ£º¡¸¸ÒÀ¹×¡ÀÏ×ÓµÄÈ¥Â·£¬È¥ËÀ°É£¡¡¹;
 #nop Ã«ÃÃËµµÀ£º¡¸ÄãÕÒ´íÈËÁË°É£¿¿´À´»¹ĞèÒª×ĞÏ¸¹Û²ì°¡¡£¡¹;
+
+#act {{^(?!¡¾)\S+ËµµÀ£º¡¸¸ÒÀ¹×¡ÀÏ×ÓµÄÈ¥Â·£¬È¥ËÀ°É£¡¡¹}} {
+    #echo {match untic};
+    #unact {^%%s%%+¿´ÆğÀ´%%+Ëê¡£};
+} {4}
