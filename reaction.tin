@@ -67,7 +67,7 @@
 }
 
 #act {{^(重新连线完毕。|您上次是在.*连线进入，请及时核对。)}} {#class ticker read ticker.tin;sc}
-#eve {VARIABLE UPDATED myId} {@getSpecial{}}
+#eve {VARIABLE UPDATE myId} {#if {{$myId} != {%1}} {#delay 1 @getSpecial{}} }
 
 #nop life;
 #act {{^这里没有jitui这种食物。}} {#line gag;}
@@ -102,6 +102,16 @@
 #act {^王夫人说道：「大理有一种名种茶花，八朵异色同株} {#delay 2 {#send {answer 八仙过海}}}
 #act {^王夫人说道：「大理有一种名种茶花，三朵异色同株} {#delay 2 {#send {answer 风尘三侠}}}
 #act {^王夫人说道：「这一种茶花，论颜色，比十八学士少了一色，偏又是驳而不纯} {#delay 2 {#send {answer 落第秀才}}}
+
+#nop die------------------------------------------------------------------------------------------------;
+#act {^你死了。} {
+    #line oneshot
+        #act {^慢慢地你终于又有了知觉... } {
+            reload;
+            wear all;
+            @getJifa{};
+        } {4};
+}
 
 #nop target, match everything of look, low priority--------------------------------------------------------------;
 #nop     江湖新星「开局一双手,打怪升级虐成狗」桃花大西瓜(Guzhuthf);

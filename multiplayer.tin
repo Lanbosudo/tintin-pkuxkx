@@ -38,6 +38,13 @@
     #else {#return consider2}
 }
 
+#func getJifa { #nop;
+    #if {"$myId" == "lanbosudo"} {
+        #var result {jifa dodge yanling-shenfa;jifa parry douzhuan-xingyi;jifa sword murong-jianfa;jifa blade baijia-daofa;jifa finger canhe-zhi;jifa leg tan-tui;bei finger leg;}
+    };
+    #else {#return consider2}
+}
+
 #nop info;
 #act {^°‘©•©•©•©•°Ú»ÀŒÔœÍ«È°Ú©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•©•°‘} {
     #line oneshot #act {{^ °æ.*°ø(\S+\s)?(\S*°∏\S+°π)?(\S+)\((\w+)\)$}} {
