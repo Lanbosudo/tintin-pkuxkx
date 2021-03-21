@@ -77,12 +77,13 @@
 #act {^你获得了%+份石炭【{瑕疵|劣质}】。} {drop shi tan}
 #act {^你获得了%+份玄冰【{瑕疵|劣质}】。} {drop xuan bing}
 
-#act {{^\s+\S+黄金\(Gold\)$}} {get gold} {4}
-#act {{^\s+\S+两白银\(Silver\)$}} {get silver} {4}
-#act {{^\s+\S+之\S+\((Waist|Shield|Ring|Cape|Bracer|Necklace|Cuirass|Gauntlet|Boots|Armor|Cuisse|Armet|Mask|Pauldron|Cloth|Head)\)$}} {#format id %l {%2}; get $id; #line quiet #unvar id;} {4}
-#act {{^\s+\S+【(普通|优秀|完美)】\(([^()]+)\)}} {#format id %l {%3}; get $id; #line quiet #unvar id;} {4};
-#act {{^\s+\S+(玄冰空青|锰晶|金刚砂)【瑕疵】\(([^()]+)\)}} {#format id %l {%3}; get $id; #line quiet #unvar id;} {4};
-#act {{^\s+\S+包袱\(Bao fu\)$}} {get bao fu} {4}
+#act {{^    \S+黄金\(Gold\)$}} {get gold} {4}
+#act {{^    \S+两白银\(Silver\)$}} {get silver} {4}
+#act {{^    \S+之\S+\((Sword|Blade|Staff|Whip|Axe|Spear|Hammer|Halberd|Throwing|Dagger|Armor|Boots|Cloth|Hands|Head|Shield|Surcoat|Waist|Wrists|Finger|Neck|Heart|Shoulder|Leg|Face)\)$}} {#format id %l {%2}; get $id; #line quiet #unvar id;} {4}
+#act {^    %S{☆精金|★木灵|☆玄冰|★炎晶|◎玉髓|☆月魄|★日魂|☆玄武甲|☆麒麟角|☆凤凰羽|★神龙骨}(%S {jin|ling|bing|jing|sui|po|hun|jia|jiao|yu|gu})} {get %3 %4} {4}
+#act {{^    \S+【(普通|优秀|完美)】\(([^()]+)\)}} {#format id %l {%3}; get $id; #line quiet #unvar id;} {4};
+#act {{^    \S+(玄冰空青|锰晶|金刚砂)【瑕疵】\(([^()]+)\)}} {#format id %l {%3}; get $id; #line quiet #unvar id;} {4};
+#act {{^    \S+包袱\(Bao fu\)$}} {get bao fu} {4}
 
 #nop not right to do...;
 #nop #act {{^\s+\S+的尸体\(Corpse\)}} {get gold from corpse; get silver from corpse; get cash from corpse;} {4}
