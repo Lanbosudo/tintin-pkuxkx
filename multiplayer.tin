@@ -30,7 +30,7 @@
 
 #func getSpecial { #nop;
     #if {"$myId" == "lanbosudo"} {
-        #var result {sp +agile;sp +ironskin;sp agile;sp ironskin};
+        #var result {sp +ironskin;sp ironskin};
     };
     #elseif {"$myId" == "lanbosudoc"} {
         #var result {sp +greedy};
