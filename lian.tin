@@ -82,7 +82,8 @@
 #act {{^你的\S+进步了！}} {skbrief $type_lian}
 #act {{^#(\d+)/\d+$}} {
     #local FULLSKILL 289;
-    #list list_skill cre {shenyuan-gong;force;sword;finger;parry;dodge};
+    #nop TODO: move to multiplayer;
+    #list list_skill cre {shenyuan-gong;force;sword;finger;parry;dodge;leg};
     #var lvl_lian %2;
     #if {%2 >= $FULLSKILL} {
         #class lian kill;

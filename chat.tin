@@ -58,7 +58,10 @@
 
 
 #nop triggers---------------------------------------------------------;
-#EVENT {SCREEN RESIZE} {#local tmp @paint_chat{}}
+#EVENT {SCREEN RESIZE} {
+    #split $height_chat $height_prompt;
+    #local tmp @paint_chat{};
+}
 #eve {SCROLLED MOUSE WHEEL UP} {
     #if {%0 < $height_chat} {#local tmp @scroll_chat{up}};
     #else {#buffer up};
