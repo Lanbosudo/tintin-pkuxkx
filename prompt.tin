@@ -37,6 +37,8 @@
 
     #line gag;
 
+    #var bar_neili @paint_bar{$neili;$neili;@eval{2*$neili_max};<ffa>;<ffc>;<dde>};
+
     #line oneshot
         #act {{^#(\d+),(\d+),(\d+),(\d+),(\d\d+),(\d+)$}} {
             #var qi_max %%2;
@@ -72,7 +74,7 @@
 
     #line gag;
     #echo {{--=%s=--%s--%s--%d--%s@%s---} {-4}} $myId $week $target_name $target_lvl $job_name $job_loc;
-    #echo {{---<faa>%s<eee>-<adf>%s<eee>-<ffa>%s<eee>-<aff>%s<eee>---Exp:%s|Poten:%s--%s:%s---} {-3}}
+    #echo {{---<faa>%s<eee>-<adf>%s<eee>-<ffa>%s<eee>-<aff>%s<eee>---Exp:%s|Poten:%s--%s:%s--[$class_opened]---} {-3}}
 
         $qi/$qi_max(@eval{$qi*100/$qi_efft}^$percent_qi%%)
         $jing/$jing_max(@eval{$jing*100/$jing_efft}^$percent_jing%%)
@@ -84,7 +86,7 @@
 #var lvl_lian -;
 #var class_opened {};
 #prompt {{^#(\d+),(\d+),(-?\d+),(-?\d+),(0|1),(0|1)$}} {
-    ---[$bar_qi]-[$bar_jing]--Busy:<faf>$isBusy<eee>--[$class_opened]---
+    ---[$bar_qi]-[$bar_jing]-[$bar_neili]-Busy:<faf>$isBusy<eee>---
 } {-2}
 
 #fun get_percent {
