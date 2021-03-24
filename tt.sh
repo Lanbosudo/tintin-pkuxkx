@@ -3,7 +3,7 @@
 cd .tintin;
 
 if [ ! -z $@ ] && [ $@ == 2 ]; then
-    tt++ -r login2.tin && cd
+    abduco -c xkxc tt++ -r login2.tin && cd
 else
-    tt++ -r login.tin && cd
+    abduco -c xkx tt++ -r login.tin && cd
 fi
