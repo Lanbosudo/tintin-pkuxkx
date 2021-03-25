@@ -61,7 +61,7 @@
 #EVENT {SCREEN RESIZE} {
     #split $height_chat $height_prompt;
     #buffer up;
-    #buffer down;
+    #buffer end;
     #local tmp @paint_chat{};
 }
 #eve {SCROLLED MOUSE WHEEL UP} {

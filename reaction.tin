@@ -66,34 +66,41 @@
     };
 }
 
+#nop reaction for sys info;
 #act {{^(重新连线完毕。|您上次是在.*连线进入，请及时核对。)}} {#class ticker read ticker.tin;sc}
 #eve {VARIABLE UPDATE myId} {#if {{$myId} != {%1}} {#delay 1 @getSpecial{}} }
 
-#nop life;
 #act {{^这里没有jitui这种食物。}} {#line gag;}
 #act {{^你所在的环境没有水源，你身上也没有容器可以解渴。}} {#line gag}
 #act {{^你将剩下的烤鸡腿吃得干干净净。}} {drop bone}
 #act {^你有很长一段时间没有备份档案了，请使用backup命令来备份。} {backup}
 #act {^你获得了%+份石炭【{瑕疵|劣质}】。} {drop shi tan}
 #act {^你获得了%+份玄冰【{瑕疵|劣质}】。} {drop xuan bing}
+#act {^你突然感到精神一振，浑身似乎又充满了力量！} {tuna 10}
 
-#act {{^    \S+黄金\(Gold\)$}} {get gold} {4}
-#act {{^    \S+两白银\(Silver\)$}} {get silver} {4}
-#act {{^    \S+之\S+\((Sword|Blade|Staff|Whip|Axe|Spear|Hammer|Halberd|Throwing|Dagger|Armor|Boots|Cloth|Hands|Head|Shield|Surcoat|Waist|Wrists|Finger|Neck|Heart|Shoulder|Leg|Face)\)$}} {#format id %l {%2}; get $id; #line quiet #unvar id;} {4}
-#act {^    %S{☆精金|★木灵|☆玄冰|★炎晶|◎玉髓|☆月魄|★日魂|☆玄武甲|☆麒麟角|☆凤凰羽|★神龙骨}(%S {jin|ling|bing|jing|sui|po|hun|jia|jiao|yu|gu})} {get %3 %4} {4}
-#act {{^    \S+【(普通|优秀|完美)】\(([^()]+)\)}} {#format id %l {%3}; get $id; #line quiet #unvar id;} {4};
-#act {{^    \S+(玄冰空青|锰晶|金刚砂)【瑕疵】\(([^()]+)\)}} {#format id %l {%3}; get $id; #line quiet #unvar id;} {4};
-#act {{^    \S+包袱\(Bao fu\)$}} {get bao fu} {4}
+#nop reaction for picking up;
+#act {{^    \S+之\S+\((Sword|Blade|Staff|Whip|Axe|Spear|Hammer|Halberd|Throwing|Dagger|Armor|Boots|Cloth|Hands|Head|Shield|Surcoat|Waist|Wrists|Finger|Neck|Heart|Shoulder|Leg|Face)\)$}} {
+    #format id %l {%2}; get $id; #line quiet #unvar id; #delay pickup {look} 1;} {4}
+#act {^    %S{☆精金|★木灵|☆玄冰|★炎晶|◎玉髓|☆月魄|★日魂|☆玄武甲|☆麒麟角|☆凤凰羽|★神龙骨}(%S {jin|ling|bing|jing|sui|po|hun|jia|jiao|yu|gu})} {
+    get %3 %4; #delay pickup {look} 1;} {4}
+#act {{^    \S+【(普通|优秀|完美)】\(([^()]+)\)}} {
+    #format id %l {%3}; get $id; #line quiet #unvar id; #delay pickup {look} 1;} {4};
+#act {{^    \S+(玄冰空青|锰晶|金刚砂)【瑕疵】\(([^()]+)\)}} {
+    #format id %l {%3}; get $id; #line quiet #unvar id; #delay pickup {look} 1;} {4};
+#act {{^    \S*(黄金|白银|包袱|百草丹|牛黃血竭丹|经验符|朱睛冰蟾)\(([^()]+)\)$}} {
+    #format id %l {%3}; get $id; #line quiet #unvar id; #delay pickup {look} 1;} {4}
 
 #nop not right to do...;
 #nop #act {{^\s+\S+的尸体\(Corpse\)}} {get gold from corpse; get silver from corpse; get cash from corpse;} {4}
 #nop #act {{^\s+\S+的骸骨\(Skeleton\)}} {get gold from skeleton; get silver from skeleton; get cash from skeleton;} {4}
 
-#act {^%s杂耍人(Zashua ren)$} {north} {4};
+#nop reaction of location;
 #act {^春来茶馆 -} {fillall}
 #act {{^(你拿起船桨用力划了起来。|你跃上小舟，船就划了起来。|(黄河|长江)渡船 -|羊皮筏 -|(小)?木船 -)}} {yun regenerate;dazuo max;}
 #act {{^(不知过了多久，船终于靠岸了，你累得满头大汗。|小舟终于划到近岸，你从船上走了出来。|你朝船夫挥了挥手便跨上岸去。|你沿着踏板走了上去。)}} {halt;yun recover}
-#act {^你突然感到精神一振，浑身似乎又充满了力量！} {tuna 10}
+
+#nop reaction of npc;
+#act {^%s杂耍人(Zashua ren)$} {north} {4};
 #act {^陆大有喝道：你不是华山弟子，不得入内。} {@getPowerUp{};hit lu dayou}
 #act {^中年道长拦住你说道：后面是本派重地，你不是武当弟子，此去多有不便，请留步。} {@getPowerUp{}; hit zhongnian daozhang;}
 #act {^一阵风吹过，把枯乾的骸骨化成骨灰吹散了。} {look}
@@ -102,6 +109,7 @@
 #act {^王夫人说道：「大理有一种名种茶花，八朵异色同株} {#delay 2 {#send {answer 八仙过海}}}
 #act {^王夫人说道：「大理有一种名种茶花，三朵异色同株} {#delay 2 {#send {answer 风尘三侠}}}
 #act {^王夫人说道：「这一种茶花，论颜色，比十八学士少了一色，偏又是驳而不纯} {#delay 2 {#send {answer 落第秀才}}}
+#act {^官兵拦住你说道：站住，把%+留下再说！} {uw all}
 
 #nop die------------------------------------------------------------------------------------------------;
 #act {^你死了。} {
@@ -264,6 +272,7 @@
         give $tmp_id cai wu;
     } {4};
 }
+#act {^从劫匪身上掉了出来一颗%*} { put gem in dai}
 
 #nop job juewei--------------------------------------------------------------------------------;
 #act {^你%+了%*罪犯，%*的金吾卫%*，可以去衙门领%*奖%*了。} {
