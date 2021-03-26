@@ -16,6 +16,7 @@
     };
 }
 
+#nop several versions of macro keys here: mintty+tt, mintty+screen+tt, terminus+tt;
 #nop Numpad 5---------------------------------------------------------;
 #macro {\eOu} {#send {look}}
 #macro {\eOE} {look;}
@@ -54,6 +55,9 @@
 #macro {\e[6~} {#local tmp @findExit{southeast}}
 #macro {\e[4~} {#local tmp @findExit{southwest}}
 #macro {\e[1~} {#local tmp @findExit{northwest}}
+
+#macro {\e[F} {#local tmp @findExit{southwest}}
+#macro {\e[H} {#local tmp @findExit{northwest}}
 
 #macro {\e[1;5y} {#local tmp @findExit{northeast;gan che to}}
 #macro {\e[1;5s} {#local tmp @findExit{southeast;gan che to}}
