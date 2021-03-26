@@ -1,4 +1,4 @@
-#nop;
+#nop include alias,multiplayer;
 #var color_bg <B004040>;
 
 #func getBar { #nop %1: value, #2: max value, %3 color;

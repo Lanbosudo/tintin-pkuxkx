@@ -1,4 +1,4 @@
-#nop include multiplayer;
+#nop include multiplayer,alias;
 
 #var height_chat 11;
 #var height_prompt 3;

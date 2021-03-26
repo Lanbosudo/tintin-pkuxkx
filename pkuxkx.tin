@@ -14,6 +14,20 @@
     #CONFIG {MOUSE} ON;
     #CONFIG {WORDWRAP} OFF;
 
+    #nop dependency tree (up->down: dependencies->class requiring dependencies);
+    #nop                                            ;
+    #nop      multiplayer                           ;
+    #nop        /  |  \__________________           ;
+    #nop      /    |   \           \     |          ;
+    #nop   ticker  |    alias       |    |          ;
+    #nop           |     /| \_____  |    |          ;
+    #nop           |   /  |  \    \ |    |          ;
+    #nop           | /    |   \    \|    |          ;
+    #nop         chat   walk   \  prompt/           ;
+    #nop           |            \   | /             ;
+    #nop         macro           reaction           ;
+    #nop                                            ;
+
     #class multiplayer read multiplayer.tin;
     #class alias read alias.tin;
     #class chat read chat.tin;

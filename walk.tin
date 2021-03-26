@@ -1,3 +1,4 @@
+#nop include alias;
 #nop var initialisation;
 
 #list locationName create {yangzhou; xinyang; gaibang; qufu; qingliang; shashou; zhenjiang; jiangzhou; xiangyang; xuchang; nanyang; wudang; jingzhou; luoyang; huashancun; huashan; quanzhen; gumu; tonghua; ruzhou; jinyang; qilincun; shaolin; huaibei; chengdu; huijiang; lingjiu; lingzhou; zanpu; lanzhou; huangzhong; xingxiu; riyue; guangan; zhangjiakou; guanwai; puyang; yueyang; suzhou; jiaxing; fuzhou; mingzhou; linan; quanzhou; nanchang; yixing; murong; guiyun; lujiazhuang; yuewangmu; yashan; putian; meizhuang; miaojiang; dali; tianlong; emei; kunming; pingxi; lingxiao; dalunsi; menggu; taishan; tongquetai; chaoyang; shence; zhengyang; jinguang; mingde; anding; yongan; desheng; yanziji}

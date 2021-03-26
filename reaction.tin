@@ -1,5 +1,5 @@
+#nop include prompt,alias,multiplayer;
 #nop staus check & reaction;
-#nop include prompt;
 
 #list list_descrpt cre {
     "不堪一击";"毫不足虑";"不足挂齿";"初学乍练";"勉勉强强";
