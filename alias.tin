@@ -29,6 +29,9 @@
     #math result {%1};
 }
 
+#func max { #nop %1: num a, %2: num b;
+    #if {%1 > %2} {#return %1} {#return %2}
+}
 
 #nop full skills-----------------------------------------------------;
 #ali {{^lian (\S+)$}} {

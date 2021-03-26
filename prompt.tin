@@ -37,7 +37,7 @@
 
     #line gag;
 
-    #var bar_neili @paint_bar{$neili;$neili;@eval{2*$neili_max};<ffa>;<ffc>;<dde>};
+    #var bar_neili @paint_bar{$neili;@max{$neili_max;$neili};@eval{2*$neili_max};<ffa>;<dde>;<eee>};
 
     #line oneshot
         #act {{^#(\d+),(\d+),(\d+),(\d+),(\d\d+),(\d+)$}} {
