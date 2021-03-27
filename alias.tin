@@ -2,7 +2,7 @@
 
 #nop LoQ debug alias---------------------------------------------;
 #ali {^t+%1} {#class %1 read %1.tin; #var class_opened $class_opened|%1;}
-#ali {^t-%1} {#class %1 kill; #repl class_opened {|%1} {};}
+#ali {^t-%1} {#class %1 kill; #repl class_opened {%1} {}; #repl class_opened {||} {}}
 #ali {^t@%1} {#class %1 kill; #class %1 read %1.tin;}
 
 #ali {^p %1} {#echo $%1}

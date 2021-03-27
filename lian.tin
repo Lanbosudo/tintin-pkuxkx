@@ -2,11 +2,18 @@
 #nop    one reaction for one trigger;
 
 #nop prepare;
-#act {{^你必须空手才能练习}} {uw all; lian $type_lian 50;}
+#act {^{你必须空手才能练习|学习\S+必须空手。}} {uw all; lian $type_lian 50;}
 #act {{^你要装备 (\w+) 类武器才能练习}} {uw all; wi %2; lian $type_lian 50;}
 
-#action {{^你需要提高基本功，不然练得再多也没有用。}} {
-    #if {"$type_lian" == "parry"} { out};
+#action {^{你需要提高基本功，不然练得再多也没有用。|你的基本招架的级别还没有斗转星移的级别高，不能通过练习来提高了。}} {
+    #if {{$type_lian} == {{parry|douzhuan-xingyi}} } { 
+
+        #list list_exit find {eastdown} tmp;
+        #if {$tmp} { jump down; eastdown};
+
+        out;
+    };
+
     lingwu $type_lian 50;
 };
 
@@ -25,7 +32,7 @@
 
 #act {{^你深深吸了几口气，脸色看起来好多了。}} {lian $type_lian 50}
 
-#act {{^(你现在过于疲倦,无法静下心来领悟功夫！|你现在过于疲倦，无法专心下来研读新知。|你的精神太低了。|你今天太累了，结果什么也没有学到。|你已经很累了，歇歇再读吧，身体要紧。)}} {yun regenerate}
+#act {{^(你现在过于疲倦,无法静下心来领悟功夫！|你现在过于疲倦，无法专心下来研读新知。|你的精神太低了。|你今天太累了，结果什么也没有学到。|你已经很累了，歇歇再读吧，身体要紧。|可惜你太累了，无法集中精神来研究夜空中的星斗。)}} {yun regenerate}
 
 #act {{^你略一凝神，精神看起来好多了。}} {
     #if {@get_percent{$neili;$neili_max} < 20 && @get_percent{$qi;$qi_max} > 80} {
@@ -40,16 +47,25 @@
     #if {"$type_lian" == "shenyuan-gong"} {
         xue bo for shenyuan-gong 20;
     };
-    #elseif {"$type_lian" == "parry"} {
-        du douzhuan xingyi;
+    #elseif {"$type_lian" == "douzhuan-xingyi"} {
+        #list list_exit find {west} tmp;
+        #if {$tmp && @sizeof{list_exit} == 1} {
+            cai huanshi; westup; jump zhuang};
+        #else {jump zhuang;l sky};
     }
 }
 
 #act {{^(你(的)?内力不够|\( 你的内力已经枯竭，不能施用内功。\))}} {
     #if {@get_percent{$qi;$qi_max} < 5} {
 
-        #if {"$type_lian" == "parry"} { out};
-        #if {"$type_lian" == "shenyuan-gong"} { west};
+        #if {{$type_lian} == {{parry|douzhuan-xingyi}} } { 
+
+            #list list_exit find {eastdown} tmp;
+            #if {$tmp} { jump down; eastdown};
+
+            out;
+        };
+        #elseif {"$type_lian" == "shenyuan-gong"} { west};
         hp;w;w;n;n;e;sleep
     } {
         dazuo max
@@ -57,8 +73,14 @@
 }
 
 #act {{^(你现在精不够，无法控制内息的流动！|你现在气血严重不足，无法满足打坐最小要求。)}} {
-    #if {"$type_lian" == "parry"} { out};
-    #if {"$type_lian" == "shenyuan-gong"} { west};
+    #if {{$type_lian} == {{parry|douzhuan-xingyi}} } { 
+
+        #list list_exit find {eastdown} tmp;
+        #if {$tmp} { jump down; eastdown};
+
+        out;
+    };
+    #elseif {"$type_lian" == "shenyuan-gong"} { west};
     hp;w;w;n;n;e;sleep;
 }
 
@@ -74,6 +96,15 @@
 #nop douzhuan-xingyi;
 #act {{^你正在研习斗转星移的武功图谱，似乎有点心得。}} {du douzhuan xingyi}
 #act {{^斗转星移初期只能通过研读图谱学习。}} {cai huanshi; du douzhuan xingyi}
+#act {^斗转星移只能通过学习来提高，无法通过练习来提高。} {
+    #list list_exit find {west} tmp;
+    #if {$tmp && @sizeof{list_exit} == 1} {
+        cai huanshi; westup; jump zhuang};
+}
+
+#act {^你太累了，先歇歇吧！} {yun regenerate}
+#act {^{你脚下微一运劲，轻轻地一纵就上了木桩。|你又掌握了一些在实战中运用斗转星移的技巧。}} {l sky}
+#act {^你仰首望天，太阳挂在天空中，白云朵朵，阳光顺着云层的边缘洒下来，你觉得有些刺眼。} {#delay 60 {l sky}}
 
 #nop force;
 #act {{^特殊内功无法练习，你可以通过\(learn\)或者\(xiulian\)来提高。}} {lingwu $type_lian 50}
@@ -81,9 +112,9 @@
 
 #act {{^你的\S+进步了！}} {skbrief $type_lian}
 #act {{^#(\d+)/\d+$}} {
-    #local FULLSKILL 289;
+    #local FULLSKILL 307;
     #nop TODO: move to multiplayer;
-    #list list_skill cre {shenyuan-gong;force;sword;finger;parry;dodge;leg};
+    #list list_skill cre {shenyuan-gong;force;sword;finger;douzhuan-xingyi;parry;dodge;leg};
     #var lvl_lian %2;
     #if {%2 >= $FULLSKILL} {
         #class lian kill;
@@ -106,3 +137,5 @@
         }
     };
 }
+
+#tic {idle_check} {yun recover;dazuo 50} 300;

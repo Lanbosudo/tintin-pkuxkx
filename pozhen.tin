@@ -127,7 +127,7 @@
 
 #act {^这里似乎就是迷阵布下的地点了。} {
     #line oneshot #act {^你回到了%+。} {
-        jiali none; unset ForcedAct;
+        jiali 1; unset ForcedAct;
         #class pozhen kill;
         #repl class_opened {pozhen} {};
         #repl class_opened {||} {};
