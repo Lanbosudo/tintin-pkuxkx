@@ -35,6 +35,14 @@
     #if {%1 > %2} {#return %1} {#return %2}
 }
 
+#func truncToWidth { #nop %1, string to be truncated;
+    #screen get cols screenWidth;
+    #math screenWidth {$screenWidth-1};
+
+    #format result {%.${screenWidth}s} {%1};
+    #unvar screenWidth;
+}
+
 #nop full skills-----------------------------------------------------;
 #ali {{^lian (\S+)$}} {
     #class lian read lian.tin;

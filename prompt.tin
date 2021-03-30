@@ -73,13 +73,18 @@
     #var isBusy %7;
 
     #line gag;
-    #echo {{--=%s=--%s--%s--%d--%s@%s---} {-4}} $myId $week $target_name $target_lvl $job_name $job_loc;
-    #echo {{---<faa>%s<eee>-<adf>%s<eee>-<ffa>%s<eee>-<aff>%s<eee>---Exp:%s|Poten:%s--%s:%s--[$class_opened]---} {-3}}
 
+    #format bar1 {--=%s=--%s--%s--%d--%s@%s---} $myId $week $target_name $target_lvl $job_name $job_loc;
+    #echo {{%s} {-4}} @truncToWidth{$bar1};
+
+    #format bar2 {---<faa>%s<eee>-<adf>%s<eee>-<ffa>%s<eee>-<aff>%s<eee>---Exp:%s|Poten:%s--%s:%s--[$class_opened]---}
         $qi/$qi_max(@eval{$qi*100/$qi_efft}^$percent_qi%%)
         $jing/$jing_max(@eval{$jing*100/$jing_efft}^$percent_jing%%)
         $neili/$neili_max $jingli/$jingli_max
         $exp $poten $type_lian $lvl_lian;
+    #echo {{%s} {-3}} @truncToWidth{$bar2};
+
+    #unvar bar1, bar2;
 }
 
 #var type_lian -;

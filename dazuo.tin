@@ -26,3 +26,5 @@
     #if {$neili*100/$neili_max < 20 } {dazuo max};
     tuna max;
 }
+
+#tic {idle_check} {yun recover;dazuo 50} 300;

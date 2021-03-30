@@ -34,7 +34,7 @@
 #function paint_chat {
     #nop #math -10 is not valid...;
     #loop 1 @eval{$height_chat-1} cnt {
-        #echo {{%s} {$cnt}} {$list_chat[@eval{$row_paint_chat+ $cnt-1}]};
+        #echo {{%s} {$cnt}} {@truncToWidth{$list_chat[@eval{$row_paint_chat+ $cnt-1}]}};
     };
 }
 
