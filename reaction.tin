@@ -80,15 +80,22 @@
 
 #nop reaction for picking up;
 #act {{^    \S+之\S+\((Sword|Blade|Staff|Whip|Axe|Spear|Hammer|Halberd|Throwing|Dagger|Armor|Boots|Cloth|Hands|Head|Shield|Surcoat|Waist|Wrists|Finger|Neck|Heart|Shoulder|Leg|Face)\)$}} {
-    #format id %l {%2}; get $id; #line quiet #unvar id; #delay pickup {look} 1;} {4}
+    #format id %l {%2}; get $id; #line quiet #unvar id; #delay pickup {look} 1;
+} {4}
 #act {^    %S{☆精金|★木灵|☆玄冰|★炎晶|◎玉髓|☆月魄|★日魂|☆玄武甲|☆麒麟角|☆凤凰羽|★神龙骨}(%S {jin|ling|bing|jing|sui|po|hun|jia|jiao|yu|gu})} {
-    get %3 %4; #delay pickup {look} 1;} {4}
+    get %3 %4; #delay pickup {look} 1;
+} {4}
 #act {{^    \S+【(普通|优秀|完美)】\(([^()]+)\)}} {
-    #format id %l {%3}; get $id; #line quiet #unvar id; #delay pickup {look} 1;} {4};
+    #format id %l {%3}; get $id; #line quiet #unvar id; #delay pickup {look} 1;
+} {4};
 #act {{^    \S+(玄冰空青|锰晶|金刚砂)【瑕疵】\(([^()]+)\)}} {
-    #format id %l {%3}; get $id; #line quiet #unvar id; #delay pickup {look} 1;} {4};
-#act {{^    \S*(黄金|白银|包袱|百草丹|牛黃血竭丹|经验符|朱睛冰蟾)\(([^()]+)\)$}} {
-    #format id %l {%3}; get $id; #line quiet #unvar id; #delay pickup {look} 1;} {4}
+    #format id %l {%3}; get $id; #line quiet #unvar id; #delay pickup {look} 1;
+} {4};
+#act {{^    \S*(黄金|白银|包袱|百草丹|牛黃血竭丹|经验符|朱睛冰蟾|养精丹|金创药)\(([^()]+)\)$}} {
+    #format id %l {%3}; get $id; #line quiet #unvar id; #delay pickup {look} 1;
+} {4};
+#act {{^(?!【)\S+丢下]S+}} {#delay pickup {look} 1}
+
 
 #nop not right to do...;
 #nop #act {{^\s+\S+的尸体\(Corpse\)}} {get gold from corpse; get silver from corpse; get cash from corpse;} {4}
@@ -109,7 +116,7 @@
 #act {^王夫人说道：「大理有一种名种茶花，八朵异色同株} {#delay 2 {#send {answer 八仙过海}}}
 #act {^王夫人说道：「大理有一种名种茶花，三朵异色同株} {#delay 2 {#send {answer 风尘三侠}}}
 #act {^王夫人说道：「这一种茶花，论颜色，比十八学士少了一色，偏又是驳而不纯} {#delay 2 {#send {answer 落第秀才}}}
-#act {^{官兵|虚通}拦住你说道：%+{留下再说！|请放下兵刃。}} {uw all}
+#act {^{官兵|虚通|守山弟子}%+{留下再说！|请放下兵刃。|请解兵器。}} {uw all}
 
 #nop die------------------------------------------------------------------------------------------------;
 #act {^你死了。} {
@@ -134,7 +141,7 @@
     };
     #regexp {%2} {{\S*$target_name$}} {
         #format target_id %l {%3};
-        look $target_id;
+        #delay target_look {look $target_id} 1;
     };
 } {5};
 
@@ -155,7 +162,7 @@
     };
     #nop id here;
 
-    look;
+    #delay killing_look {look} 1;
 }
 #act {{^\s.*\s(他|你|她)看起来约\S+多岁。}} {
 
@@ -208,6 +215,7 @@
         #echo <aff>========================;
         #echo 挖到！;
         #echo <aff>========================<eee>;
+        uw chan;
 
         #line oneshot #act {^    「流民」花小贱(Hua xiaojian)} {give hua flower};
     };
@@ -216,6 +224,8 @@
         #unact {^    「流民」花小贱(Hua xiaojian)};
     }
 }
+
+#act {^没有花铲，你怎么挖花？} {wi chan;#delay 1 {scoop flower};}
 
 #act {^花小贱说道：「%+正是我想要的，谢谢$myName啦。」} {
     #list list_flower find %1 tmp_index;
@@ -264,6 +274,7 @@
     #line oneshot #act {^    卷走%1财物的伙计 %+(%+)} {
         #format tmp_id %l %%2;
         ask $tmp_id about 要;
+        ask $tmp_id about yao;
 
     } {4};
 
