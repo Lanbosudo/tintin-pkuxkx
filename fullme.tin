@@ -6,3 +6,5 @@
 };
 
 #alias {^fullme2} {#system ./fullme.sh $url_fullme}
+
+#nop 【江湖】賀蘭飍(Karr)在线发出红包，请到http://fullme.pkuxkx.net/robot.php?filename=1617960788614700查询口令。;
