@@ -159,7 +159,15 @@
 }
 #ali {^gt?%1} {
     #local index $locationIndex[%1];
-    #echo {%s-%s} $locationCNName[$index] $locationPY[$index];
+    #if {@length{$index} == 0} {
+        #echo {%s not found} {%1};
+    };
+    #else {
+        #echo {%s-%s} $locationCNName[$index] $locationPY[$index];
+    };
+}
+#ali {^gt-%1-%2$} {
+    #local tmp @getPathPY{%1;%2}
 }
 
 #nop #ali {^yzqlc} {
