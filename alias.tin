@@ -146,6 +146,8 @@
     #echo {lian: %s lv.%s; triggers: %s} $type_lian $lvl_lian $class_opened;
 };
 
+#ali {^fawang$} { ask fawang about ·ç»ðÂÖ}
+
 #nop map related-------------------------------------------------------;
 #ali {^map} {help map-pkuxkx}
 

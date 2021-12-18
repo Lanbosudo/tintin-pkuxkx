@@ -1,6 +1,23 @@
 #nop include prompt,alias,multiplayer;
 #nop staus check & reaction;
 
+#nop action priority convention (0~9, 5 default):
+#nop +--------------------------------------------------+
+#nop |   priority  |     scenario                       |
+#nop +-------------+------------------------------------+
+#nop |      0      |     placeholder                    |
+#nop +-------------+------------------------------------+
+#nop |      1      | oneshot, (follwoing must happen)   |
+#nop +-------------+------------------------------------+
+#nop |      2      |     fight                          |
+#nop +-------------+------------------------------------+
+#nop |      3      |     job/task                       |
+#nop +-------------+------------------------------------+
+#nop |      4      |     walk                           |
+#nop +-------------+------------------------------------+
+#nop |      5      |     trivia reactions               |
+#nop +-------------+------------------------------------+
+
 #list list_descrpt cre {
     "不堪一击";"毫不足虑";"不足挂齿";"初学乍练";"勉勉强强";
     "初窥门径";"初出茅庐";"略知一二";"普普通通";"平平淡淡";
@@ -79,21 +96,21 @@
 #act {^你突然感到精神一振，浑身似乎又充满了力量！} {tuna 10}
 
 #nop reaction for picking up;
-#act {{^    \S+之\S+\((Sword|Blade|Staff|Whip|Axe|Spear|Hammer|Halberd|Throwing|Dagger|Armor|Boots|Cloth|Hands|Head|Shield|Surcoat|Waist|Wrists|Finger|Neck|Heart|Shoulder|Leg|Face)\)$}} {
+#act {{^    \S+之\S+\((Sword|Blade|Staff|Whip|Axe|Spear|Hammer|Halberd|Throwing|Dagger|Armor|Boots|Cloth|Hands|Head|Shield|Surcoat|Waist|Wrists|Finger|Neck|Heart|Shoulder|Leg|Face|Hook)\)$}} {
     #format id %l {%2}; get $id; #line quiet #unvar id; #delay pickup {look} 1;
-} {4}
+}
 #act {^    %S{☆精金|★木灵|☆玄冰|★炎晶|◎玉髓|☆月魄|★日魂|☆玄武甲|☆麒麟角|☆凤凰羽|★神龙骨}(%S {jin|ling|bing|jing|sui|po|hun|jia|jiao|yu|gu})} {
     get %3 %4; #delay pickup {look} 1;
-} {4}
+}
 #act {{^    \S+【(普通|优秀|完美)】\(([^()]+)\)}} {
     #format id %l {%3}; get $id; #line quiet #unvar id; #delay pickup {look} 1;
-} {4};
+}
 #act {{^    \S+(玄冰空青|锰晶|金刚砂)【瑕疵】\(([^()]+)\)}} {
     #format id %l {%3}; get $id; #line quiet #unvar id; #delay pickup {look} 1;
-} {4};
+}
 #act {{^    \S*(黄金|白银|包袱|百草丹|牛黃血竭丹|经验符|朱睛冰蟾|养精丹|金创药)\(([^()]+)\)$}} {
     #format id %l {%3}; get $id; #line quiet #unvar id; #delay pickup {look} 1;
-} {4};
+}
 #act {{^(?!【)\S+丢下]S+}} {#delay pickup {look} 1}
 
 
@@ -120,12 +137,11 @@
 
 #nop die------------------------------------------------------------------------------------------------;
 #act {^你死了。} {
-    #line oneshot
-        #act {^慢慢地你终于又有了知觉... } {
+    #line oneshot #act {^慢慢地你终于又有了知觉... } {
             reload;
             wear all;
             @getJifa{};
-        } {4};
+        } {2};
 }
 
 #nop target, match everything of look, low priority--------------------------------------------------------------;
@@ -143,14 +159,14 @@
         #format target_id %l {%3};
         #delay target_look {look $target_id} 1;
     };
-} {5};
+};
 
 #nop battle-------------------------------------------------------------------------------------------------------;
 #act {^你战胜了%+!} {
     #echo <faa>=====================;
     #echo <faa>%0;
     #echo <faa>=====================;
-}
+} {2}
 #act {^看起来%1想杀死你！} {
     #var target_name %1;
 
@@ -163,19 +179,27 @@
     #nop id here;
 
     #delay killing_look {look} 1;
-}
-#act {{^\s.*\s(他|你|她)看起来约\S+多岁。}} {
+} {2}
 
-    #nop  ▌         他的武功看上去不堪一击，出手似乎极轻。;
-    #nop  ▌         你的武功看上去鹤立鸡群，出手似乎很轻。;
-    #nop  ▌ ══    他的境界完全看不出深浅。;
+#nop  ▌         他的武功看上去不堪一击，出手似乎极轻。;
+#nop  ▌         你的武功看上去鹤立鸡群，出手似乎很轻。;
+#nop  ▌ ══    他的境界完全看不出深浅。;
+#nop     -  -    他看起来约五十多岁，身长约近八尺，体型肥胖。
+#act {{^\s.*\s(他|你|她)看起来约\S+多岁，}} {
+
     #line oneshot #act {{^\s.*的(武功|境界)(看上去|完全看)(\S+?)(，出手|。)}} {
-        #local desc %%4;
-        #var target_lvl @desc2lvl{$desc};
-    }
+        #delay 1 {#echo {%s--%s} {%%4} {@desc2lvl{%%4}}};
+    } {1}
 }
 
-#nop #act {{^(你未选定攻击对手|未有对手或者你和对方未处于战斗中|你刚欲动作，突然感到一阵烦闷|慢慢地你终于又有了知觉...)}} {hpbrief};
+#nop #act {{^(你未选定攻击对手|未有对手或者你和对方未处于战斗中|你刚欲动作，突然感到一阵烦闷|慢慢地你终于又有了知觉...)}} {hpbrief} {2};
+
+#nop 当头炮决定开始跟随你一起行动。
+#act {{^\S+决定开始跟随你一起行动。}} {
+    #echo <ffa>=====================;
+    #echo <ffa>%1;
+    #echo <ffa>=====================;
+}
 
 #act {{^[> ]*$}} {#line gag}
 
@@ -184,12 +208,12 @@
     #line oneshot #act {{^(?!【)(\S+)说道：「嘿嘿，让本大爷来教训教训你！」}} {
         #var target_name %%2;
         #nop #line oneshot #act {^%%2死了} {#var target_name -;get han from corpse;look;};
-    };
-}
+    } {1};
+} {2}
 
 #act {^你从怀中掏出信交给%+，道：「这是岳不群先生托%+送给您的信，请收好。」} {
-    #line oneshot #act {^    武林名宿 华山派掌门「君子剑」岳不群(Yue buqun)} {ask yue about finish} {4};
-}
+    #line oneshot #act {^    武林名宿 华山派掌门「君子剑」岳不群(Yue buqun)} {ask yue about finish} {1};
+} {3}
 
 #nop job flower-----------------------------------------------------------------------------;
 #act {^你道：“听说花姑娘正在制作一种特殊的酱料，不止在下可否效力一二？”} {
@@ -200,16 +224,16 @@
         #local tmp @plist{list_flower};
 
         #repl job_name {;} {|};
-    };
+    } {1};
 
     #line oneshot #act {^    花痴 花老板(Hua laoban)} {
         ask hua about $list_flower[1];
-    };
-}
+    } {1};
+} {3}
 #act {^你向花老板打听有关『%+』的消息。} {
     #line oneshot #act {^花老板说道：「%+可以在%+等地被挖到。」} {
         #var job_loc %%2;
-    };
+    } {1};
 
     #act {^你挖出来了一株{($job_name)}。} {
         #echo <aff>========================;
@@ -217,15 +241,15 @@
         #echo <aff>========================<eee>;
         uw chan;
 
-        #line oneshot #act {^    「流民」花小贱(Hua xiaojian)} {give hua flower};
-    };
+        #line oneshot #act {^    「流民」花小贱(Hua xiaojian)} {give hua flower} {1};
+    } {3};
 
     #act {^{($job_name)}渐渐地枯萎了。} {
         #unact {^    「流民」花小贱(Hua xiaojian)};
-    }
-}
+    } {3}
+} {3}
 
-#act {^没有花铲，你怎么挖花？} {wi chan;#delay 1 {scoop flower};}
+#act {^没有花铲，你怎么挖花？} {uw all;wi chan;#delay 1 {scoop flower};}
 
 #act {^花小贱说道：「%+正是我想要的，谢谢$myName啦。」} {
     #list list_flower find %1 tmp_index;
@@ -242,12 +266,12 @@
 
     #line oneshot #act {^    花痴 花老板(Hua laoban)} {
         ask hua about $list_flower[1];
-    };
+    } {1};
 };
 
 #act {^完成海棠任务后，你被奖励了} {
     #unact {^    花痴 花老板(Hua laoban)};
-}
+} {3}
 
 #nop job pu ren------------------------------------------------------------------------------;
 #act {^你从慕容世家家贼的尸体身上搜出一封信件。} {

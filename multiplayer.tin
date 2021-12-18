@@ -46,10 +46,10 @@
 }
 
 #nop info;
-#act {^≡━━━━◎人物详情◎━━━━━━━━━━━━━━━━━━━━━━━━━━≡} {
-    #line oneshot #act {{^ 【.*】(\S+\s)?(\S*「\S+」)?(\S+)\((\w+)\)$}} {
-        #format myId %l %%5;
-        #var myName %%4;
+#act {^┌───人物详情────────────────────────┬───────┐} {
+    #line oneshot #act {{^│ \S+\s(\S+)\((\w+)\)\s+│}} {
+        #format myId %l %%3;
+        #var myName %%2;
     };
 }
-
+#nop title match: {^ 【.*】(\S+\s)?(\S*「\S+」)?(\S+)\((\w+)\)$};

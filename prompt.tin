@@ -74,7 +74,7 @@
 
     #line gag;
 
-    #format bar1 {--<fda>=%s=<eee>--%s--<adf>%s--%d<eee>--<fbf>%s@%s<eee>---} $myId $week $target_name $target_lvl $job_name $job_loc;
+    #format bar1 {--<fda>=%s=<eee>--%s--<adf>%s-Lv%d<eee>--<fbf>%s@%s<eee>---} $myId $week $target_name $target_lvl $job_name $job_loc;
     #echo {{%s} {-4}} @truncToWidth{$bar1};
 
     #format bar2 {---<faa>%s<eee>-<adf>%s<eee>-<ffa>%s<eee>-<aff>%s<eee>---Exp:%s|Poten:%s--%s:%s--[$class_opened]---}

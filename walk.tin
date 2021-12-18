@@ -384,3 +384,16 @@
     #list list_exit cre {%2};
     #nop #local tmp @plist{list_exit};
 };
+#nop 浓雾中你依稀觉得似乎可以通往 south方向。
+#act {{^\s+浓雾中你依稀觉得似乎可以通往\s(\w+)方向。}} {
+    #list list_exit cre {%2};
+    #nop #local tmp @plist{list_exit};
+};
+#nop 浓雾中你觉得似乎有出口通往 north、 southeast和 west方向。
+#act {{^\s+浓雾中你觉得似乎有出口通往((\s\w+、)*\s\w+)和(\s\w+)方向。}} {
+    #local exits {%2、%4};
+    #rep exits {、} {;};
+    #rep exits { } {};
+    #list list_exit cre $exits; 
+    #local tmp @plist{list_exit};
+}

@@ -12,7 +12,7 @@
         #delay 1 {yun heal}};
     #else {#delay 1 {dazuo max}};
 }
-#act {^你并没有受伤！} {dazuo max;}
+#act {^{你并没有受伤！|你现在气血充盈，没有受伤。}} {dazuo max;}
 #act {^你已经受伤过重，只怕一运真气便有生命危险！} {yun lifeheal $myId}
 #act {^你双掌相交护于胸前，双目微闭，运起内功开始疗伤。} {#delay 2 {yun heal}}
 
