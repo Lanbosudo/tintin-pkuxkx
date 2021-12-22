@@ -1,2 +1,14 @@
-montage -geometry 400x100 -background '#000040404040' .*jpg $@ jpeg:- |convert - -colors 256 sixel:-
-#colors -background #000040404040 -fill #eeeee8e8d5d5 
+#!/usr/bin/env bash
+
+if [ ! -f .*jpg ]; then
+    echo 'no .*jpg file found in current directory'
+    exit
+fi
+
+#if [ -z $STY ]; then
+
+#using script from lsix: colors -background '#000040404040' -fill '#eeeee8e8d5d5'
+#background color #004040 (solarized) #181818 (flat-ui theme)
+backgroundColor='#181818'
+
+montage -geometry 400x100 -background $backgroundColor .*jpg jpeg:- |convert - -colors 256 sixel:- 

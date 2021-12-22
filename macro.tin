@@ -17,73 +17,50 @@
 }
 
 #nop several versions of macro keys here: mintty+tt, mintty+screen+tt, terminus+tt;
-#nop Numpad 5---------------------------------------------------------;
-#macro {\eOu} {#send {look}}
+#nop Numpad 5/^L-------------------------------------------------------;
+#macro {\e[E} {#send {look}}
 #macro {\eOE} {look;}
+#macro {\cl} {look;}
+
+#nop ??
+#macro {\eOu} {look;}
 
 #nop Numpad 6,2,4,8---------------------------------------------------;
-#macro {\eOv} {#local tmp @findExit{east}}
-#macro {\eOr} {#local tmp @findExit{south}}
-#macro {\eOt} {#local tmp @findExit{west}}
-#macro {\eOx} {#local tmp @findExit{north}}
-
-#nop arrow right,down,left,north;
+#nop mintty/terminus+tt: arrow right,down,left,north;
 #macro {\e[C} {#local tmp @findExit{east}}
 #macro {\e[B} {#local tmp @findExit{south}}
 #macro {\e[D} {#local tmp @findExit{west}}
 #macro {\e[A} {#local tmp @findExit{north}}
 
-#nop all ganche: ^+macroKey
-#macro {\e[1;5v} {#local tmp @findExit{east;gan che to}}
-#macro {\e[1;5r} {#local tmp @findExit{south;gan che to}}
-#macro {\e[1;5t} {#local tmp @findExit{west;gan che to}}
-#macro {\e[1;5x} {#local tmp @findExit{north;gan che to}}
-
-#macro {\e[1;5C} {#local tmp @findExit{east;gan che to}}
-#macro {\e[1;5B} {#local tmp @findExit{south;gan che to}}
-#macro {\e[1;5D} {#local tmp @findExit{west;gan che to}}
-#macro {\e[1;5A} {#local tmp @findExit{north;gan che to}}
+#nop ??
+#macro {\eOv} {#local tmp @findExit{east}}
+#macro {\eOr} {#local tmp @findExit{south}}
+#macro {\eOt} {#local tmp @findExit{west}}
+#macro {\eOx} {#local tmp @findExit{north}}
 
 #nop Numpad 9,3,1,7---------------------------------------------------;
+#nop mintty: pgup,pgdn,end,home;
+#macro {\e[5~} {#local tmp @findExit{northeast}}
+#macro {\e[6~} {#local tmp @findExit{southeast}}
+#macro {\e[F} {#local tmp @findExit{southwest}}
+#macro {\e[H} {#local tmp @findExit{northwest}}
+
+#nop screen+mintty;
+#macro {\e[4~} {#local tmp @findExit{southwest}}
+#macro {\e[1~} {#local tmp @findExit{northwest}}
+
+#nop ???
 #macro {\eOy} {#local tmp @findExit{northeast}}
 #macro {\eOs} {#local tmp @findExit{southeast}}
 #macro {\eOq} {#local tmp @findExit{southwest}}
 #macro {\eOw} {#local tmp @findExit{northwest}}
 
-#nop pgup,pgdn,end,home;
-#macro {\e[5~} {#local tmp @findExit{northeast}}
-#macro {\e[6~} {#local tmp @findExit{southeast}}
-#macro {\e[4~} {#local tmp @findExit{southwest}}
-#macro {\e[1~} {#local tmp @findExit{northwest}}
-
-#macro {\e[F} {#local tmp @findExit{southwest}}
-#macro {\e[H} {#local tmp @findExit{northwest}}
-
-#macro {\e[1;5y} {#local tmp @findExit{northeast;gan che to}}
-#macro {\e[1;5s} {#local tmp @findExit{southeast;gan che to}}
-#macro {\e[1;5q} {#local tmp @findExit{southwest;gan che to}}
-#macro {\e[1;5w} {#local tmp @findExit{northwest;gan che to}}
-
-#macro {\e[5;5~} {#local tmp @findExit{northeast;gan che to}}
-#macro {\e[6;5~} {#local tmp @findExit{southeast;gan che to}}
-#macro {\e[1;5F} {#local tmp @findExit{southwest;gan che to}}
-#macro {\e[1;5H} {#local tmp @findExit{northwest;gan che to}}
-
 #nop Numpad +--------------------------------------------------------;
-#macro {\eOk\eOk} {#send {d}}
+#macro {\eOn\eOn} {#send {d}}
 #nop del;
 #macro {\e[3~\e[3~} {d}
 
-#macro {\eOk\eOv} {#send {ed}}
-#macro {\eOk\eOr} {sd}
-#macro {\eOk\eOt} {wd}
-#macro {\eOk\eOx} {nd}
-
-#macro {\eOk\eOy} {ned}
-#macro {\eOk\eOw} {nwd}
-#macro {\eOk\eOq} {swd}
-#macro {\eOk\eOs} {sed}
-
+#nop mintty
 #macro {\e[3~\e[C} {#send {ed}}
 #macro {\e[3~\e[B} {sd}
 #macro {\e[3~\e[D} {wd}
@@ -93,21 +70,24 @@
 #macro {\e[3~\e[6~} {sed}
 #macro {\e[3~\e[4~} {swd}
 #macro {\e[3~\e[1~} {nwd}
+#macro {\e[3~\e[F} {swn}
+#macro {\e[3~\e[H} {nwd}
+
+#nop ???
+#macro {\eOn\eOv} {#send {ed}}
+#macro {\eOn\eOr} {sd}
+#macro {\eOn\eOt} {wd}
+#macro {\eOn\eOx} {nd}
+
+#macro {\eOn\eOy} {ned}
+#macro {\eOn\eOw} {nwd}
+#macro {\eOn\eOq} {swd}
+#macro {\eOn\eOs} {sed}
 
 #nop Numpad 0--------------------------------------------------------;
 #macro {\eOp\eOp} {#send {u}}
 #nop ins;
 #macro {\e[2~\e[2~} {u}
-
-#macro {\eOp\eOv} {#send {eu}}
-#macro {\eOp\eOr} {su}
-#macro {\eOp\eOt} {wu}
-#macro {\eOp\eOx} {nu}
-
-#macro {\eOp\eOy} {neu}
-#macro {\eOp\eOw} {nwu}
-#macro {\eOp\eOq} {swu}
-#macro {\eOp\eOs} {seu}
 
 #macro {\e[2~\e[C} {#send {eu}}
 #macro {\e[2~\e[B} {su}
@@ -118,17 +98,31 @@
 #macro {\e[2~\e[6~} {seu}
 #macro {\e[2~\e[4~} {swu}
 #macro {\e[2~\e[1~} {nwu}
+#macro {\e[2~\e[F} {swn}
+#macro {\e[2~\e[H} {nwd}
+
+#nop ???
+#macro {\eOp\eOv} {#send {eu}}
+#macro {\eOp\eOr} {su}
+#macro {\eOp\eOt} {wu}
+#macro {\eOp\eOx} {nu}
+
+#macro {\eOp\eOy} {neu}
+#macro {\eOp\eOw} {nwu}
+#macro {\eOp\eOq} {swu}
+#macro {\eOp\eOs} {seu}
 
 #nop Numpad / and *---------------------------------------------------;
-#macro {\eOo} {enter}
-#macro {\eO5o} {gan che to enter}
-#nop shift+/;
-#macro {\eO2o} {enter}
+#macro {\eOo} {#local tmp @findExit{enter}}
+#macro {\eOp\eOo} {#local tmp @findExit{enter}}
+#nop ins+/;
+#macro {\e[2~/} {#local tmp @findExit{enter}}
 
 #nop Numpad *;
-#macro {\eOj} {out}
-#macro {\eO5j} {gan che to out}
-#macro {\eO2j} {out}
+#macro {\eOj} {#local tmp @findExit{out}}
+#macro {\eOp\eOj} {#local tmp @findExit{out}}
+#nop ins+*
+#macro {\e[2~*} {#local tmp @findExit{out}}
 
 #nop buffer/chat scroll, F1~F4----------------------------------------;
 #macro {\eOP} {#buffer up};
