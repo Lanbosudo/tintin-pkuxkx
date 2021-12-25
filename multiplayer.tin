@@ -42,6 +42,9 @@
     #if {"$myId" == "lanbosudo"} {
         #var result {jifa dodge yanling-shenfa;jifa parry douzhuan-xingyi;jifa sword murong-jianfa;jifa blade baijia-daofa;jifa finger canhe-zhi;jifa leg tan-tui;bei finger leg;}
     };
+    #elseif {"$myId" == "lanbosudoc"} {
+        #var result {jifa force longxiang-boruo;jifa dodge yuxue-dunxing;jifa parry xiangfu-lun;jifa hammer xiangfu-lun;jifa strike huoyan-dao}
+    };
     #else {#return consider2}
 }
 

@@ -84,7 +84,7 @@
 }
 
 #nop reaction for sys info;
-#act {{^(重新连线完毕。|您上次是在.*连线进入，请及时核对。)}} {#class ticker read ticker.tin;sc}
+#act {{^(重新连线完毕。|您上次是在.*连线进入，请及时核对。)}} {#class ticker read ticker.tin;#cr;sc}
 #eve {VARIABLE UPDATE myId} {#if {{$myId} != {%1}} {#delay 1 @getSpecial{}} }
 
 #act {{^这里没有jitui这种食物。}} {#line gag;}
@@ -161,6 +161,20 @@
     };
 };
 
+#nop complement
+#act {{^((?<!【)[^\w\s]+)\s+=\s([a-z ]+)(, [a-z ]+)*$}} {
+    #nop #echo {match id: %3, name: %2};
+    #regexp {%2} {{\S*$job_name$}} {
+        #format id %l {%3};
+        follow $id;
+    };
+    #regexp {%2} {{\S*$target_name$}} {
+        #format target_id %l {%3};
+        #delay target_look {look $target_id} 1;
+    }
+}
+#act {^等等，系统喘气中......} {#delay 1 {id here}}
+
 #nop battle-------------------------------------------------------------------------------------------------------;
 #act {^你战胜了%+!} {
     #echo <faa>=====================;
@@ -178,24 +192,36 @@
     };
     #nop id here;
 
-    #delay killing_look {look} 1;
+    #delay killing_look {look;id here} 1;
 } {2}
 
 #nop  ▌         他的武功看上去不堪一击，出手似乎极轻。;
 #nop  ▌         你的武功看上去鹤立鸡群，出手似乎很轻。;
 #nop  ▌ ══    他的境界完全看不出深浅。;
 #nop     -  -    他看起来约五十多岁，身长约近八尺，体型肥胖。
-#act {{^\s.*\s(他|你|她)看起来约\S+多岁，}} {
+#nop    ▃▆▃   普通百姓「华丽转身」大高手(Grobot);
 
-    #line oneshot #act {{^\s.*的(武功|境界)(看上去|完全看)(\S+?)(，出手|。)}} {
-        #delay 1 {#echo {%s--%s} {%%4} {@desc2lvl{%%4}}};
-    } {1}
+#act {{^\s.{10}\s([^(]+)\([\w\s]+\)}} {
+    #regexp {%2} {{\S*$target_name$}} {
+
+        #nop block the next trigger for level;
+
+        #line oneshot #act {{^\s.*的(武功|境界)(看上去|完全看)(\S+?)(，出手|。)}} {
+            #nop #echo {%s--%s} {%%4} {@desc2lvl{%%4}};
+            #var target_lvl @desc2lvl{%%4};
+        } {1};
+    }
+    {
+        #line oneshot #act {{^\s.*的(武功|境界)(看上去|完全看)(\S+?)(，出手|。)}} {
+            #delay 1 {#echo {%s--%s} {%%4} {@desc2lvl{%%4}}};
+        } {1};
+    };
 }
 
 #nop #act {{^(你未选定攻击对手|未有对手或者你和对方未处于战斗中|你刚欲动作，突然感到一阵烦闷|慢慢地你终于又有了知觉...)}} {hpbrief} {2};
 
 #nop 当头炮决定开始跟随你一起行动。
-#act {{^\S+决定开始跟随你一起行动。}} {
+#act {{^[^【]\S+决定开始跟随你一起行动。}} {
     #echo <ffa>=====================;
     #echo <ffa>%1;
     #echo <ffa>=====================;
@@ -207,6 +233,8 @@
 #act {^你伸手向怀中一摸，发现密函已经不翼而飞！} {
     #line oneshot #act {{^(?!【)(\S+)说道：「嘿嘿，让本大爷来教训教训你！」}} {
         #var target_name %%2;
+
+        #nop done in prompt, target_name update EVENT;
         #nop #line oneshot #act {^%%2死了} {#var target_name -;get han from corpse;look;};
     } {1};
 } {2}
