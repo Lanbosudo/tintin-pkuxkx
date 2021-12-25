@@ -39,8 +39,7 @@
 
     #var bar_neili @paint_bar{$neili;@max{$neili_max;$neili};@eval{2*$neili_max};<ffa>;<dde>;<eee>};
 
-    #line oneshot
-        #act {{^#(\d+),(\d+),(\d+),(\d+),(\d\d+),(\d+)$}} {
+    #line oneshot #act {{^#(\d+),(\d+),(\d+),(\d+),(\d\d+),(\d+)$}} {
             #var qi_max %%2;
             #var qi_efft %%3;
             #var qi %%4;
@@ -118,10 +117,24 @@
 #nop jobs----------------------------------------------------------------;
 #act {^阿碧对你说道：去把将%1杀掉！} {#var job_name %1}
 #act {^岳不群交给你一封盖着火漆印戳的密函。} {
-    #line oneshot #act {{^(岳不群对你道：「我这里正好有封密函，麻烦你跑一趟，交给(\S+)附近的(\S+)。」|岳不群道：「多谢\S+，你赶紧把它送到(\S+)附近的(\S+)手中。」|岳不群在你的耳边悄声说道：这封机密函件，火速送给(.+)附近的(.+)，好处少不了你的。)}} {
-        #var job_name %%4%%6%%8;
-        #var job_loc %%3%%5%%7;
+
+    #class songxin_get open;
+    #act {{^岳不群对你道：「我这里正好有封密函，麻烦你跑一趟，交给(\S+)附近的(\S+)。」}} {
+        #var job_name %%3;
+        #var job_loc %%2;
+        #class songxin_get kill;
     };
+    #act {{^岳不群道：「多谢\S+，你赶紧把它送到(\S+)附近的(\S+)手中。」}} {
+        #var job_name %%3;
+        #var job_loc %%2;
+        #class songxin_get kill;
+    };
+    #act {{^岳不群在你的耳边悄声说道：这封机密函件，火速送给(.+)附近的(.+)，好处少不了你的。}} {
+        #var job_name %%3;
+        #var job_loc %%2;
+        #class songxin_get kill;
+    };
+
 }
 #act {{^你对陆乘风道：“听闻近来有人冒名桃花岛弟子在(\S+)布下迷阵行恶，我愿代劳除去此獠。”}} {
     #act {^陆乘风对着你点了点头。} {
