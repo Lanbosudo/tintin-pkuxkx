@@ -126,6 +126,8 @@
 #nop reaction of npc;
 #act {^%s杂耍人(Zashua ren)$} {north} {4};
 #act {^陆大有喝道：你不是华山弟子，不得入内。} {@getPowerUp{};hit lu dayou}
+#act {^兰剑伸手拦住你，说道：“非灵鹫宫弟子请回！”} {@getPowerUp{};hit lan jian}
+#act {^梅剑伸手拦住你，说道：“非灵鹫宫弟子请回！”} {@getPowerUp{};hit mei jian}
 #act {^中年道长拦住你说道：后面是本派重地，你不是武当弟子，此去多有不便，请留步。} {@getPowerUp{}; hit zhongnian daozhang;}
 #act {^一阵风吹过，把枯乾的骸骨化成骨灰吹散了。} {look}
 
@@ -221,7 +223,7 @@
 #nop #act {{^(你未选定攻击对手|未有对手或者你和对方未处于战斗中|你刚欲动作，突然感到一阵烦闷|慢慢地你终于又有了知觉...)}} {hpbrief} {2};
 
 #nop 当头炮决定开始跟随你一起行动。
-#act {{^[^【]\S+决定开始跟随你一起行动。}} {
+#act {{^\S{2}(?<!【)\S+决定开始跟随你一起行动。}} {
     #echo <ffa>=====================;
     #echo <ffa>%1;
     #echo <ffa>=====================;

@@ -143,7 +143,7 @@
 #ali {^stf$} {status_me -f};
 
 #ali {^joball$} {
-    #echo {target: %s lv.%s; job: %s @ %s} $target_name $target_lvl $job_name $job_loc;
+    #echo {target: %s(%s)lv.%s; job: %s@%s} $target_name $target_id $target_lvl $job_name $job_loc;
     #echo {lian: %s lv.%s; triggers: %s} $type_lian $lvl_lian $class_opened;
 };
 
