@@ -1,12 +1,14 @@
 #nop include chat;
 
-#func findExit { #nop %1 simple direction, %2 prefix, e.g., gan che;
+#var _walk_prefix {};
+
+#func findExit { #nop %1 simple direction, $_walk_prefix, e.g., "gan che to ";
     #foreach $list_exit[%*] direction {
         #local flag 0;
         #regex {$direction} {{^%1(up|down)?$}} {
-            #echo go:%s {%2 $direction};
+            #echo go:%s {$_walk_prefix$direction};
             #nop send {%2 $direction} won't work, escaping space might be problem...;
-            %2 $direction;
+            $_walk_prefix$direction;
             #format flag 1;
 
             #nop break inside regexp doesn't work...;

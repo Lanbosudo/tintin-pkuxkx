@@ -164,7 +164,7 @@
 };
 
 #nop complement
-#act {{^((?<!【)[^\w\s]+)\s+=\s([a-z ]+)(, [a-z ]+)*$}} {
+#act {{^((?<!【)[^\w\s]+)\s+=\s([a-z ']+)(, [a-z ']+)*$}} {
     #nop #echo {match id: %3, name: %2};
     #regexp {%2} {{\S*$job_name$}} {
         #format id %l {%3};
@@ -197,16 +197,14 @@
     #delay killing_look {look;id here} 1;
 } {2}
 
-#nop  ▌         他的武功看上去不堪一击，出手似乎极轻。;
-#nop  ▌         你的武功看上去鹤立鸡群，出手似乎很轻。;
-#nop  ▌ ══    他的境界完全看不出深浅。;
-#nop     -  -    他看起来约五十多岁，身长约近八尺，体型肥胖。
-#nop    ▃▆▃   普通百姓「华丽转身」大高手(Grobot);
+#nop ^ ▌         他的武功看上去不堪一击，出手似乎极轻。;
+#nop ^ ▌         你的武功看上去鹤立鸡群，出手似乎很轻。;
+#nop ^ ▌ ══    他的境界完全看不出深浅。;
+#nop ^    -  -    他看起来约五十多岁，身长约近八尺，体型肥胖。
+#nop ^   ▃▆▃   普通百姓「华丽转身」大高手(Grobot);
 
-#act {{^\s.{10}\s([^(]+)\([\w\s]+\)}} {
+#act {{^\s.{10}\s([^(]+)\([\w\s']+\)}} {
     #regexp {%2} {{\S*$target_name$}} {
-
-        #nop block the next trigger for level;
 
         #line oneshot #act {{^\s.*的(武功|境界)(看上去|完全看)(\S+?)(，出手|。)}} {
             #nop #echo {%s--%s} {%%4} {@desc2lvl{%%4}};
@@ -328,7 +326,7 @@
     #line oneshot #act {^    卷走%1财物的伙计 %+(%+)} {
         #format tmp_id %l %%2;
         ask $tmp_id about 要;
-        ask $tmp_id about yao;
+        #delay 2 {ask $tmp_id about yao};
 
     } {4};
 

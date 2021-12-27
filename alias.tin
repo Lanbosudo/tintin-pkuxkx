@@ -226,6 +226,16 @@
     zhanbu -maze;
 }
 
+#ali {^gc$} {
+    #regex {$_walk_prefix} {gan che to } {
+        #var _walk_prefix {};
+        #echo {resetting walk..};
+    } {
+        #var _walk_prefix {gan che to };
+        #echo {begin ganche};
+    };
+}
+
 #nop aobai-------------------------------------------------------;
 #ali {^aobai %1$} {
     #format class_opened $class_opened|aobai;
