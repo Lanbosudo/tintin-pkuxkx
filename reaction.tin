@@ -108,10 +108,10 @@
 #act {{^    \S+(玄冰空青|锰晶|金刚砂)【瑕疵】\(([^()]+)\)}} {
     #format id %l {%3}; get $id; #line quiet #unvar id; #delay pickup {look} 1;
 }
-#act {{^    \S*(黄金|白银|包袱|百草丹|牛黃血竭丹|经验符|朱睛冰蟾|养精丹|金创药)\(([^()]+)\)$}} {
+#act {{^    \S*(黄金|白银|包袱|百草丹|牛黃血竭丹|经验符|朱睛冰蟾|养精丹|金创药|水靠)\(([^()]+)\)$}} {
     #format id %l {%3}; get $id; #line quiet #unvar id; #delay pickup {look} 1;
 }
-#act {{^(?!【)\S+丢下]S+}} {#delay pickup {look} 1}
+#act {{^\S{2}(?<!【)\S+丢下\S+}} {#delay pickup {look} 1}
 
 
 #nop not right to do...;
@@ -121,7 +121,9 @@
 #nop reaction of location;
 #act {^春来茶馆 -} {fillall}
 #act {{^(你拿起船桨用力划了起来。|你跃上小舟，船就划了起来。|(黄河|长江)渡船 -|羊皮筏 -|(小)?木船 -)}} {yun regenerate;dazuo max;}
-#act {{^(不知过了多久，船终于靠岸了，你累得满头大汗。|小舟终于划到近岸，你从船上走了出来。|你朝船夫挥了挥手便跨上岸去。|你沿着踏板走了上去。)}} {halt;yun recover}
+#act {{^(不知过了多久，船终于靠岸了，你累得满头大汗。|小舟终于划到近岸，你从船上走了出来。|你朝船夫挥了挥手便跨上岸去。|你沿着踏板走了上去。|绿衣少女将小船系在树枝之上，你跨上岸去。)}} {halt;yun recover}
+
+#act {^你取出水靠，披在身上，轻轻一纵，跳入河中。} {#delay 2 {pick sword}}
 
 #nop reaction of npc;
 #act {^%s杂耍人(Zashua ren)$} {north} {4};
@@ -130,6 +132,8 @@
 #act {^梅剑伸手拦住你，说道：“非灵鹫宫弟子请回！”} {@getPowerUp{};hit mei jian}
 #act {^中年道长拦住你说道：后面是本派重地，你不是武当弟子，此去多有不便，请留步。} {@getPowerUp{}; hit zhongnian daozhang;}
 #act {^一阵风吹过，把枯乾的骸骨化成骨灰吹散了。} {look}
+#act {^丑雕神情冷漠地拦住了你的去路。} {ask diao about 独孤求败}
+#act {^    绿衣女郎(Girl)} {ask girl about 拜庄}
 
 #act {^王夫人说道：「大理有一种名种茶花，是天下的极品，一株上共开十八朵花} {#delay 2 {#send {answer 十八学士}}}
 #act {^王夫人说道：「大理有一种名种茶花，八朵异色同株} {#delay 2 {#send {answer 八仙过海}}}

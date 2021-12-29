@@ -1,6 +1,6 @@
 #nop
 
-#EVENT {PROGRAM START} {#session pkuxkx hk.pkuxkx.com 8080}
+#EVENT {PROGRAM START} {#session pkuxkx mud.pkuxkx.com 8080}
 #EVENT {SESSION DISCONNECTED} {#gts #delay 60 {#session pkuxkx hk.pkuxkx.com 8080}};
 /*
 #nop #act {...disconnected..} {};
