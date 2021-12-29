@@ -1,9 +1,15 @@
+#nop include alias.tin
+
 #nop tip for avoiding multiple firing;
 #nop    one reaction for one trigger;
+#nop switching to ticker for all action => no multi-triggers
 
 #nop prepare;
-#act {^{你必须空手才能练习|学习\S+必须空手。}} {uw all; lian $type_lian 50;}
-#act {{^你要装备 (\w+) 类武器才能练习}} {uw all; wi %2; lian $type_lian 50;}
+#act {^{你必须空手才能练习|学习\S+必须空手。}} {uw all; #var _str_lian_action{lian $type_lian 50}}
+#act {{^你要装备 (\w+) 类武器才能练习}} {uw all; wi %2; #var _str_lian_action{lian $type_lian 50}}
+
+#nop main ticker
+#tick {tic_lian} {$_str_lian_action} 1;
 
 #action {^{你需要提高基本功，不然练得再多也没有用。|你的基本招架的级别还没有斗转星移的级别高，不能通过练习来提高了。}} {
     #if {{$type_lian} == {{parry|douzhuan-xingyi}} } { 
@@ -14,44 +20,33 @@
         out;
     };
 
-    lingwu $type_lian 50;
+    #var _str_lian_action {lingwu $type_lian 50};
 };
 
-#action {{^你领悟了\S+次\S+。}} {lingwu $type_lian 50}
+#act {^%1上面没有记载什么值得学习的东西。} {#var _str_lian_action {read $type_lian 20}}
+#act {^你看着看着觉得书中人物的%+也不过如此。} {#var _str_lian_action {du $type_lian for 50}}
 
-#act {^你研读了五十次%+} {du $type_lian for 50}
-#act {^%1上面没有记载什么值得学习的东西。} {read $type_lian 20}
-#act {^你思索着%+中关于%+，对%+有一些新的理解。} {du $type_lian for 50}
-#act {^你看着看着觉得书中人物的%+也不过如此。} {du $type_lian for 50}
-
-#action {{^你的基本功夫比你的高级功夫还高！}} {lian $type_lian 50}
-
-#act {{^你\S+练习\S+，获得了\S+进步！}} {lian $type_lian 50}
+#action {{^你的基本功夫比你的高级功夫还高！}} {#var _str_lian_action {lian $type_lian 50}}
 
 #act {{^(你的体力不够练|你现在气血虚浮，练习不了|你太累了，没有办法练习|你的体力太低了)}} {yun recover}
 
-#act {{^你深深吸了几口气，脸色看起来好多了。}} {lian $type_lian 50}
-
+#action {{^你领悟了\S{2}次\S+。}} {yun regenerate}
 #act {{^(你现在过于疲倦,无法静下心来领悟功夫！|你现在过于疲倦，无法专心下来研读新知。|你的精神太低了。|你今天太累了，结果什么也没有学到。|你已经很累了，歇歇再读吧，身体要紧。|可惜你太累了，无法集中精神来研究夜空中的星斗。)}} {yun regenerate}
 
 #act {{^你略一凝神，精神看起来好多了。}} {
     #if {@get_percent{$neili;$neili_max} < 20 && @get_percent{$qi;$qi_max} > 80} {
         dazuo max;
-    } {
-        #regexp {$type_lian} {{book|tianlong}}
-            {du $type_lian for 50}
-            {lian $type_lian 50};
-    }
+    };
 }
 #act {{^你只能练习用 enable 指定的特殊技能。}} {
     #if {"$type_lian" == "shenyuan-gong"} {
-        xue bo for shenyuan-gong 20;
+        #var _str_lian_action{xue bo for shenyuan-gong 20};
     };
     #elseif {"$type_lian" == "douzhuan-xingyi"} {
         #list list_exit find {west} tmp;
         #if {$tmp && @sizeof{list_exit} == 1} {
+            #var _str_lian_action {look sky};
             cai huanshi; westup; jump zhuang};
-        #else {jump zhuang;l sky};
     }
 }
 
@@ -87,55 +82,48 @@
 #act {{^你一觉醒来，精神抖擞地活动了几下手脚。}} {w;s;s;e;e;dazuo max}
 
 #act {{^你将真气在体内沿脉络运行了一圈，缓缓纳入丹田，放下手，长吐了一口气。}} {
-    #if {"$type_lian" == "shenyuan-gong"} {bo huacao; xue bo for shenyuan-gong 20;};
-    #regexp {$type_lian} {{book|tianlong}}
-        {du $type_lian for 50}
-        {lian $type_lian 50};
+    #if {"$type_lian" == "shenyuan-gong"} {
+        bo huacao;
+    };
+    #if {"$type_lian" == "douzhuan-xingyi" } {
+        cai huanshi; westup; jump zhuang
+    };
 }
 
 #nop douzhuan-xingyi;
-#act {{^你正在研习斗转星移的武功图谱，似乎有点心得。}} {du douzhuan xingyi}
-#act {{^斗转星移初期只能通过研读图谱学习。}} {cai huanshi; du douzhuan xingyi}
+#act {{^斗转星移初期只能通过研读图谱学习。}} {cai huanshi; #var _str_lian_action {du douzhuan xingyi}}
 #act {^斗转星移只能通过学习来提高，无法通过练习来提高。} {
     #list list_exit find {west} tmp;
     #if {$tmp && @sizeof{list_exit} == 1} {
         cai huanshi; westup; jump zhuang};
 }
 
-#act {^你太累了，先歇歇吧！} {yun regenerate}
-#act {^{你脚下微一运劲，轻轻地一纵就上了木桩。|你又掌握了一些在实战中运用斗转星移的技巧。}} {l sky}
-#act {^你仰首望天，太阳挂在天空中，白云朵朵，阳光顺着云层的边缘洒下来，你觉得有些刺眼。} {#delay 60 {l sky}}
+#act {^你太累了，先歇歇吧！} {yun regenerate; jump zhuang}
 
 #nop force;
-#act {{^特殊内功无法练习，你可以通过\(learn\)或者\(xiulian\)来提高。}} {lingwu $type_lian 50}
-#act {{^其中二十次对答你颇有所感，你听了\S+的指导，似乎有些心得。}} {xue bo for shenyuan-gong 20;}
+#act {{^特殊内功无法练习，你可以通过\(learn\)或者\(xiulian\)来提高。}} { #var _str_lian_action {lingwu $type_lian 50}}
 
 #act {{^你的\S+进步了！}} {skbrief $type_lian}
 #act {{^#(\d+)/\d+$}} {
-    #local FULLSKILL 307;
     #nop TODO: move to multiplayer;
     #list list_skill cre {shenyuan-gong;force;sword;finger;douzhuan-xingyi;parry;dodge;leg};
     #var lvl_lian %2;
-    #if {%2 >= $FULLSKILL} {
-        #class lian kill;
-        #repl class_opened {|lian} {};
-        halt;
+    #if {%2 >= $_level_lian} {
         #if {"$type_lian" == "shenyuan-gong"} { west};
 
         #line quiet #local index;
         #list list_skill find $type_lian index;
         #if {$index < @sizeof{list_skill}} {
             #line quiet #math index {$index+1};
-            #delay 5 {lian $list_skill[$index]};
+            #var type_lian {$list_skill[$index]};
+            #var _str_lian_action {lian $type_lian 50};
         } {
             #nop start dazuo script;
-            #class dazuo read dazuo.tin;
-            #var class_opened $class_opened|dazuo;
+            t-lian;
+            t+dazuo;
             #format type_lian dazuo;
             hp -neili;
             dazuo max;
         }
     };
 }
-
-#tic {idle_check} {yun recover;dazuo 50} 300;

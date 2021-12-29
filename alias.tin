@@ -44,25 +44,27 @@
 }
 
 #nop full skills-----------------------------------------------------;
-#ali {{^lian (\S+)$}} {
-    #class lian read lian.tin;
-    #var class_opened $class_opened|lian;
+#ali {{^lian (\S+) to (\d+)$}} {
+    t+lian;
     #var type_lian %2;
+    #var _level_lian %3;
 
-    skbrief %2;lian $type_lian 50;
+    skbrief %2;
+    #var _str_lian_action {lian $type_lian 20};
 }
-#ali {{^xue (\S+) (\S+)$}} {
-    #class lian read lian.tin;
-    #var class_opened $class_opened|lian;
+#ali {{^xue (\S+) (\S+) to (\d+)$}} {
+    t+lian;
     #var type_lian %3;
+    #var _level_lian %4;
 
-    skbrief %3;xue %2 for $type_lian 20;
+    skbrief %3;
+    #var _str_lian_action {xue %2 for $type_lian 20};
 }
-#ali {{^read (\S+)$}} {
-    #class lian read lian.tin;
-    #var class_opened $class_opened|lian;
+#ali {{^read (\S+) to (\d+)$}} {
+    t+lian;
     #var type_lian %2;
-    du %2 for 50;
+    #var _level_lian %3;
+    #var _str_lian_action {du %2 for 50};
 }
 
 #ali {^daman$} {
@@ -148,6 +150,21 @@
 };
 
 #ali {^fawang$} { ask fawang about ·ç»ðÂÖ}
+
+#ali {^larmor$} {
+    #local armors {armor;boots;cloth;hands;head;shield;surcoat;waist;wrists;finger;neck;heart;shoulder;leg;face};
+    #list _list_armors cre $armors;
+    #var _armor_cnt 0;
+
+    #foreach *_list_armors[%*] _armor_index {
+        #nop in delay, $_armor_index won't be evaluated until executed;
+        #nop #delay $_armor_index {#send {list $_list_armors[$_armor_index] pro}};
+
+        #delay {$_armor_index-0.5} {#math _armor_cnt {$_armor_cnt+1}};
+        #delay $_armor_index {#send {list $_list_armors[$_armor_cnt] pro}};
+    };
+    #unvar _armor_index, _armor_cnt;
+}
 
 #nop map related-------------------------------------------------------;
 #ali {^map} {help map-pkuxkx}

@@ -13,8 +13,8 @@
     #else {#delay 1 {dazuo max}};
 }
 #act {^{你并没有受伤！|你现在气血充盈，没有受伤。}} {dazuo max;}
-#act {^你已经受伤过重，只怕一运真气便有生命危险！} {yun lifeheal $myId}
-#act {^你双掌相交护于胸前，双目微闭，运起内功开始疗伤。} {#delay 2 {yun heal}}
+#act {^你已经受伤过重，只怕一运真气便有生命危险！} {yun lifeheal $myId; yun juxue $myId}
+#act {^{你双掌相交护于胸前，双目微闭，运起内功开始疗伤。|你收蹑心神，屏息静气，缓缓开始运功疗伤。}} {#delay 2 {yun heal}}
 
 
 #act {{^你将真气在体内沿脉络运行了一圈，缓缓纳入丹田，放下手，长吐了一口气。}} {yun recover}
