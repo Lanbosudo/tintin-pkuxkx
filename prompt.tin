@@ -1,6 +1,9 @@
 #nop include alias,multiplayer;
+
+#nop var-------------------------------------------------;
 #var color_bg <B004040>;
 
+#nop func------------------------------------------------;
 #func getBar { #nop %1: value, #2: max value, %3 color;
     #format result %u {%3};
     #format result {$result%l} {%3};
@@ -19,12 +22,36 @@
     #nop #echo $result;
 }
 
+#var _map_NPC2JobName {
+    {林震南} {护镖}
+    {宋远桥} {宋远桥}
+    {欧阳克} {心上人}
+    {陆乘风} {破阵}
+    {公孙止} {公孙止}
+    {鹿杖客} {万安塔}
+    {苗王} {苗疆所有主流}
+    {岑其斯} {苗疆所有主流}
+    {韩员外} {韩员外}
+    {莲花生大士} {天珠及见性成佛}
+    {萧峰} {萧峰}
+    {胡一刀} {胡一刀}
+    {韩世忠} {韩世忠}
+    {仆人} {慕容仆人}
+    {孟之经} {都府刺杀}
+    {慕容复} {偷学}
+    {余玠} {谍报}
+    {欧阳敏} {暗杀}
+}
+#func npc2Job { #nop %1: npc name;
+    #var result $_map_NPC2JobName[%1];
+}
+
+
+#nop act--------------------------------------------------;
 /*
 #2.44M,480766,3440,33,3440,3440
 #1934,1934,136,1275,1275,1275
 #0,101,0,0,0,1
-【江湖】宋远桥、心上人、破阵、公孙止、万安塔、苗疆所有主流等任务奖励下降，韩员外、天珠及见性成佛、萧峰、胡一刀、韩世忠等任务奖励不变，慕容仆人、都府刺杀、偷学、谍报等任务奖励上升，护镖奖励最佳。
-【江湖】经推算，本周为平静之周，无特殊效果！
  */
 #act {{^#([0-9.]+(M|K)?),(\d+),(-?\d+),(\d+),(-?\d\d+),(\d+)$}} {
     #nop #echo {%2, %4, %5, %6, %7, %8};
@@ -73,7 +100,7 @@
 
     #line gag;
 
-    #format bar1 {--<fda>=%s=<eee>--%s--<adf>%s-Lv%d<eee>--<fbf>%s@%s<eee>---} $myId $week $target_name $target_lvl $job_name $job_loc;
+    #format bar1 {--<fda>=%s=<eee>--<adf>%sLv%d<eee>--<fbf>%s@%s<eee>---%s--} $myName $target_name $target_lvl $job_name $job_loc $week;
     #echo {{%s} {-4}} @truncToWidth{$bar1};
 
     #format bar2 {---<faa>%s<eee>-<adf>%s<eee>-<ffa>%s<eee>-<aff>%s<eee>---Exp:%s|Poten:%s--%s:%s--[$class_opened]---}
@@ -105,13 +132,64 @@
 }
 
 #nop notification-------------------------------------------------------;
-#act {^【江湖】经推算，本周为} {time}
-#act {~{^\e.+m本周为(\S+?)，}} {
-    #var week %2;
+/*
+【江湖】宋远桥、心上人、破阵、公孙止、万安塔、苗疆所有主流等任务奖励下降，韩员外、天珠及见性成佛、萧峰、胡一刀、韩世忠等任务奖励不变，慕容仆人、都府刺杀、偷学、谍报等任务奖励上升，护镖奖励最佳。
+【江湖】经推算，本周为平静之周，无特殊效果！
+┌───平静之周┬──────────────────────────────────┐
+│   慕容复     │无特殊效果。                                                        │
+│ ▂▇▇▇▂ 偷│剩余时间：二小时五十九分五十九秒。                                  │
+│   ╥ ╥      │                                                                    │
+│   ▂﹀▂ ▌学│↑谍报、都府刺杀、公孙止、胡一刀。                                  │
+│ ▅      █   │→天珠及见性成佛、韩世忠、萧峰、暗杀、护镖、万安塔。                │
+│ █      ▄ 任│↓苗疆所有主流、心上人、宋远桥、韩员外、慕容仆人、破阵。            │
 
-    #nop 慕容仆人、公孙止、韩世忠、宋远桥、偷学、萧峰等任务奖励下降，都府刺杀、破阵、苗疆所有主流、谍报、万安塔等任务奖励不变，心上人、护镖、胡一刀、韩员外等任务奖励上升，天珠及见性
-成佛奖励最佳。;
-    #line oneshot #act {~{^\e.+m(?!【)\S+等任务奖励下降\S+等任务奖励不变\S+等任务奖励上升，(\S+)奖励最佳。}} {#var week $week(%%2)};
+*/
+
+#act {~^\\e%+m【江湖】经推算，本周为%+，} {
+    time;
+}
+#act {^┌───%+之周┬} {
+    #var week {%1周};
+    #line oneshot #act {{^│(.{14})│}} {
+        #local _npc_name_expInc {%%2};
+        #repl _npc_name_expInc { } {};
+        #nop #echo {exp increased job npc: {$_npc_name_expInc}};
+
+        #local _job_name @npc2Job{$_npc_name_expInc};
+        #format _job_name {%.4s} $_job_name;
+
+        #var week {$week<fca>↑$_job_name};
+    };
+
+    #line oneshot #act {{^│.{14}│↑(\S+)。}} {
+        #local _job_names %%2;
+        #repl _job_names {、} {;};
+        #list _list_job_names cre $_job_names;
+
+        #foreach *_list_job_names[%*] _index {
+            #format _name {%.4s} {$_list_job_names[$_index]};
+            #list _list_job_names set $_index {$_name};
+        };
+
+        #list _list_job_names simp {};
+        #repl _list_job_names {;} {};
+        #var week {$week<eea>$_list_job_names};
+    };
+
+    #line oneshot #act {{^│.{14}│↓(\S+)。}} {
+        #local _job_names %%2;
+        #repl _job_names {、} {;};
+        #list _list_job_names cre $_job_names;
+
+        #foreach *_list_job_names[%*] _index {
+            #format _name {%.4s} {$_list_job_names[$_index]};
+            #list _list_job_names set $_index {$_name};
+        };
+
+        #list _list_job_names simp {};
+        #repl _list_job_names {;} {};
+        #var week {$week<faa>$_list_job_names};
+    };
 }
 
 #nop jobs----------------------------------------------------------------;
