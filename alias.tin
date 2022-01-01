@@ -44,27 +44,10 @@
 }
 
 #nop full skills-----------------------------------------------------;
-#ali {{^lian (\S+) to (\d+)$}} {
+#ali {^fullskill %d} {
     t+lian;
-    #var type_lian %2;
-    #var _level_lian %3;
-
-    skbrief %2;
-    #var _str_lian_action {lian $type_lian 20};
-}
-#ali {{^xue (\S+) (\S+) to (\d+)$}} {
-    t+lian;
-    #var type_lian %3;
-    #var _level_lian %4;
-
-    skbrief %3;
-    #var _str_lian_action {xue %2 for $type_lian 20};
-}
-#ali {{^read (\S+) to (\d+)$}} {
-    t+lian;
-    #var type_lian %2;
-    #var _level_lian %3;
-    #var _str_lian_action {du %2 for 50};
+    #echo {to level %1};
+    #var _level_lian %1;
 }
 
 #ali {^daman$} {
@@ -203,8 +186,9 @@
 #ali {^px$} {ask wu about ÉäÔÂ¹­;give wu gong;
     #delay 1 {push desk;d;light lampn;light lamps;light lampe;light lampw;d;break men;d}
 }
-#ali {^fm$} {w;e;s;e;n;n;e;w;s}
 #ali {^sandu$} {ask du nan about ÆÐÌá×Ó;ask du e about ·üÄ§µ¶;ask du jie about ½ð¸ÕÕÖ}
+#nop ???
+#ali {^fm$} {w;e;s;e;n;n;e;w;s}
 #ali {^ch$} {w;n;w;s;s;e;e;w}
 #ali {^chb$} {e;s;n;w;n;n;e;s;e}
 

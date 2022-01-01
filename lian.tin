@@ -4,119 +4,181 @@
 #nop    one reaction for one trigger;
 #nop switching to ticker for all action => no multi-triggers
 
-#nop prepare;
-#act {^{你必须空手才能练习|学习\S+必须空手。}} {uw all; #var _str_lian_action{lian $type_lian 50}}
-#act {{^你要装备 (\w+) 类武器才能练习}} {uw all; wi %2; #var _str_lian_action{lian $type_lian 50}}
+/* logic:
+   1. get current room name
+   2. construct mapping type_lian => room_name
+   3. need path for connecting room_name
+   4. logic: in _tic_lian,
+        if (current_room_name = map(type_lian)) then
+            getAction(type_lian)
+        else
+            untic _tic_lian
+            set target_room_name to map(type_lian)
 
-#nop main ticker
-#tick {tic_lian} {$_str_lian_action} 1;
+            tick _tick_lian_wait_walk: (tick interval should be longer than all path delay interval)
+                if current_room_name == target_room_name then
+                    untick _tick_lian_wait_walk; tic _tic_lian
+                fi
 
-#action {^{你需要提高基本功，不然练得再多也没有用。|你的基本招架的级别还没有斗转星移的级别高，不能通过练习来提高了。}} {
-    #if {{$type_lian} == {{parry|douzhuan-xingyi}} } { 
+            path(current_room_name, map(type_lian))
+        fi
+    5. caution about delay jump zhuang and tick (solved); don't send path multiple times.. (solved)
 
-        #list list_exit find {eastdown} tmp;
-        #if {$tmp} { jump down; eastdown};
+ */
+#nop initialisation------------------------------------------------------;
+#nop map type_lian => room_name;
+#var _list_room_lian;
 
-        out;
+#nop TODO: type & room can be customised by $myId/$myMenpai;
+#list list_skill cre {shenyuan-gong;force;sword;finger;douzhuan-xingyi;parry;dodge;leg};
+#list _list_type cre {shenyuan-gong;force;sword;finger;douzhuan-xingyi;parry;dodge;leg;sleep;dazuo};
+#list _list_room_lian cre {"密室";"花园";"花园";"花园";"观星台";"花园";"花园";"花园";"休息室";"休息室"};
+
+#var type_lian $list_skill[1];
+
+#nop func-------------------------------------------------------------------;
+#func mapType2Room { #nop %1 type_lian;
+    #list _list_type find {%1} _cnt;
+    #local i_type $_cnt;
+    #if {$i_type} {
+        #var result $_list_room_lian[$i_type];
     };
+    #else { #var result -};
+}
 
-    #var _str_lian_action {lingwu $type_lian 50};
-};
+#nop TODO: multi-key map?;
+#func getPathBtwRoom { #nop %1 roomName1, %2 roomName2;
+    #echo {%1, %2};
+    #if { "%1%2" == "花园密室" } {
+        #var result {bo huacao} };
+    #elseif { "%1%2" == "密室%S" } {
+        #var result {west} };
+    #elseif { "%1%2" == "花园观星台" } {
+        #var result {cai huanshi; westup; yun regenerate; #delay 3 {jump zhuang}} };
+    #elseif { "%1%2" == "观星台%S" } {
+        #var result {#delay 3 {jump down; eastdown; out}} };
+    #elseif { "%1%2" == "花园休息室" } {
+        #var result {hp;w;w;n;n;e} };
+    #elseif { {"%1%2"} == {"休息室%S"} } {
+        #var result {w;s;s;e;e} };
+    #else { #var result "" };
+}
 
-#act {^%1上面没有记载什么值得学习的东西。} {#var _str_lian_action {read $type_lian 20}}
-#act {^你看着看着觉得书中人物的%+也不过如此。} {#var _str_lian_action {du $type_lian for 50}}
+#func tic_logic {
+    #var _target_room_name {@mapType2Room{$type_lian}};
+    #repl _target_room_name {"} {};
+    #nop #echo {need to room $_target_room_name};
 
-#action {{^你的基本功夫比你的高级功夫还高！}} {#var _str_lian_action {lian $type_lian 50}}
+    #if {"$_current_room_name" == "$_target_room_name"} {
+        #nop #echo {do action of $type_lian};
+        @getLianAction{$type_lian};
+    };
+    #else {
+        @getPathBtwRoom{$_current_room_name;$_target_room_name};
 
+        #nop TODO: use EVENT to monitor current room name;
+        #var _current_room_name_bck $_current_room_name;
+        #untick _tic_lian;
+
+        #nop CAUTION: tick won't be killed by class kill;
+        #tic _tick_lian_wait_walk {
+            #if {"$_current_room_name" != "$_current_room_name_bck"} {
+                #untick _tick_lian_wait_walk;
+                #tick {_tic_lian} { #local tmp @tic_logic{}} 1;
+            };
+        } 5;
+    };
+}
+
+#func getLianAction { #nop %1 type_lian;
+    #if {{%1} == {shenyuan-gong}} {
+        #var result {xue bo for shenyuan-gong 20};
+    }; #elseif {{%1} == {force}} {
+        #var result {lingwu force 50};
+    }; #elseif {{%1} == {sword}} {
+        #var result {lian sword 50};
+    }; #elseif {{%1} == {finger}} {
+        #var result {lian finger 50};
+    }; #elseif {{%1} == {douzhuan-xingyi}} {
+        #var result {look sky};
+    }; #elseif {{%1} == {parry}} {
+        #var result {lingwu parry 50};
+    }; #elseif {{%1} == {dodge}} {
+        #var result {lian dodge 50};
+    }; #elseif {{%1} == {leg}} {
+        #var result {lian leg 50};
+    }; #elseif {{%1} == {sleep}} {
+        #var result {sleep};
+    }; #elseif {{%1} == {dazuo}} {
+        #var result {dazuo max};
+    };
+}
+#nop prepare-------------------------------------------------------------;
+#act {^{你必须空手才能练习|学习\S+必须空手。}} {uw all}
+#act {{^你要装备 (\w+) 类武器才能练习}} {uw all; wi %2}
+
+#nop main ticker---------------------------------------------------------;
+#tick {_tic_lian} { #local tmp @tic_logic{}} 1;
+#delay 2 {skbrief $type_lian};
+
+#nop triggers--------------------------------------------------------------;
 #act {{^(你的体力不够练|你现在气血虚浮，练习不了|你太累了，没有办法练习|你的体力太低了)}} {yun recover}
 
+#action {^你需要提高基本功，不然练得再多也没有用。} {
+    lingwu $type_lian 50;
+}
 #action {{^你领悟了\S{2}次\S+。}} {yun regenerate}
 #act {{^(你现在过于疲倦,无法静下心来领悟功夫！|你现在过于疲倦，无法专心下来研读新知。|你的精神太低了。|你今天太累了，结果什么也没有学到。|你已经很累了，歇歇再读吧，身体要紧。|可惜你太累了，无法集中精神来研究夜空中的星斗。)}} {yun regenerate}
+
+#act {^你太累了，先歇歇吧！} {look eastdown}; #nop pretending moved, update room name in cases of failing jump zhuang/down;
 
 #act {{^你略一凝神，精神看起来好多了。}} {
     #if {@get_percent{$neili;$neili_max} < 20 && @get_percent{$qi;$qi_max} > 80} {
         dazuo max;
     };
 }
-#act {{^你只能练习用 enable 指定的特殊技能。}} {
-    #if {"$type_lian" == "shenyuan-gong"} {
-        #var _str_lian_action{xue bo for shenyuan-gong 20};
-    };
-    #elseif {"$type_lian" == "douzhuan-xingyi"} {
-        #list list_exit find {west} tmp;
-        #if {$tmp && @sizeof{list_exit} == 1} {
-            #var _str_lian_action {look sky};
-            cai huanshi; westup; jump zhuang};
-    }
-}
-
 #act {{^(你(的)?内力不够|\( 你的内力已经枯竭，不能施用内功。\))}} {
     #if {@get_percent{$qi;$qi_max} < 5} {
-
-        #if {{$type_lian} == {{parry|douzhuan-xingyi}} } { 
-
-            #list list_exit find {eastdown} tmp;
-            #if {$tmp} { jump down; eastdown};
-
-            out;
+        #list list_skill find $type_lian _index_lian;
+        #if {$_index_lian} {
+            #var _type_lian_bck $type_lian;
         };
-        #elseif {"$type_lian" == "shenyuan-gong"} { west};
-        hp;w;w;n;n;e;sleep
+        #var type_lian sleep;
     } {
         dazuo max
     }
 }
-
 #act {{^(你现在精不够，无法控制内息的流动！|你现在气血严重不足，无法满足打坐最小要求。)}} {
-    #if {{$type_lian} == {{parry|douzhuan-xingyi}} } { 
-
-        #list list_exit find {eastdown} tmp;
-        #if {$tmp} { jump down; eastdown};
-
-        out;
+    #list list_skill find $type_lian _index_lian;
+    #if {$_index_lian} {
+        #var _type_lian_bck $type_lian;
     };
-    #elseif {"$type_lian" == "shenyuan-gong"} { west};
-    hp;w;w;n;n;e;sleep;
+    #var type_lian sleep;
 }
 
-#act {{^你一觉醒来，精神抖擞地活动了几下手脚。}} {w;s;s;e;e;dazuo max}
-
-#act {{^你将真气在体内沿脉络运行了一圈，缓缓纳入丹田，放下手，长吐了一口气。}} {
-    #if {"$type_lian" == "shenyuan-gong"} {
-        bo huacao;
-    };
-    #if {"$type_lian" == "douzhuan-xingyi" } {
-        cai huanshi; westup; jump zhuang
-    };
+#act {{^你一觉醒来，精神抖擞地活动了几下手脚。}} {
+    #var type_lian dazuo;
+    #line oneshot #act {{^你将真气在体内沿脉络运行了一圈，缓缓纳入丹田，放下手，长吐了一口气。}} {
+        do 3 halt;
+        #var type_lian $_type_lian_bck;
+    } {1};
 }
-
-#nop douzhuan-xingyi;
-#act {{^斗转星移初期只能通过研读图谱学习。}} {cai huanshi; #var _str_lian_action {du douzhuan xingyi}}
-#act {^斗转星移只能通过学习来提高，无法通过练习来提高。} {
-    #list list_exit find {west} tmp;
-    #if {$tmp && @sizeof{list_exit} == 1} {
-        cai huanshi; westup; jump zhuang};
-}
-
-#act {^你太累了，先歇歇吧！} {yun regenerate; jump zhuang}
-
-#nop force;
-#act {{^特殊内功无法练习，你可以通过\(learn\)或者\(xiulian\)来提高。}} { #var _str_lian_action {lingwu $type_lian 50}}
 
 #act {{^你的\S+进步了！}} {skbrief $type_lian}
 #act {{^#(\d+)/\d+$}} {
     #nop TODO: move to multiplayer;
-    #list list_skill cre {shenyuan-gong;force;sword;finger;douzhuan-xingyi;parry;dodge;leg};
     #var lvl_lian %2;
     #if {%2 >= $_level_lian} {
-        #if {"$type_lian" == "shenyuan-gong"} { west};
 
+        #nop local not working with list find..;
         #line quiet #local index;
         #list list_skill find $type_lian index;
+
         #if {$index < @sizeof{list_skill}} {
             #line quiet #math index {$index+1};
             #var type_lian {$list_skill[$index]};
-            #var _str_lian_action {lian $type_lian 50};
+
+            skbrief $type_lian;
         } {
             #nop start dazuo script;
             t-lian;
@@ -124,6 +186,6 @@
             #format type_lian dazuo;
             hp -neili;
             dazuo max;
-        }
-    };
+        };
+    }
 }

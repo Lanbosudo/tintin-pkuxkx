@@ -1,0 +1,7 @@
+#nop room, map, search...
+
+#act {^{(\S{2}(?<!【)\S+) - [\S+]}} {
+    #var _current_room_name %2;
+
+    #delay {room_name} {#echo {当前房间：$_current_room_name}} 1;
+}

@@ -13,6 +13,7 @@
     #CONFIG {CHARSET} GBK;
     #CONFIG {MOUSE} ON;
     #CONFIG {WORDWRAP} OFF;
+    #CONFIG {REPEAT CHAR} {;};
 
     #nop dependency tree (up->down: dependencies->class requiring dependencies);
     #nop                                            ;
@@ -36,4 +37,5 @@
     #class macro read macro.tin;
     #class walk read walk.tin;
     #class fullme read fullme.tin;
+    #class map read map.tin;
 }
