@@ -4,7 +4,13 @@
     #var url_fullme %0;
     #system ./fullme.sh %0;
 };
+#act {http://fullme.pkuxkx.net/robot.php?filename={\d+}} {
+    #var url_fullme %0;
+    #echo {$url_fullme};
+    #system ./fullme.sh %0;
+}
 
 #alias {^fullme2} {#system ./fullme.sh $url_fullme}
 
+#nop http://fullme.pkuxkx.net/robot.php?filename=164085755936062
 #nop 【江湖】賀蘭飍(Karr)在线发出红包，请到http://fullme.pkuxkx.net/robot.php?filename=1617960788614700查询口令。;

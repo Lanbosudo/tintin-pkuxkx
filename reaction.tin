@@ -74,7 +74,6 @@
 #eve {VARIABLE UPDATED food} {
     #if {$inBattle == 0 && $isBusy == 0} {
         #if {$food < 100 } {
-            #if {$food == 45 || $food == 44} {#echo {<aff>¶ö°¡©d('¦ê')<eee>}};
             #send {do 3 eat jitui};
         };
         #if {$drink < 100} {
