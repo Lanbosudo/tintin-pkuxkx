@@ -74,15 +74,15 @@
         @getLianAction{$type_lian};
     };
     #else {
-        @getPathBtwRoom{$_current_room_name;$_target_room_name};
+        #untick _tic_lian;
 
         #nop TODO: use EVENT to monitor current room name;
-        #var _current_room_name_bck $_current_room_name;
-        #untick _tic_lian;
+        #var _room_updated 0;
+        @getPathBtwRoom{$_current_room_name;$_target_room_name};
 
         #nop CAUTION: tick won't be killed by class kill;
         #tic _tick_lian_wait_walk {
-            #if {"$_current_room_name" != "$_current_room_name_bck"} {
+            #if {$_room_updated} {
                 #untick _tick_lian_wait_walk;
                 #tick {_tic_lian} { #local tmp @tic_logic{}} 1;
             };
@@ -130,7 +130,8 @@
 #action {{^你领悟了\S{2}次\S+。}} {yun regenerate}
 #act {{^(你现在过于疲倦,无法静下心来领悟功夫！|你现在过于疲倦，无法专心下来研读新知。|你的精神太低了。|你今天太累了，结果什么也没有学到。|你已经很累了，歇歇再读吧，身体要紧。|可惜你太累了，无法集中精神来研究夜空中的星斗。)}} {yun regenerate}
 
-#act {^你太累了，先歇歇吧！} {look eastdown}; #nop pretending moved, update room name in cases of failing jump zhuang/down;
+#act {^你太累了，先歇歇吧！} {look}; #nop mark room updated, in cases of failing jump down;
+#act {^你仰首望天，天上繁星点点，你顺着银河的方向看去，却发现部分的夜空被周围的树冠挡住了。} {jump zhuang}
 
 #act {{^你略一凝神，精神看起来好多了。}} {
     #if {@get_percent{$neili;$neili_max} < 20 && @get_percent{$qi;$qi_max} > 80} {

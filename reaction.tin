@@ -118,8 +118,12 @@
 #nop #act {{^\s+\S+的骸骨\(Skeleton\)}} {get gold from skeleton; get silver from skeleton; get cash from skeleton;} {4}
 
 #nop reaction of location;
-#act {^春来茶馆 -} {fillall}
-#act {{^(你拿起船桨用力划了起来。|你跃上小舟，船就划了起来。|(黄河|长江)渡船 -|羊皮筏 -|(小)?木船 -)}} {yun regenerate;dazuo max;}
+#eve {VARIABLE UPDATED _current_room_name} {
+    #nop CAUTION: chinese char should be enclosed by quote;
+    #if {"$_current_room_name" == "春来茶馆"} {fillall};
+    #if {"$_current_room_name" == "{(黄河|长江)渡船|羊皮筏|(小)?木船}"} {yun regenerate;dazuo max};
+}
+#act {{^(你拿起船桨用力划了起来。|你跃上小舟，船就划了起来。)}} {yun regenerate;dazuo max;}
 #act {{^(不知过了多久，船终于靠岸了，你累得满头大汗。|小舟终于划到近岸，你从船上走了出来。|你朝船夫挥了挥手便跨上岸去。|你沿着踏板走了上去。|绿衣少女将小船系在树枝之上，你跨上岸去。)}} {halt;yun recover}
 
 #act {^你取出水靠，披在身上，轻轻一纵，跳入河中。} {#delay 2 {pick sword}}
@@ -133,6 +137,7 @@
 #act {^一阵风吹过，把枯乾的骸骨化成骨灰吹散了。} {look}
 #act {^丑雕神情冷漠地拦住了你的去路。} {ask diao about 独孤求败}
 #act {^    绿衣女郎(Girl)} {ask girl about 拜庄}
+#act {^    姑苏慕容侍女 阿碧(A bi)} {ask bi about 听香剑}
 
 #act {^王夫人说道：「大理有一种名种茶花，是天下的极品，一株上共开十八朵花} {#delay 2 {#send {answer 十八学士}}}
 #act {^王夫人说道：「大理有一种名种茶花，八朵异色同株} {#delay 2 {#send {answer 八仙过海}}}
@@ -200,13 +205,14 @@
     #delay killing_look {look;id here} 1;
 } {2}
 
-#nop ^ ▌         他的武功看上去不堪一击，出手似乎极轻。;
-#nop ^ ▌         你的武功看上去鹤立鸡群，出手似乎很轻。;
-#nop ^ ▌ ══    他的境界完全看不出深浅。;
-#nop ^    -  -    他看起来约五十多岁，身长约近八尺，体型肥胖。
-#nop ^   ▃▆▃   普通百姓「华丽转身」大高手(Grobot);
-
-#act {{^\s.{10}\s([^(]+)\([\w\s']+\)}} {
+/*
+ ▌         他的武功看上去不堪一击，出手似乎极轻。
+ ▌         你的武功看上去鹤立鸡群，出手似乎很轻。
+ ▌ ══    他的境界完全看不出深浅。
+    -  -    他看起来约五十多岁，身长约近八尺，体型肥胖。
+   ▃▆▃   普通百姓「华丽转身」大高手(Grobot)
+ */
+#act {{^\s.{10}\s([^(]+)(?=(\(|正盘膝坐))}} {
     #regexp {%2} {{\S*$target_name$}} {
 
         #line oneshot #act {{^\s.*的(武功|境界)(看上去|完全看)(\S+?)(，出手|。)}} {
@@ -302,6 +308,7 @@
 
 #act {^完成海棠任务后，你被奖励了} {
     #unact {^    花痴 花老板(Hua laoban)};
+    #var job_loc -;
 } {3}
 
 #nop job pu ren------------------------------------------------------------------------------;
