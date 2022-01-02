@@ -1,4 +1,4 @@
-#nop include alias;
+#nop include alias, macro;
 #nop var initialisation----------------------------------------------;
 
 #list locationName create {yangzhou; xinyang; gaibang; qufu; qingliang; shashou; zhenjiang; jiangzhou; xiangyang; xuchang; nanyang; wudang; jingzhou; luoyang; huashancun; huashan; quanzhen; gumu; tonghua; ruzhou; jinyang; qilincun; shaolin; huaibei; chengdu; huijiang; lingjiu; lingzhou; zanpu; lanzhou; huangzhong; xingxiu; riyue; guangan; zhangjiakou; guanwai; puyang; yueyang; suzhou; jiaxing; fuzhou; mingzhou; linan; quanzhou; nanchang; yixing; murong; guiyun; lujiazhuang; yuewangmu; yashan; putian; meizhuang; miaojiang; dali; tianlong; emei; kunming; pingxi; lingxiao; dalunsi; menggu; taishan; tongquetai; chaoyang; shence; zhengyang; jinguang; mingde; anding; yongan; desheng; yanziji; qingzhou; dengzhou; weihaiwei; dongdukou; yandang; hankou}
@@ -101,6 +101,8 @@
     #list adjacentMatrix[$count] creat $tmp_list[$count];
 }
 #line quiet #unvar tmp_list;
+
+#var _stack_walk {};
 #nop end var initialisation------------------------------------------;
 
 
@@ -215,6 +217,11 @@
         #send {set brief 1};
         look;
         #echo {<cfa>到达%s!<eee>} $locationCNName[$locationIndex[$list_path[1]]];
+
+        #nop reset walk stack;
+        #var _stack_walk {};
+        #var _list_dir_input {};
+
         #return;
     };
 
@@ -372,7 +379,71 @@
     #local tmp @plist{list_path};
 }
 
+#nop reverse walking;
+#func getReverseDir { #nop %1 direction to be reversed;
+    #local dir %1;
+    #if {{%1} == {%*west%*}} { #repl dir {west} {east}};
+    #if {{%1} == {%*east%*}} { #repl dir {east} {west}};
+    #if {{%1} == {%*north%*}} { #repl dir {north} {south}};
+    #if {{%1} == {%*south%*}} { #repl dir {south} {north}};
+    #if {{%1} == {%*up%*}} { #repl dir {up} {down}};
+    #if {{%1} == {%*down%*}} { #repl dir {down} {up}};
+    #if {{%1} == {%*enter%*}} { #repl dir {enter} {out}};
+    #if {{%1} == {%*out%*}} { #repl dir {out} {enter}};
+
+    #var result $dir;
+}
+
+#func stack_pop { #nop %1 stack_name;
+    #if {@sizeof{%1}} {
+        #var result $%1[1];
+        #list %1 del 1;
+    } {
+        #var result "";
+    };
+};
+
+#func stack_push_walk { #nop %1 stack_name, %2 dir_to_push;
+    #local top_dir $%1[1];
+    #if {"$top_dir" == "@getReverseDir{%2}"} {
+        #local tmp @stack_pop{%1};
+    } {
+        #list %1 ins 1 {%2};
+    }
+}
+
 #nop end func-------------------------------------------------;
+
+#nop use _current_room_name will cause RACE (exits might be updated at same time);
+/* TODO: if list_dir_input[1] in list_exit then push walk_stack
+   else keep removing list_dir_input[1] until different dir found, then push walk_stack
+ */
+#eve {VARIABLE UPDATE _current_room_name} {
+
+    #local _list_exits $list_exit;
+
+    #if {@sizeof{_list_dir_input}} {
+        #list _list_exits find {$_list_dir_input[1]} _index;
+
+        #nop incorrect dir inputted;
+        #if {$_index == 0} {
+            #local dir_to_remove $_list_dir_input[1];
+            #list _list_dir_input sim {};
+
+            #repl _list_dir_input {$dir_to_remove;} {};
+            #if {{$_list_dir_input} == {$dir_to_remove}} {
+                #var _list_dir_input {};
+            } {
+                #list _list_dir_input cre {$_list_dir_input};
+            };
+        };
+
+        #if {@sizeof{_list_dir_input}} {
+            #local tmp @stack_push_walk{_stack_walk;$_list_dir_input[1]};
+            #list _list_dir_input del 1;
+        };
+    };
+}
 
 #act {{^^\s+这里明显的\S+有\s((\w+、)*\w+)\s和\s(\w+)。}} {
     #local exits {%2、%4};

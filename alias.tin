@@ -173,6 +173,22 @@
     #local tmp @getPathPY{%1;%2}
 }
 
+#nop pop walk stack to go back;
+#ali {^bk$} {
+    #var _list_reverse_path {};
+    #foreach $_stack_walk[%*] _dir {
+        #list _list_reverse_path ins -1 {@getReverseDir{$_dir}};
+    };
+    #nop #list _list_reverse_path ins -1 {do_look};
+    #list _list_reverse_path sim {};
+    #repl _list_reverse_path {;} {|};
+
+    #var _stack_walk {};
+
+    set walk_path $_list_reverse_path;
+    walk path;
+}
+
 #nop #ali {^yzqlc} {
     set walk_path do_enter shudong|do_say 天堂有路你不走|down|1|north|northwest|northwest|northwest|north|northwest|up|east;
     walk path;

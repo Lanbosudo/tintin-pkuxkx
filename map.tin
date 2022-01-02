@@ -4,5 +4,5 @@
     #var _current_room_name %2;
     #var _room_updated 1;
 
-    #delay {room_name} {#echo {当前房间：$_current_room_name}} 1;
+    #nop #delay {room_name} {#echo {当前房间：$_current_room_name}} 1;
 }

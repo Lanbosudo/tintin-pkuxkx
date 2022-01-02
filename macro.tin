@@ -1,11 +1,14 @@
-#nop include chat;
+#nop include chat, walk;
 
 #var _walk_prefix {};
+#var _list_dir_input {};
 
 #func findExit { #nop %1 simple direction, $_walk_prefix, e.g., "gan che to ";
     #foreach $list_exit[%*] direction {
         #local flag 0;
         #regex {$direction} {{^%1(up|down)?$}} {
+            #list _list_dir_input ins {-1} $direction;
+
             #echo go:%s {$_walk_prefix$direction};
             #nop send {%2 $direction} won't work, escaping space might be problem...;
             $_walk_prefix$direction;
@@ -58,61 +61,61 @@
 #macro {\eOw} {#local tmp @findExit{northwest}}
 
 #nop Numpad +--------------------------------------------------------;
-#macro {\eOn\eOn} {#send {d}}
+#macro {\eOn\eOn} {{#local tmp @findExit{down}}}
 #nop del;
-#macro {\e[3~\e[3~} {d}
+#macro {\e[3~\e[3~} {#local tmp @findExit{down}}
 
 #nop mintty
-#macro {\e[3~\e[C} {#send {ed}}
-#macro {\e[3~\e[B} {sd}
-#macro {\e[3~\e[D} {wd}
-#macro {\e[3~\e[A} {nd}
+#macro {\e[3~\e[C} {{#local tmp @findExit{eastdown}}}
+#macro {\e[3~\e[B} {#local tmp @findExit{southdown}}
+#macro {\e[3~\e[D} {#local tmp @findExit{westdown}}
+#macro {\e[3~\e[A} {#local tmp @findExit{northdown}}
 
-#macro {\e[3~\e[5~} {ned}
-#macro {\e[3~\e[6~} {sed}
-#macro {\e[3~\e[4~} {swd}
-#macro {\e[3~\e[1~} {nwd}
-#macro {\e[3~\e[F} {swn}
-#macro {\e[3~\e[H} {nwd}
+#macro {\e[3~\e[5~} {#local tmp @findExit{northeastdown}}
+#macro {\e[3~\e[6~} {#local tmp @findExit{southeastdown}}
+#macro {\e[3~\e[4~} {#local tmp @findExit{southwestdown}}
+#macro {\e[3~\e[1~} {#local tmp @findExit{northwestdown}}
+#macro {\e[3~\e[F} {#local tmp @findExit{southwestdown}}
+#macro {\e[3~\e[H} {#local tmp @findExit{northwestdown}}
 
 #nop ???
-#macro {\eOn\eOv} {#send {ed}}
-#macro {\eOn\eOr} {sd}
-#macro {\eOn\eOt} {wd}
-#macro {\eOn\eOx} {nd}
+#macro {\eOn\eOv} {{#local tmp @findExit{eastdown}}}
+#macro {\eOn\eOr} {#local tmp @findExit{southdown}}
+#macro {\eOn\eOt} {#local tmp @findExit{westdown}}
+#macro {\eOn\eOx} {#local tmp @findExit{northdown}}
 
-#macro {\eOn\eOy} {ned}
-#macro {\eOn\eOw} {nwd}
-#macro {\eOn\eOq} {swd}
-#macro {\eOn\eOs} {sed}
+#macro {\eOn\eOy} {#local tmp @findExit{northeastdown}}
+#macro {\eOn\eOw} {#local tmp @findExit{northwestdown}}
+#macro {\eOn\eOq} {#local tmp @findExit{southwestdown}}
+#macro {\eOn\eOs} {#local tmp @findExit{southeastdown}}
 
 #nop Numpad 0--------------------------------------------------------;
-#macro {\eOp\eOp} {#send {u}}
+#macro {\eOp\eOp} {{#local tmp @findExit{up}}}
 #nop ins;
-#macro {\e[2~\e[2~} {u}
+#macro {\e[2~\e[2~} {#local tmp @findExit{up}}
 
-#macro {\e[2~\e[C} {#send {eu}}
-#macro {\e[2~\e[B} {su}
-#macro {\e[2~\e[D} {wu}
-#macro {\e[2~\e[A} {nu}
+#macro {\e[2~\e[C} {{#local tmp @findExit{eastup}}}
+#macro {\e[2~\e[B} {#local tmp @findExit{southup}}
+#macro {\e[2~\e[D} {#local tmp @findExit{westup}}
+#macro {\e[2~\e[A} {#local tmp @findExit{northup}}
 
-#macro {\e[2~\e[5~} {neu}
-#macro {\e[2~\e[6~} {seu}
-#macro {\e[2~\e[4~} {swu}
-#macro {\e[2~\e[1~} {nwu}
-#macro {\e[2~\e[F} {swn}
-#macro {\e[2~\e[H} {nwd}
+#macro {\e[2~\e[5~} {#local tmp @findExit{northeastup}}
+#macro {\e[2~\e[6~} {#local tmp @findExit{southeastup}}
+#macro {\e[2~\e[4~} {#local tmp @findExit{southwestup}}
+#macro {\e[2~\e[1~} {#local tmp @findExit{northwestup}}
+#macro {\e[2~\e[F} {#local tmp @findExit{southwestup}}
+#macro {\e[2~\e[H} {#local tmp @findExit{northwestdown}}
 
 #nop ???
-#macro {\eOp\eOv} {#send {eu}}
-#macro {\eOp\eOr} {su}
-#macro {\eOp\eOt} {wu}
-#macro {\eOp\eOx} {nu}
+#macro {\eOp\eOv} {{#local tmp @findExit{eastup}}}
+#macro {\eOp\eOr} {#local tmp @findExit{southup}}
+#macro {\eOp\eOt} {#local tmp @findExit{westup}}
+#macro {\eOp\eOx} {#local tmp @findExit{northup}}
 
-#macro {\eOp\eOy} {neu}
-#macro {\eOp\eOw} {nwu}
-#macro {\eOp\eOq} {swu}
-#macro {\eOp\eOs} {seu}
+#macro {\eOp\eOy} {#local tmp @findExit{northeastup}}
+#macro {\eOp\eOw} {#local tmp @findExit{northwestup}}
+#macro {\eOp\eOq} {#local tmp @findExit{southwestup}}
+#macro {\eOp\eOs} {#local tmp @findExit{southeastup}}
 
 #nop Numpad / and *---------------------------------------------------;
 #macro {\eOo} {#local tmp @findExit{enter}}
