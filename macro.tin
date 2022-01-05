@@ -135,3 +135,6 @@
 
 #macro {\eOR} {#local tmp @scroll_chat{up}};
 #macro {\eOS} {#local tmp @scroll_chat{down}};
+
+#nop F5, repeat command
+#macro {\e[15~} {;}

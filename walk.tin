@@ -444,22 +444,23 @@
         };
     };
 }
+#act {{^(你的动作还没有完成，不能移动。|西湖美则美矣，但你也犯不着投水自杀吧？|哎哟，你一头撞在墙上，才发现这个方向没有出路。|锦江看看就好了，难道你真要投河自尽吗？)}} { #list _list_dir_input del 1 } {4}
 
 #act {{^^\s+这里明显的\S+有\s((\w+、)*\w+)\s和\s(\w+)。}} {
     #local exits {%2、%4};
     #rep exits {、} {;};
     #list list_exit cre $exits; 
     #nop #local tmp @plist{list_exit};
-}
+} {4}
 #act {{^\s+这里唯一的\S+有\s(\w+)。}} {
     #list list_exit cre {%2};
     #nop #local tmp @plist{list_exit};
-};
+} {4};
 #nop 浓雾中你依稀觉得似乎可以通往 south方向。
 #act {{^\s+浓雾中你依稀觉得似乎可以通往\s(\w+)方向。}} {
     #list list_exit cre {%2};
     #nop #local tmp @plist{list_exit};
-};
+} {4};
 #nop 浓雾中你觉得似乎有出口通往 north、 southeast和 west方向。
 #act {{^\s+浓雾中你觉得似乎有出口通往((\s\w+、)*\s\w+)和(\s\w+)方向。}} {
     #local exits {%2、%4};
@@ -467,4 +468,4 @@
     #rep exits { } {};
     #list list_exit cre $exits; 
     #local tmp @plist{list_exit};
-}
+} {4}

@@ -107,7 +107,7 @@
 #act {{^    \S+(玄冰空青|锰晶|金刚砂)【瑕疵】\(([^()]+)\)}} {
     #format id %l {%3}; get $id; #line quiet #unvar id; #delay pickup {look} 1;
 }
-#act {{^    \S*(黄金|白银|包袱|百草丹|牛黃血竭丹|经验符|朱睛冰蟾|养精丹|金创药|水靠)\(([^()]+)\)$}} {
+#act {{^    \S*(黄金|白银|包袱|百草丹|牛黃血竭丹|经验符|朱睛冰蟾|养精丹|金创药|水靠|残片)\(([^()]+)\)$}} {
     #format id %l {%3}; get $id; #line quiet #unvar id; #delay pickup {look} 1;
 }
 #act {{^\S{2}(?<!【)\S+丢下\S+}} {#delay pickup {look} 1}
@@ -130,14 +130,23 @@
 
 #nop reaction of npc;
 #act {^%s杂耍人(Zashua ren)$} {north} {4};
-#act {^陆大有喝道：你不是华山弟子，不得入内。} {@getPowerUp{};hit lu dayou}
-#act {^兰剑伸手拦住你，说道：“非灵鹫宫弟子请回！”} {@getPowerUp{};hit lan jian}
-#act {^梅剑伸手拦住你，说道：“非灵鹫宫弟子请回！”} {@getPowerUp{};hit mei jian}
-#act {^中年道长拦住你说道：后面是本派重地，你不是武当弟子，此去多有不便，请留步。} {@getPowerUp{}; hit zhongnian daozhang;}
+#act {^陆大有喝道：你不是华山弟子，不得入内。} {
+    #list _list_dir_input del 1;
+    @getPowerUp{};hit lu dayou}
+#act {^兰剑伸手拦住你，说道：“非灵鹫宫弟子请回！”} {
+    #list _list_dir_input del 1;
+    @getPowerUp{};hit lan jian}
+#act {^梅剑伸手拦住你，说道：“非灵鹫宫弟子请回！”} {
+    #list _list_dir_input del 1;
+    @getPowerUp{};hit mei jian}
+#act {^中年道长拦住你说道：后面是本派重地，你不是武当弟子，此去多有不便，请留步。} {
+    #list _list_dir_input del 1;
+    @getPowerUp{}; hit zhongnian daozhang;}
 #act {^一阵风吹过，把枯乾的骸骨化成骨灰吹散了。} {look}
 #act {^丑雕神情冷漠地拦住了你的去路。} {ask diao about 独孤求败}
 #act {^    绿衣女郎(Girl)} {ask girl about 拜庄}
 #act {^    姑苏慕容侍女 阿碧(A bi)} {ask bi about 听香剑}
+#act {^    武林名宿 大轮寺掌门 金轮法王(Jinlun fawang)} {ask fawang about 风火轮}
 
 #act {^王夫人说道：「大理有一种名种茶花，是天下的极品，一株上共开十八朵花} {#delay 2 {#send {answer 十八学士}}}
 #act {^王夫人说道：「大理有一种名种茶花，八朵异色同株} {#delay 2 {#send {answer 八仙过海}}}
@@ -191,8 +200,31 @@
     #echo <faa>%0;
     #echo <faa>=====================;
 } {2}
+
+#act {{^(\S{2}(?<!【)\S+)死了}} {
+    #list _list_target_names find {$target_name} index;
+    #if {$index} {
+        #list _list_target_names del $index;
+
+        #if {!$inBattle} {
+            get all from corpse;
+        } {
+            get silver from corpse;
+            get gold from corpse;
+            get cash from corpse;
+        };
+
+
+        #if {@sizeof{_list_target_names}} {
+            #var target_name $_list_target_names[1];
+            #delay killing_look {look;id here} 1;
+        };
+    };
+
+}
+
 #act {^看起来%1想杀死你！} {
-    #var target_name %1;
+    #var target_name {%1};
 
     #nop deprecate now...;
     #nop 张金鳌               = zhang jinao, zhang, jinao;
@@ -305,6 +337,8 @@
         ask hua about $list_flower[1];
     } {1};
 };
+
+#act {^突然窜出几个蒙面大汉，把你劫上了马车。} {xia} 3;
 
 #act {^完成海棠任务后，你被奖励了} {
     #unact {^    花痴 花老板(Hua laoban)};
