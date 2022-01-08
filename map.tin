@@ -1,6 +1,6 @@
 #nop room, map, search...
 
-#act {^{(\S{2}(?<!¡¾)\S+) - [\S+]}} {
+#act {^{(\S{2}(?<!¡¾)\S+) - \[\S+\]}} {
     #var _current_room_name %2;
     #var _room_updated 1;
 

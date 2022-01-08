@@ -61,12 +61,12 @@
 #macro {\eOw} {#local tmp @findExit{northwest}}
 
 #nop Numpad +--------------------------------------------------------;
-#macro {\eOn\eOn} {{#local tmp @findExit{down}}}
+#macro {\eOn\eOn} {#local tmp @findExit{down}}
 #nop del;
 #macro {\e[3~\e[3~} {#local tmp @findExit{down}}
 
 #nop mintty
-#macro {\e[3~\e[C} {{#local tmp @findExit{eastdown}}}
+#macro {\e[3~\e[C} {#local tmp @findExit{eastdown}}
 #macro {\e[3~\e[B} {#local tmp @findExit{southdown}}
 #macro {\e[3~\e[D} {#local tmp @findExit{westdown}}
 #macro {\e[3~\e[A} {#local tmp @findExit{northdown}}
@@ -79,7 +79,7 @@
 #macro {\e[3~\e[H} {#local tmp @findExit{northwestdown}}
 
 #nop ???
-#macro {\eOn\eOv} {{#local tmp @findExit{eastdown}}}
+#macro {\eOn\eOv} {#local tmp @findExit{eastdown}}
 #macro {\eOn\eOr} {#local tmp @findExit{southdown}}
 #macro {\eOn\eOt} {#local tmp @findExit{westdown}}
 #macro {\eOn\eOx} {#local tmp @findExit{northdown}}
@@ -90,11 +90,11 @@
 #macro {\eOn\eOs} {#local tmp @findExit{southeastdown}}
 
 #nop Numpad 0--------------------------------------------------------;
-#macro {\eOp\eOp} {{#local tmp @findExit{up}}}
+#macro {\eOp\eOp} {#local tmp @findExit{up}}
 #nop ins;
 #macro {\e[2~\e[2~} {#local tmp @findExit{up}}
 
-#macro {\e[2~\e[C} {{#local tmp @findExit{eastup}}}
+#macro {\e[2~\e[C} {#local tmp @findExit{eastup}}
 #macro {\e[2~\e[B} {#local tmp @findExit{southup}}
 #macro {\e[2~\e[D} {#local tmp @findExit{westup}}
 #macro {\e[2~\e[A} {#local tmp @findExit{northup}}
@@ -107,7 +107,7 @@
 #macro {\e[2~\e[H} {#local tmp @findExit{northwestdown}}
 
 #nop ???
-#macro {\eOp\eOv} {{#local tmp @findExit{eastup}}}
+#macro {\eOp\eOv} {#local tmp @findExit{eastup}}
 #macro {\eOp\eOr} {#local tmp @findExit{southup}}
 #macro {\eOp\eOt} {#local tmp @findExit{westup}}
 #macro {\eOp\eOx} {#local tmp @findExit{northup}}

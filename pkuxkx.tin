@@ -1,7 +1,7 @@
 #nop
 
 #EVENT {PROGRAM START} {#session pkuxkx mud.pkuxkx.com 8080}
-#EVENT {SESSION DISCONNECTED} {#gts #delay 60 {#session pkuxkx hk.pkuxkx.com 8080}};
+#EVENT {SESSION DISCONNECTED} {#gts #tic _tic_pkuxkx {#gts #session pkuxkx mud.pkuxkx.com 8080} 60};
 /*
 #nop #act {...disconnected..} {};
  */
@@ -15,6 +15,11 @@
     #CONFIG {WORDWRAP} OFF;
     #CONFIG {REPEAT CHAR} {;};
 
+    /*
+    TODO: 
+      1. move variables and functions in always-on classes to a common Util class
+      2. global variables naming convention: begin with _, followed with data struct name (e.g., _list_names)
+     */
     #nop dependency tree (up->down: dependencies->class requiring dependencies);
     #nop                                            ;
     #nop      multiplayer                           ;

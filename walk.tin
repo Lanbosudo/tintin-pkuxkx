@@ -414,7 +414,6 @@
 
 #nop end func-------------------------------------------------;
 
-#nop use _current_room_name will cause RACE (exits might be updated at same time);
 /* TODO: if list_dir_input[1] in list_exit then push walk_stack
    else keep removing list_dir_input[1] until different dir found, then push walk_stack
  */
@@ -444,7 +443,11 @@
         };
     };
 }
-#act {{^(你的动作还没有完成，不能移动。|西湖美则美矣，但你也犯不着投水自杀吧？|哎哟，你一头撞在墙上，才发现这个方向没有出路。|锦江看看就好了，难道你真要投河自尽吗？)}} { #list _list_dir_input del 1 } {4}
+
+#nop roll back dir input due to invalid direction/busy;
+#nop 你一脚深一脚浅地沿着黄河北岸向着西南方走去，虽然不快，但离目标越来越近了。;
+#act {{^(你的动作还没有完成，不能移动。|西湖美则美矣，但你也犯不着投水自杀吧？|哎哟，你一头撞在墙上，才发现这个方向没有出路。|锦江看看就好了，难道你真要投河自尽吗？|你一脚深一脚浅地沿着.+走去|你小心翼翼往前挪动，遇到艰险难行处，只好放慢脚步。|你还在山中跋涉，一时半会恐怕走不出这藏边群山！ )}} { #list _list_dir_input del 1 } {4}
+#act {^你因为种种原因停了下来，可以用walk继续进行。} {#delay 2 walk}
 
 #act {{^^\s+这里明显的\S+有\s((\w+、)*\w+)\s和\s(\w+)。}} {
     #local exits {%2、%4};
