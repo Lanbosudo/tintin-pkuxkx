@@ -1,7 +1,11 @@
 #nop
 
 #EVENT {PROGRAM START} {#session pkuxkx mud.pkuxkx.com 8080}
-#EVENT {SESSION DISCONNECTED} {#gts #tic _tic_pkuxkx {#gts #session pkuxkx mud.pkuxkx.com 8080} 60};
+#eve {SESSION ACTIVATED} {
+    #if {"%0" == "gts"} {
+        #delay 60 {#session pkuxkx mud.pkuxkx.com 8080}
+    };
+}
 /*
 #nop #act {...disconnected..} {};
  */
