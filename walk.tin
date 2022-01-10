@@ -198,6 +198,8 @@
         #line quiet #local tmp @plist{list_path};
 
         #send {set brief 3};
+        #format _begin_time {%T};
+        #echo {begin time: $_begin_time};
         #local tmp @getStep{};
     };
     #else {
@@ -207,7 +209,6 @@
 }
 
 #func getStep { #nop;
-    #nop #echo %s {@plist{list_path}};
 
     #if {@sizeof{list_path} < 2} {
 
@@ -289,27 +290,66 @@
     #nop river------------------------------------------------------------------------------;
     #elseif {("%1" == "luoyang" && "%2" == "jinyang") || ("%1" == "jinyang" && "%2" == "luoyang")
         || ("%1" == "puyang" && "%2" == "qufu") || ("%1" == "qufu" && "%2" == "puyang")
+        || ("%1" == "xinyang" && "%2" == "jiangzhou") || ("%1" == "jiangzhou" && "%2" == "xinyang")
+        || ("%1" == "yangzhou" && "%2" == "zhenjiang") || ("%1" == "zhenjiang" && "%2" == "yangzhou")
+        || ("%1" == "jingzhou" && "%2" == "yueyang") || ("%1" == "yueyang" && "%2" == "jingzhou")
+        || ("%1" == "shence" && "%2" == "yangzhou") || ("%1" == "yangzhou" && "%2" == "shence")
         || ("%1" == "lingzhou" && "%2" == "lanzhou") || ("%1" == "lanzhou" && "%2" == "lingzhou")} {
 
             #nop walk_pause: 1 - use boat/cart to travel;
             #nop           : 0 - crossed river/cart arrived, walk again/continuously;
+            #nop           : 2 - need to use ferry;
             #if {$walk_pause != 1} {#var walk_pause 1};
             #else {#var walk_pause 0};
             #echo {walk_pause: %s} $walk_pause;
 
-            #send {walk %2};
+            #if {"%1" == "shence" && $walk_pause} {walk yanziji};
+            #if {"%2" == "shence"} {walk jiankang};
+            #else {#send {walk %2}};
+    };
+
+    #nop ferry-------------------------------------------------------------------------------;
+    #nop CAUTION: /**/ can only be used outside of code blocks;
+    #nop basic logic:;
+    #nop     if walk_pause equals 0, then walk to harbour, set walk_pause as 2;
+    #nop     else if walk_pause equals 2, then ride ferry, set walk_pause as 1;
+    #nop     else if walk_pause equals 1, then walk from harbour to destination, set walk_pause back to 0;
+    #elseif {"%1" == "linan" && "%2" == "dongdukou"} {
+        #switch {$walk_pause} {
+            #case 0 {
+                #var walk_pause 2;
+                walk beidukou;
+            };
+            #case 2 {
+                #var walk_pause 0;
+                ride;
+            };
+        };
+    };
+    #elseif {"%1" == "dongdukou" && "%2" == "linan"} {
+        #switch {$walk_pause} {
+            #case 0 {
+                #var walk_pause 1;
+                ride north;
+            };
+            #case 1 {
+                #var walk_pause 0;
+                walk %2;
+            };
+        };
     };
 
     #nop cart--------------------------------------------------------------------------------;
     #elseif {("%1" == "dalunsi" && ("%2" == "yueyang" || "%2" == "chengdu"))
-        || ("%1" == "yueyang" && "%2" == "dalunsi")
-        || ("%1" == "chengdu" && ("%2" == "dalunsi" || "%2" == "tianlong"))
+        || ("%1" == "yueyang" && ("%2" == "dalunsi" || "%2" == "chengdu"))
+        || ("%1" == "chengdu" && ("%2" == "dalunsi" || "%2" == "tianlong" || "%2" == "yueyang"))
         || ("%1" == "tianlong" && "%2" == "chengdu")
-        || ("%1" == "jinguang" && "%2" == "huijiang") || ("%1" == "huijiang" && "%2" == "changan") } {
+        || ("%1" == "jinguang" && "%2" == "huijiang") || ("%1" == "huijiang" && "%2" == "jinguang") } {
 
         #local dst %2;
         #if {"%2" == "tianlong"} {#local dst tianlongsi};
         #elseif {"%2" == "huijiang"} {#local dst huizuxiaozhen};
+        #elseif {"%2" == "jinguang"} {#local dst changan};
 
         #if {$walk_pause != 1} {
             #var walk_pause 1;
@@ -377,6 +417,16 @@
 
     #local tmp @getPath{$index_src;$index_dst};
     #local tmp @plist{list_path};
+}
+
+#func forceGo {#nop %%1: src_full, %%2 dst_full;
+    #list list_path cre {%1;%2};
+    t+walk_trigger;
+
+    #send {set brief 3};
+    #format _begin_time {%T};
+    #echo {begin time: $_begin_time};
+    #local tmp @getStep{};
 }
 
 #nop reverse walking;
