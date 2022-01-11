@@ -87,7 +87,7 @@
 #eve {VARIABLE UPDATE myId} {#if {{$myId} != {%1}} {#delay 1 @getSpecial{}} }
 
 #act {{^这里没有jitui这种食物。}} {#line gag;}
-#act {{^你所在的环境没有水源，你身上也没有容器可以解渴。}} {#line gag}
+#act {{^你所在的环境没有水源，你身上也没有容器可以解渴。|这里没有任何可以让你解渴的水源。}} {#line gag}
 #act {{^你将剩下的烤鸡腿吃得干干净净。}} {drop bone}
 #act {^你有很长一段时间没有备份档案了，请使用backup命令来备份。} {backup}
 #act {^你获得了%+份石炭【{瑕疵|劣质}】。} {drop shi tan}
@@ -99,7 +99,7 @@
     #format id %l {%2}; get $id; #line quiet #unvar id; #delay pickup {look} 1;
 }
 #act {^    %S{☆精金|★木灵|☆玄冰|★炎晶|◎玉髓|☆月魄|★日魂|☆玄武甲|☆麒麟角|☆凤凰羽|★神龙骨}(%S {jin|ling|bing|jing|sui|po|hun|jia|jiao|yu|gu})} {
-    get %3 %4; #delay pickup {look} 1;
+    #format id %l {%3 %4}; get $id; #delay pickup {look} 1;
 }
 #act {{^    \S+【(普通|优秀|完美)】\(([^()]+)\)}} {
     #format id %l {%3}; get $id; #line quiet #unvar id; #delay pickup {look} 1;
@@ -298,10 +298,13 @@
     #line oneshot #act {^    花痴 花老板(Hua laoban)} {
         ask hua about $list_flower[1];
     } {1};
+
+    bk;
 } {3}
 #act {^你向花老板打听有关『%+』的消息。} {
     #line oneshot #act {^花老板说道：「%+可以在%+等地被挖到。」} {
         #var job_loc %%2;
+        bk;
     } {1};
 
     #act {^你挖出来了一株{($job_name)}。} {
@@ -309,6 +312,7 @@
         #echo 挖到！;
         #echo <aff>========================<eee>;
         uw chan;
+        bk;
 
         #line oneshot #act {^    「流民」花小贱(Hua xiaojian)} {give hua flower} {1};
     } {3};
@@ -329,6 +333,7 @@
         #repl job_name {%1|} {};
         #repl job_name {|%1} {};
     };
+    bk;
 
     #unact {^你挖出来了一株{($job_name)}。};
     #unact {^{($job_name)}渐渐地枯萎了。};
