@@ -2,6 +2,10 @@
 *.jpg
 *.log
 *.txt
+!matrix*.txt
+!map*.txt
 *.html
 *.pem
 getColor.sh
+screen*
+*.patch

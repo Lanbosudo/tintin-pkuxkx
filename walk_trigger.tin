@@ -22,12 +22,12 @@
     #class _class_walk_boat close;
 } 4;
 #act {{^大车停稳了下来，你可以下车\(xia\)了。}} {#local tmp @getStep{}} 4;
-#act {^你从小船上跳了下来，到了%+渡口。} {
+#act {^你从小船上跳了下来，到了%+。} {
     #if {$walk_pause == 1} {
         #echo {arrived; check pause: %s} $walk_pause;
         #local tmp @getStep{};
     };
-    #else {#show {你到达了%1渡口。}};
+    #else {#show {你到达了%1。}};
 } 4;
 
 #var walk_pause 0;

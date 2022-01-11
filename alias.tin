@@ -162,11 +162,31 @@
 }
 #ali {^gt?%1} {
     #local index $locationIndex[%1];
-    #if {@length{$index} == 0} {
-        #echo {%s not found} {%1};
+    #if {@length{$index}} {
+        #echo {%s-%s} $locationCNName[$index] $locationPY[$index];
     };
     #else {
-        #echo {%s-%s} $locationCNName[$index] $locationPY[$index];
+        #list fuzzySearch token {%1};
+        #list fuzzySearch sim {};
+        #rep fuzzySearch {;} {.?};
+
+        #var list_index {};
+        #foreach *locationPY[%*] index {
+            #if { {$locationPY[$index]} == {{$fuzzySearch}} } {
+                #list list_index ins 1 {$index};
+            };
+        };
+
+        #if {@sizeof{list_index}} {
+            #local locations {};
+            #foreach $list_index[%*] index {
+                #var locations {$locations $locationCNName[$index]-$locationPY[$index]};
+            };
+            #echo {可能的地点：$locations};
+        };
+        #else {
+            #echo {%s not found} {%1};
+        };
     };
 }
 #ali {^gt-%1-%2$} {
