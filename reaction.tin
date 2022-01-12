@@ -186,6 +186,8 @@
     #regexp {%2} {{\S*$job_name$}} {
         #format id %l {%3};
         follow $id;
+
+        #if {"$_job" == "ht"} {#var _ht_id $id};
     };
     #regexp {%2} {{\S*$target_name$}} {
         #format target_id %l {%3};
@@ -290,22 +292,25 @@
         #var job_name {%%2;%%4};
         #repl job_name {、} {;};
         #list list_flower cre $job_name;
-        #local tmp @plist{list_flower};
+        #nop local tmp @plist{list_flower};
 
         #repl job_name {;} {|};
-    } {1};
+        #var _job ht;
 
-    #line oneshot #act {^    花痴 花老板(Hua laoban)} {
-        ask hua about $list_flower[1];
-    } {1};
-
-    bk;
-} {3}
-#act {^你向花老板打听有关『%+』的消息。} {
-    #line oneshot #act {^花老板说道：「%+可以在%+等地被挖到。」} {
-        #var job_loc %%2;
         bk;
     } {1};
+
+    #class _class_ht_action open;
+    #act {^    花痴 花老板(Hua laoban)} {
+        ask hua about $list_flower[1];
+    } {3};
+
+    #act {^你向花老板打听有关『%+』的消息。} {
+        #line oneshot #act {^花老板说道：「%+可以在%+等地被挖到。」} {
+            #var job_loc %%%2;
+            bk;
+        } {1};
+    } 3;
 
     #act {^你挖出来了一株{($job_name)}。} {
         #echo <aff>========================;
@@ -314,41 +319,45 @@
         uw chan;
         bk;
 
-        #line oneshot #act {^    「流民」花小贱(Hua xiaojian)} {give hua flower} {1};
+        id; #nop get flower id;
+
+        #class _class_ht_give open;
+        #act {^    「流民」花小贱(Hua xiaojian)} {give hua $_ht_id} {3};
+        #class _class_ht_give close;
+
     } {3};
 
     #act {^{($job_name)}渐渐地枯萎了。} {
-        #unact {^    「流民」花小贱(Hua xiaojian)};
-    } {3}
+        #class _class_ht_give kill;
+    } {3};
+
+    #act {^没有花铲，你怎么挖花？} {uw all;wi chan;#delay 1 {scoop flower}} 3;
+
+    #act {^花小贱说道：「%+正是我想要的，谢谢$myName啦。」} {
+        #list list_flower find {%%1} tmp_index;
+        #list list_flower del $tmp_index;
+    
+        #list list_flower find %%1 tmp_index;
+        #if {$tmp_index == 0} {
+            #repl job_name {%%1|} {};
+            #repl job_name {|%%1} {};
+        };
+        bk;
+    
+        #class _class_ht_give kill;
+    } 3;
+    
+    #act {^突然窜出几个蒙面大汉，把你劫上了马车。} {xia} 3;
+    
+    #act {^完成海棠任务后，你被奖励了} {
+        #var job_loc -;
+        #var job_name -;
+        #class _class_ht_action kill;
+    } {3};
+
+    #class _class_ht_action close;
 } {3}
 
-#act {^没有花铲，你怎么挖花？} {uw all;wi chan;#delay 1 {scoop flower};}
-
-#act {^花小贱说道：「%+正是我想要的，谢谢$myName啦。」} {
-    #list list_flower find %1 tmp_index;
-    #list list_flower del $tmp_index;
-
-    #list list_flower find %1 tmp_index;
-    #if {$tmp_index == 0} {
-        #repl job_name {%1|} {};
-        #repl job_name {|%1} {};
-    };
-    bk;
-
-    #unact {^你挖出来了一株{($job_name)}。};
-    #unact {^{($job_name)}渐渐地枯萎了。};
-
-    #line oneshot #act {^    花痴 花老板(Hua laoban)} {
-        ask hua about $list_flower[1];
-    } {1};
-};
-
-#act {^突然窜出几个蒙面大汉，把你劫上了马车。} {xia} 3;
-
-#act {^完成海棠任务后，你被奖励了} {
-    #unact {^    花痴 花老板(Hua laoban)};
-    #var job_loc -;
-} {3}
 
 #nop job pu ren------------------------------------------------------------------------------;
 #act {^你从慕容世家家贼的尸体身上搜出一封信件。} {
@@ -421,4 +430,13 @@
 }
 #act {^你心中已没有丝毫杀气，如果真的一心向善，不如皈依我佛。} {
     #untick chanhui;
+}
+
+#nop nested argument escape test--------------------------------------------;
+#nop #act {^abc$} {
+    #act {^bcd$} {
+        #line oneshot #act {^test %%+} {
+            #echo {%%%1, %%1};
+        };
+    };
 }

@@ -172,7 +172,7 @@
 
         #var list_index {};
         #foreach *locationPY[%*] index {
-            #if { {$locationPY[$index]} == {{$fuzzySearch}} } {
+            #if { {$locationPY[$index]} == {{.?$fuzzySearch.?}} } {
                 #list list_index ins 1 {$index};
             };
         };
@@ -205,8 +205,11 @@
 
     #var _stack_walk {};
 
-    set walk_path $_list_reverse_path;
-    walk path;
+    #if {@length{$_list_reverse_path}} {
+        set walk_path $_list_reverse_path;
+        walk path;
+    } {#echo {<aff>walk stack empty =.=}
+    };
 }
 
 #nop #ali {^yzqlc} {
@@ -272,6 +275,8 @@
         #echo {begin ganche};
     };
 }
+
+#ali {^ht$} {scoop flower}
 
 #nop aobai-------------------------------------------------------;
 #ali {^aobai %1$} {
