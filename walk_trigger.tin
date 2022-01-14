@@ -16,7 +16,7 @@
         #local tmp @getStep{};
     } 1;
 };
-#act {^你吸了口气，一声“船家”，声音中正平和地远远传了出去。} {
+#act {^{你吸了口气，一声“船家”，声音中正平和地远远传了出去。|你的车船通账上还剩.+，这一趟的船资是}} {
     #class _class_walk_boat open;
     #act {{^只听得江面上隐隐传来：“别急嘛，这儿正忙着呐……”}} {#delay 2 {yell boat}} 4;
     #class _class_walk_boat close;
