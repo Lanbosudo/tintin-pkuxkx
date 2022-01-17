@@ -23,12 +23,20 @@
 
 #nop several versions of macro keys here: mintty+tt, mintty+screen+tt, terminus+tt;
 #nop Numpad 5/^L-------------------------------------------------------;
-#macro {\e[E} {#send {look}}
-#macro {\eOE} {look;}
-#macro {\cl} {look;}
+#macro {\e[E} {
+    #list _list_dir_input ins {1} {look};
+    #send {look}}
+#macro {\eOE} {
+    #list _list_dir_input ins {1} {look};
+    look;}
+#macro {\cl} {
+    #list _list_dir_input ins {1} {look};
+    look;}
 
 #nop ??
-#macro {\eOu} {look;}
+#macro {\eOu} {
+    #list _list_dir_input ins {1} {look};
+    look;}
 
 #nop Numpad 6,2,4,8---------------------------------------------------;
 #nop mintty/terminus+tt: arrow right,down,left,north;
