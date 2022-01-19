@@ -1,6 +1,9 @@
 #nop;
 #var type_lian dazuo;
 
+hp -neili
+dazuo 10;
+
 #act {^{你将真气在体内沿脉络运行了一圈，缓缓纳入丹田，放下手，长吐了一口气。|你只觉神元归一，全身精力弥漫，无以复加，忍不住长啸一声，徐徐站了起来。}} {
     #if {$qi*100/$qi_max < 20} {yun recover} {$type_lian max};
 }

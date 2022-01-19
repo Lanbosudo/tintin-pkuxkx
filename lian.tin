@@ -184,8 +184,6 @@
             #nop start dazuo script;
             t-lian;
             t+dazuo;
-            #format type_lian dazuo;
-            hp -neili;
             dazuo max;
         };
     }

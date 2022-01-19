@@ -39,7 +39,10 @@
     #screen get cols screenWidth;
     #math screenWidth {$screenWidth-1};
 
-    #format result {%.${screenWidth}s} {%1};
+    #format line {%.${screenWidth}s} {%1};
+    #nop CAUTION: format %.xxs str bug, might have space at start;
+    #repl line {{^\s+}} {};
+    #var result {$line};
     #unvar screenWidth;
 }
 

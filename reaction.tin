@@ -98,7 +98,7 @@
 #act {{^    \S+之\S+\((Sword|Blade|Staff|Whip|Axe|Spear|Hammer|Halberd|Throwing|Dagger|Armor|Boots|Cloth|Hands|Head|Shield|Surcoat|Waist|Wrists|Finger|Neck|Heart|Shoulder|Leg|Face|Hook)\)$}} {
     #format id %l {%2}; get $id; #line quiet #unvar id; #delay pickup {look} 1;
 }
-#act {^    %S{☆精金|★木灵|☆玄冰|★炎晶|◎玉髓|☆月魄|★日魂|☆玄武甲|☆麒麟角|☆凤凰羽|★神龙骨}(%S {jin|ling|bing|jing|sui|po|hun|jia|jiao|yu|gu})} {
+#act {^    %S{☆精金|★木灵|☆玄冰|★炎晶|◎玉髓|☆月魄|★日魂|☆玄武甲|☆麒麟角|☆凤凰羽|★神龙骨}(%S {jin|mu|bing|yan|sui|yue|ri|jia|jiao|yu|gu})} {
     #format id %l {%3 %4}; get $id; #delay pickup {look} 1;
 }
 #act {{^    \S+【(普通|优秀|完美)】\(([^()]+)\)}} {
@@ -107,7 +107,7 @@
 #act {{^    \S+(玄冰空青|锰晶|金刚砂)【瑕疵】\(([^()]+)\)}} {
     #format id %l {%3}; get $id; #line quiet #unvar id; #delay pickup {look} 1;
 }
-#act {{^    \S*(黄金|白银|包袱|百草丹|牛黃血竭丹|经验符|朱睛冰蟾|养精丹|金创药|水靠|残片)\(([^()]+)\)$}} {
+#act {{^    \S*(黄金|白银|包袱|百草丹|牛黃血竭丹|经验符|朱睛冰蟾|养精丹|金创药|水靠|(?<!地图)残片)\(([^()]+)\)$}} {
     #format id %l {%3}; get $id; #line quiet #unvar id; #delay pickup {look} 1;
 }
 #act {{^\S{2}(?<!【)\S+丢下\S+}} {#delay pickup {look} 1}
@@ -181,7 +181,7 @@
 };
 
 #nop complement
-#act {{^((?<!【)[^\w\s]+)\s+=\s([a-z ']+)(, [a-z ']+)*$}} {
+#act {{^((?!【)[^\w\s]+)\s+=\s([a-z ']+)(, [a-z ']+)*$}} {
     #nop #echo {match id: %3, name: %2};
     #regexp {%2} {{\S*$job_name$}} {
         #format id %l {%3};
