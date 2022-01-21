@@ -20,11 +20,11 @@
 #func getPerform { #nop use $myId;
     #if {"$myId" == "lanbosudo"} {
         #nop #var result {wi|blade;perform|blade.daoying;perform|finger.canshang;perform|parry.bishen;perform|dodge.yanling};
-        #var result {wi|sword;perform|sword.liuxing;perform|finger.canshang;perform|parry.bishen;perform|dodge.yanling;perform|leg.xingdian};
+        #var result {wi|sword;jiali|1cheng;perform|sword.liuxing;perform|leg.xingdian;jiali|0;perform|finger.canshang;perform|parry.bishen;perform|dodge.yanling};
     };
     #elseif {"$myId" == "lanbosudoc"} {
         #nop #var result {wi|lun;perform|strike.daoqi;perform|hammer.wushuai};
-        #var result {wi|lun;perform|hammer.dazhuan;perform|strike.daoqi};
+        #var result {wi|lun;jiali|5cheng;perform|hammer.dazhuan;perform|strike.daoqi;jiali|0};
     }
 }
 

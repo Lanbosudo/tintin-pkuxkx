@@ -118,6 +118,7 @@
 #nop #act {{^\s+\S+的骸骨\(Skeleton\)}} {get gold from skeleton; get silver from skeleton; get cash from skeleton;} {4}
 
 #nop reaction of location;
+#nop CAUTION: each event can only have one receiver, i.e., two event for each variable (VARIABLE UPDATE/UPDATED);
 #eve {VARIABLE UPDATED _current_room_name} {
     #nop CAUTION: chinese char should be enclosed by quote;
     #if {"$_current_room_name" == "春来茶馆"} {fillall};
@@ -129,7 +130,8 @@
 #act {^你取出水靠，披在身上，轻轻一纵，跳入河中。} {#delay 2 {pick sword}}
 
 #nop reaction of npc;
-#act {^%s杂耍人(Zashua ren)$} {north} {4};
+#nop NPC blocker---------------------------------------------;
+#act {^%s杂耍人(Zashua ren)$} {east} {4};
 #act {^陆大有喝道：你不是华山弟子，不得入内。} {
     #list _list_dir_input del 1;
     @getPowerUp{};hit lu dayou}
@@ -142,6 +144,10 @@
 #act {^中年道长拦住你说道：后面是本派重地，你不是武当弟子，此去多有不便，请留步。} {
     #list _list_dir_input del 1;
     @getPowerUp{}; hit zhongnian daozhang;}
+#act {^{官兵|虚通|守山弟子}%+{留下再说！|请放下兵刃。|请解兵器。}} {
+    #list _list_dir_input del 1;
+    uw all}
+
 #act {^一阵风吹过，把枯乾的骸骨化成骨灰吹散了。} {look}
 #act {^丑雕神情冷漠地拦住了你的去路。} {ask diao about 独孤求败}
 #act {^    绿衣女郎(Girl)} {ask girl about 拜庄}
@@ -152,7 +158,6 @@
 #act {^王夫人说道：「大理有一种名种茶花，八朵异色同株} {#delay 2 {#send {answer 八仙过海}}}
 #act {^王夫人说道：「大理有一种名种茶花，三朵异色同株} {#delay 2 {#send {answer 风尘三侠}}}
 #act {^王夫人说道：「这一种茶花，论颜色，比十八学士少了一色，偏又是驳而不纯} {#delay 2 {#send {answer 落第秀才}}}
-#act {^{官兵|虚通|守山弟子}%+{留下再说！|请放下兵刃。|请解兵器。}} {uw all}
 
 #nop die------------------------------------------------------------------------------------------------;
 #act {^你死了。} {
@@ -168,19 +173,31 @@
 #nop    广寒宫 堂主 侠之大者 ☆日行千里☆ 「太空堂」太空人(Astronaut);
 #nop #act {{^\s{4}([^0-9a-zA-Z;:() ]+\s)*(\S*「\S+」)?((一|二|三|四|五|六|七|八|九|十)+位)?([^;:()]+)\(([^()]+)\)( <\S+>)?$}};
 #act {{^\s{4}(\S.+)\(([^()]+)\)( (<|\[)\S+(>|\]))?$}} {
-    #nop #echo {reaction,match id: %3};
+    #nop echo {reaction,match id: %3};
+    #format look_id %l {%3};
+
     #regexp {%2} {{\S*$job_name$}} {
-        #format id %l {%3};
-        follow $id;
-        #line quiet #unvar id;
+        follow $look_id;
+
     };
     #regexp {%2} {{\S*$target_name$}} {
         #format target_id %l {%3};
         #delay target_look {look $target_id} 1;
     };
-};
+
+#nop conflict with pick-up reactions, although loading order will have natual priority (FCFS);
+#nop adding in case order changes in future;
+} 5.5;
 
 #nop complement
+/* deprecate now...;
+张金鳌               = zhang jinao, zhang, jinao;
+#line oneshot #act {^$target_name{\s+=\s(\S[^,]+)(,[^,]+)+}} {
+    #nop #echo %s {id: %%2 %%3};
+    #var target_id {%%2};
+};
+*/
+#nop id here;
 #act {{^((?!【)[^\w\s]+)\s+=\s([a-z ']+)(, [a-z ']+)*$}} {
     #nop #echo {match id: %3, name: %2};
     #regexp {%2} {{\S*$job_name$}} {
@@ -204,7 +221,7 @@
 } {2}
 
 #act {{^(\S{2}(?<!【)\S+)死了}} {
-    #list _list_target_names find {$target_name} index;
+    #list _list_target_names find {%2} index;
     #if {$index} {
         #list _list_target_names del $index;
 
@@ -214,6 +231,7 @@
             get silver from corpse;
             get gold from corpse;
             get cash from corpse;
+            get gem from corpse;
         };
 
 
@@ -228,14 +246,6 @@
 #act {^看起来%1想杀死你！} {
     #var target_name {%1};
 
-    #nop deprecate now...;
-    #nop 张金鳌               = zhang jinao, zhang, jinao;
-    #nop #line oneshot #act {^$target_name{\s+=\s(\S[^,]+)(,[^,]+)+}} {
-        #nop #echo %s {id: %%2 %%3};
-        #var target_id {%%2};
-    };
-    #nop id here;
-
     #delay killing_look {look;id here} 1;
 } {2}
 
@@ -245,8 +255,12 @@
  ▌ ══    他的境界完全看不出深浅。
     -  -    他看起来约五十多岁，身长约近八尺，体型肥胖。
    ▃▆▃   普通百姓「华丽转身」大高手(Grobot)
+ ▂▃▅▃▂ 水流觞脸上神色平和，身形凝重，稳如山岳。
  */
-#act {{^\s.{10}\s([^(]+)(?=(\(|正盘膝坐))}} {
+#act {{^\s.{10}\s([^(]+\S)(\(|正盘膝坐|脸上神色平和)([^)]+)\)?}} {
+    #format _look_id %l {%4};
+    #echo {look id: $_look_id};
+
     #regexp {%2} {{\S*$target_name$}} {
 
         #line oneshot #act {{^\s.*的(武功|境界)(看上去|完全看)(\S+?)(，出手|。)}} {
@@ -349,7 +363,7 @@
     
     #act {^突然窜出几个蒙面大汉，把你劫上了马车。} {xia} 3;
     
-    #act {^完成海棠任务后，你被奖励了} {
+    #act {{^完成海棠任务后，你被奖励了|^你向花小贱打听有关『fail』的消息。}} {
         #var job_loc -;
         #var job_name -;
         #class _class_ht_action kill;
@@ -360,6 +374,7 @@
 
 
 #nop job pu ren------------------------------------------------------------------------------;
+
 #act {^你从慕容世家家贼的尸体身上搜出一封信件。} {
     #line oneshot #act {^    姑苏慕容 仆人(Pu ren)} {
         give ren xin;
@@ -371,6 +386,7 @@
     #var job_loc %3,%1;
     #var job_name %2;
 }
+
 #act {^你累了个半死，终于把镖运到了地头。} {
     #line oneshot #act {^    林震南(Lin zhennan)} {
         ask lin about finish;
@@ -418,7 +434,6 @@
     } {4};
 }
 
-
 #nop aobai camp------------------------------------------------------------------------------;
 #act {^ 道    德：  %+                     杀    气：  {疯狂|嗜血}} {
     #untick aobai;
@@ -440,3 +455,4 @@
         };
     };
 }
+#act {$_test_test} { #echo {matched %0}};

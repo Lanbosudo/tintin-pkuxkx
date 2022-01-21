@@ -119,6 +119,7 @@
 
 #nop main ticker---------------------------------------------------------;
 #tick {_tic_lian} { #local tmp @tic_logic{}} 1;
+#tic {idle_check} {look} 300;
 #delay 2 {skbrief $type_lian};
 
 #nop triggers--------------------------------------------------------------;

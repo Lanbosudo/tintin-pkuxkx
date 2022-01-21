@@ -163,7 +163,7 @@ m\e[1;37m、\e[2;37;0m\e[1;37m\e[2;37;0m\e[1;37m公孙止\e[2;37;0m\e[1;37m、\e[2;37
     #var week {%3};
     time;
 }
-#act {{^┌───(\S+)之周(┬|─)}} {
+#act {{^┌───(\S+)(之周|同庆)(┬|─)}} {
 
     #nop CAUTION: manually input meta color will be treated as plain string and only converted while output;
     #nop different from color match (SEEMS color code is not in string itself);
