@@ -229,6 +229,8 @@
     #delay 1 {push desk;d;light lampn;light lamps;light lampe;light lampw;d;break men;d}
 }
 #ali {^sandu$} {ask du nan about ÆÐÌá×Ó;ask du e about ·üÄ§µ¶;ask du jie about ½ð¸ÕÕÖ}
+#ali {^jqg$} {@getJueqingguPath{enter}};
+#ali {^jqgb$} {@getJueqingguPath{back}};
 #nop ???
 #ali {^fm$} {w;e;s;e;n;n;e;w;s}
 #ali {^ch$} {w;n;w;s;s;e;e;w}
@@ -281,6 +283,21 @@
 
 #ali {^ht$} {scoop flower}
 
+#ali {^db$} {
+    #foreach *_list_db_look_id[%*] index {
+        #if {{$_list_db_look_id[$index]} == {$_list_db_look_id[-1]}} {
+            #list _list_db_look_id set $index {
+                #delay $index {look $_list_db_look_id[-1] @eval{1+@sizeof{_list_db_look_id}-$index}};
+            }
+        } {
+            #list _list_db_look_id set $index {
+                #delay $index {look $_list_db_look_id[$index]};
+            }
+        };
+
+        $_list_db_look_id[$index];
+    };
+}
 #nop aobai-------------------------------------------------------;
 #ali {^aobai %1$} {
     #format class_opened $class_opened|aobai;

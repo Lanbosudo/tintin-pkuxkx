@@ -123,6 +123,8 @@
     #nop CAUTION: chinese char should be enclosed by quote;
     #if {"$_current_room_name" == "春来茶馆"} {fillall};
     #if {"$_current_room_name" == "{(黄河|长江)渡船|羊皮筏|(小)?木船}"} {yun regenerate;dazuo max};
+
+    #var _list_db_look_id {};
 }
 #act {{^(你拿起船桨用力划了起来。|你跃上小舟，船就划了起来。)}} {yun regenerate;dazuo max;}
 #act {{^(不知过了多久，船终于靠岸了，你累得满头大汗。|小舟终于划到近岸，你从船上走了出来。|你朝船夫挥了挥手便跨上岸去。|你沿着踏板走了上去。|绿衣少女将小船系在树枝之上，你跨上岸去。)}} {halt;yun recover}
@@ -179,12 +181,39 @@
     #regexp {%2} {{\S*$job_name$}} {
         follow $look_id;
 
+        #nop jobs=====================================;
+        #if {{$_job} == {db}} {
+            #local codes {$job_name};
+            #repl codes {|} {;};
+            #list list_db_code cre {$codes};
+            #foreach *list_db_code[%*] index {
+                #list list_db_code set $index {#delay $index {say $list_db_code[$index]}};
+                $list_db_code[$index];
+            };
+        };
+        #nop jobs=====================================;
     };
     #regexp {%2} {{\S*$target_name$}} {
         #format target_id %l {%3};
         #delay target_look {look $target_id} 1;
     };
 
+    #nop jobs=====================================;
+    #if {{$_job} == {db}} {
+        #list _list_db_look_id find {$look_id} index;
+        #if {!$index} { #nop a b <= c;
+            #list _list_db_look_id ins 1 {$look_id};
+        } {
+            #if {{$_list_db_look_id[$index]} == {$_list_db_look_id[-1]}} { #nop a b b <= b;
+                #list _list_db_look_id ins -1 {$look_id};
+            } { #nop a b <= a;
+                #list _list_db_look_id del $index;
+                #list _list_db_look_id ins -1 {$look_id};
+                #list _list_db_look_id ins -1 {$look_id};
+            };
+        };
+    };
+    #nop jobs=====================================;
 #nop conflict with pick-up reactions, although loading order will have natual priority (FCFS);
 #nop adding in case order changes in future;
 } 5.5;
@@ -286,7 +315,33 @@
 
 #act {{^[> ]*$}} {#line gag}
 
+#nop menzhon----------------------------------------------------------------------------;
+#act {^阿碧对你说道：去把将%1杀掉！} {#var job_name %1} 3;
+
 #nop job songxin----------------------------------------------------------------------------;
+#act {^岳不群%*给你一封盖着火漆印戳的密函。} {
+    #var _job sx;
+
+    #class songxin_get open;
+    #act {{^岳不群对你道：「我这里正好有封密函，麻烦你跑一趟，交给(\S+)附近的(\S+)。」}} {
+        #var job_name %%3;
+        #var job_loc %%2;
+        #class songxin_get kill;
+    };
+    #act {{^岳不群道：「多谢\S+，你赶紧把它送到(\S+)附近的(\S+)手中。」}} {
+        #var job_name %%3;
+        #var job_loc %%2;
+        #class songxin_get kill;
+    };
+    #act {{^岳不群在你的耳边悄声说道：这封机密函件，火速送给(.+)附近的(.+)，好处少不了你的。}} {
+        #var job_name %%3;
+        #var job_loc %%2;
+        #class songxin_get kill;
+    };
+    #class songxin_get close;
+
+} 3;
+
 #act {^你伸手向怀中一摸，发现密函已经不翼而飞！} {
     #line oneshot #act {{^(?!【)(\S+)说道：「嘿嘿，让本大爷来教训教训你！」}} {
         #var target_name %%2;
@@ -297,7 +352,12 @@
 } {2}
 
 #act {^你从怀中掏出信交给%+，道：「这是岳不群先生托%+送给您的信，请收好。」} {
-    #line oneshot #act {^    武林名宿 华山派掌门「君子剑」岳不群(Yue buqun)} {ask yue about finish} {1};
+    #line oneshot #act {^    武林名宿 华山派掌门「君子剑」岳不群(Yue buqun)} {
+        ask yue about finish;
+        #var _job -;
+        #var job_loc -;
+        #var job_name -;
+    } {1};
 } {3}
 
 #nop job flower-----------------------------------------------------------------------------;
@@ -374,10 +434,19 @@
 
 
 #nop job pu ren------------------------------------------------------------------------------;
+#act {^你向仆人打听有关『job』的消息。} {
+    #line oneshot #act {^仆人叹道：家贼难防，有人偷走了少爷的信件，{据传曾在『(\S+)』附近出现，你去把它找回来吧！|听说在(\S+)留下了线索，你去看看！}} {
+        #var job_name {$myName.*慕容世家家贼};
+        #var job_loc {%%2%%3};
+    };
+} 3;
 
 #act {^你从慕容世家家贼的尸体身上搜出一封信件。} {
     #line oneshot #act {^    姑苏慕容 仆人(Pu ren)} {
         give ren xin;
+        #var _job -;
+        #var job_loc -;
+        #var job_name -;
     };
 }
 
@@ -385,11 +454,15 @@
 #act {^林震南在你的耳边悄声说道：你把这批红货送到%+那里，他已经派了个伙计名叫%+到%+附近接你，把镖车送到他那里就行了。} {
     #var job_loc %3,%1;
     #var job_name %2;
-}
+    #var _job hb;
+} 3;
 
 #act {^你累了个半死，终于把镖运到了地头。} {
     #line oneshot #act {^    林震南(Lin zhennan)} {
         ask lin about finish;
+        #var _job -;
+        #var job_loc -;
+        #var job_name -;
     };
 }
 #act {^劫匪突然从暗处跳了出来，阴笑道：“红货和人命都留下来吧！。”} {
@@ -412,6 +485,10 @@
 #act {^从劫匪身上掉了出来一颗%*} { put gem in dai}
 
 #nop job juewei--------------------------------------------------------------------------------;
+#act {^最近长安城内出现不少盗窃事件，有人报告%+} {
+    #var job_loc {%1};
+} 3;
+
 #act {^你%+了%*罪犯，%*的金吾卫%*，可以去衙门领%*奖%*了。} {
     #echo <aff>========================<eee>;
     #echo {找到罪犯！};
@@ -433,6 +510,102 @@
         #repl class_opened {|juewei} {};
     } {4};
 }
+
+#nop pozhen--------------------------------------------------------------------------------;
+#act {{^你对陆乘风道：“听闻近来有人冒名桃花岛弟子在(\S+)布下迷阵行恶，我愿代劳除去此獠。”}} {
+    #act {^陆乘风对着你点了点头。} {
+        #var job_loc %2;
+        #unact {^陆乘风对着你点了点头。};
+        #unact {^陆乘风说道：「别跟我吹牛，你上次完成了吗？」};
+    };
+
+    #act {^陆乘风说道：「别跟我吹牛，你上次完成了吗？」} {
+        #unact {^陆乘风对着你点了点头。};
+        #unact {^陆乘风说道：「别跟我吹牛，你上次完成了吗？」};
+    };
+} 3;
+
+
+#nop diebao---------------------------------------------------------------------------------;
+#act {^你向余玠打听有关『job』的消息。} {
+    #class _class_diebao kill;
+    #var _job db;
+
+    #class _class_diebao open;
+
+    #act {^余玠在你的耳边悄声说道：为了保护接头人的安全，接头人的名字不能透露，我只能告诉你某人在%+等着你。} {
+        #var job_loc {%%1};
+    } 3;
+
+    #act {^长相大致如下%+} {
+        #var _job_diebao_look {%%1};
+    } 3;
+
+    #nop CAUTION: in action, variable name beginning with underscore: ${_variable_name};
+    #nop CAUTION: watch out for empty variable match?;
+    #var _job_diebao_look {防止误匹fdjkajfdklajfdksl};
+    #act {${_job_diebao_look}} {
+        ask $_look_id about 接头;
+
+    } 3;
+
+    #act {^你向%+打听有关『接头』的消息。} {
+        #act {^%%1在你的耳边悄声说道：有人在%+给你留下了下一步行动的步骤。} {
+            #var job_loc {%%%1};
+        } 3;
+    } 3;
+
+    #act {^[%+]%s$myName钧鉴：} {
+        read %%1;
+    } 3;
+
+    #act {^----------------------------------------------------------------------} {
+        #line oneshot #act {^%+$} {
+            #var _db_code {%%%1};
+            #repl _db_code {，暗号是} {|};
+            #repl _db_code {，暗号} {|};
+            #repl _db_code {，说出} {|};
+
+            #repl _db_code {，请找} {|};
+            #repl _db_code {其人名曰} {|};
+            #repl _db_code {，名唤} {|};
+            #repl _db_code {会找你。} {|};
+            #repl _db_code {正在%+等着你} {|&1};
+
+            #repl _db_code {{，|　|◤|﹣|＿| |“|”|。|#|◎|★|∣|▆|〓}} {|};
+
+            #repl _db_code {{\|\|+}} {|};
+            #repl _db_code {%+|$} {&1};
+            #echo {db code: $_db_code};
+
+            #var job_name {$_db_code};
+        } 1;
+    } 3;
+
+    #nop act {^%+，暗号%+，请找%+} {
+        #var job_loc {%%1};
+        #var _db_code {%%2};
+        #var job_name {%%3};
+    } 3;
+
+    #act {^{(?!【)\S+}见状脚下抹油，“你掩护，我先撤！”，别忘了告之右丞。} {
+        #class _class_diebao open;
+        #act {^    大宋 右丞相兼枢密使 余玠(Yu jie)} {
+            t-ticker;
+            ask yu about finish;
+        } 3;
+        #class _class_diebao close;
+    } 3;
+
+    #act {{^   \( \|     完成谍报任务之后，你被奖励了：|^你向余玠打听有关『fail』的消息。}} {
+        #class _class_diebao kill;
+        t@ticker;
+        #var job_loc -;
+        #var job_name -;
+    } 3;
+
+    #class _class_diebao close;
+} 3;
 
 #nop aobai camp------------------------------------------------------------------------------;
 #act {^ 道    德：  %+                     杀    气：  {疯狂|嗜血}} {

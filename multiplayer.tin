@@ -48,6 +48,19 @@
     #else {#return consider2}
 }
 
+#func getJueqingguPath { #nop mode: %1;
+    #if {"%1" == "enter"} {
+        #if {"$myId" == "lanbosudo"} {
+            #var result {move qian;move zuo;move hou;move qian;move you;move zuo;move you};
+        };
+    };
+    #elseif {"%1" == "back"} {
+        #if {"$myId" == "lanbosudo"} {
+            #var result {move you;move zuo;move you;move qian;move hou;move zuo;move qian};
+        };
+    };
+};
+
 #nop info;
 #act {^©∞©§©§©§»ÀŒÔœÍ«È©§©§©§©§©§©§©§©§©§©§©§©§©§©§©§©§©§©§©§©§©§©§©§©§©–©§©§©§©§©§©§©§©¥} {
     #line oneshot #act {{^©¶ \S+\s(\S+)\((\w+)\)\s+©¶}} {
