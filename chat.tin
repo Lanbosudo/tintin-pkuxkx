@@ -110,6 +110,13 @@
 #act {~^\e%+m【任务】%*比武大会主持人%*对阵方为：%+$} {
     #local tmp @push_chat{%0};
 }
+
+
+#act {{^(你告诉$myName|$myName\(\w+\)告诉你)：echo$}} {
+    #line gag;
+    #echo {<aff>echo back!<eee>};
+    #var _is_echo_back 1;
+}
 #act {~^\e%+{m(?!【)(\S+\((\w+)\)告诉你|你告诉\S+)}：%+\e%+m$} {
     #line gag;
     #nop echo {tell id: %4, msg: %5};
@@ -120,7 +127,7 @@
         #local tmp @log{%0};
         #local tmp @push_chat{%0};
     };
-} {3};
+}
 
 
 #nop comments---------------------------------------------------------;

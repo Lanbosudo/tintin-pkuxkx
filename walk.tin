@@ -231,7 +231,7 @@
 
         #nop reset walk stack;
         #var _stack_walk {};
-        #var _list_dir_input {};
+        #list _list_dir_input cre {look};
 
         #return;
     };
@@ -486,13 +486,14 @@
  */
 #eve {VARIABLE UPDATE _current_room_name} {
 
+    #if {{$_list_dir_input} == {look}} {
+        #list _list_dir_input del 1;
+        #return;
+    };
+
     #local _list_exits $list_exit;
 
     #if {@sizeof{_list_dir_input}} {
-        #if {"$_list_dir_input[1]" == "look"} {
-            #var _list_dir_input {};
-            #return;
-        };
 
         #list _list_exits find {$_list_dir_input[1]} _index;
 
@@ -513,6 +514,11 @@
             #local tmp @stack_push_walk{_stack_walk;$_list_dir_input[1]};
             #list _list_dir_input del 1;
         };
+    };
+}
+#eve {VARIABLE UPDATED _is_echo_back} {
+    #if {$_is_echo_back} {
+        #var _list_dir_input {};
     };
 }
 

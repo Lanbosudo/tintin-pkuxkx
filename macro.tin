@@ -17,26 +17,31 @@
             #nop break inside regexp doesn't work...;
             #nop break;
         };
-        #if {$flag} {#break};
+        #if {$flag} {
+            #var _is_echo_back 0;
+            #delay _del_walk_echo {
+                #if {@sizeof{_list_dir_input}} {
+                tell $myId echo};
+            } 1;
+
+            #break;
+        };
     };
+}
+
+#func locateCurrentRoom { #nop add look to _list_dir_input;
+    #list _list_dir_input ins 1 {look};
+    #send look;
 }
 
 #nop several versions of macro keys here: mintty+tt, mintty+screen+tt, terminus+tt;
 #nop Numpad 5/^L-------------------------------------------------------;
-#macro {\e[E} {
-    #list _list_dir_input ins {1} {look};
-    #send {look}}
-#macro {\eOE} {
-    #list _list_dir_input ins {1} {look};
-    look;}
-#macro {\cl} {
-    #list _list_dir_input ins {1} {look};
-    look;}
+#macro {\e[E} {#local tmp @locateCurrentRoom{}}
+#macro {\eOE} {#local tmp @locateCurrentRoom{}}
+#macro {\cl} {#local tmp @locateCurrentRoom{}}
 
 #nop ??
-#macro {\eOu} {
-    #list _list_dir_input ins {1} {look};
-    look;}
+#macro {\eOu} {#local tmp @locateCurrentRoom{}}
 
 #nop Numpad 6,2,4,8---------------------------------------------------;
 #nop mintty/terminus+tt: arrow right,down,left,north;

@@ -73,7 +73,7 @@
     #repl _target_room_name {"} {};
     #nop #echo {need to room $_target_room_name};
 
-    #if {"$_current_room_name" == "$_target_room_name"} {
+    #if {"$_look_room_name" == "$_target_room_name"} {
         #nop #echo {do action of $type_lian};
         @getLianAction{$type_lian};
     };
@@ -82,7 +82,7 @@
 
         #nop TODO: use EVENT to monitor current room name;
         #var _room_updated 0;
-        @getPathBtwRoom{$_current_room_name;$_target_room_name};
+        @getPathBtwRoom{$_look_room_name;$_target_room_name};
 
         #nop CAUTION: tick won't be killed by class kill;
         #tic _tick_lian_wait_walk {

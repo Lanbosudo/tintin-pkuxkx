@@ -1,8 +1,12 @@
 #nop room, map, search...
 
-#act {^{(\S{2}(?<!【)\S+) - \[\S+\]}} {
-    #var _current_room_name %2;
+#act {^{((?!【)(=汝阳王府= )?\S+) - \[\S+\]}} {
+    #if {@sizeof{_list_dir_input}} {
+        #var _current_room_name {%2};
+    };
+
+    #var _look_room_name {%2};
     #var _room_updated 1;
 
-    #nop #delay {room_name} {#echo {当前房间：$_current_room_name}} 1;
+    #delay {room_name} {#echo {当前房间：$_current_room_name, look 房间: $_look_room_name}} 1;
 }
