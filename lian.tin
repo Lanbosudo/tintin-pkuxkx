@@ -31,8 +31,8 @@
 
 #nop TODO: type & room can be customised by $myId/$myMenpai;
 #list list_skill cre {shenyuan-gong;force;sword;finger;douzhuan-xingyi;parry;dodge;leg};
-#list _list_type cre {shenyuan-gong;force;sword;finger;douzhuan-xingyi;parry;dodge;leg;sleep;dazuo};
-#list _list_room_lian cre {"密室";"花园";"花园";"花园";"观星台";"花园";"花园";"花园";"休息室";"休息室"};
+#list _list_type cre {shenyuan-gong;force;sword;finger;douzhuan-xingyi;parry;dodge;leg;sleep;dazuo;eat};
+#list _list_room_lian cre {"密室";"花园";"花园";"花园";"观星台";"花园";"花园";"花园";"休息室";"休息室";"膳房"};
 
 #var type_lian $list_skill[1];
 
@@ -61,6 +61,10 @@
         #var result {hp;w;w;n;n;e} };
     #elseif { {"%1%2"} == {"休息室%S"} } {
         #var result {w;s;s;e;e} };
+    #elseif { "%1%2" == "花园膳房" } {
+        #var result {w;w;n;w} };
+    #elseif { {"%1%2"} == {"膳房%S"} } {
+        #var result {e;s;e;e} };
     #else { #var result "" };
 }
 
@@ -111,6 +115,8 @@
         #var result {sleep};
     }; #elseif {{%1} == {dazuo}} {
         #var result {dazuo max};
+    }; #elseif {{%1} == {eat}} {
+        #var result {eat fentiao; eat baicai; eat doufu; eat qiezi; drink hulu};
     };
 }
 #nop prepare-------------------------------------------------------------;
@@ -123,13 +129,26 @@
 #delay 2 {skbrief $type_lian};
 
 #nop triggers--------------------------------------------------------------;
-#act {{^(你的体力不够练|你现在气血虚浮，练习不了|你太累了，没有办法练习|你的体力太低了)}} {yun recover}
+#act {{^(你的体力不够练|你现在气血虚浮，练习不了|你太累了，没有办法练习|你的体力太低了|你试着练习\S+少许进步)}} {yun recover}
 
 #action {^你需要提高基本功，不然练得再多也没有用。} {
     lingwu $type_lian 50;
 }
 #action {{^你领悟了\S{2}次\S+。}} {yun regenerate}
-#act {{^(你现在过于疲倦,无法静下心来领悟功夫！|你现在过于疲倦，无法专心下来研读新知。|你的精神太低了。|你今天太累了，结果什么也没有学到。|你已经很累了，歇歇再读吧，身体要紧。|可惜你太累了，无法集中精神来研究夜空中的星斗。)}} {yun regenerate}
+#act {{^(你现在过于疲倦,无法静下心来领悟功夫！|你现在过于疲倦，无法专心下来研读新知。|你的精神太低了。|你今天太累了，结果什么也没有学到。|你已经很累了，歇歇再读吧，身体要紧。)}} {yun regenerate}
+#act {^可惜你太累了，无法集中精神来研究夜空中的星斗。} {
+    #nop stuck on zhuang...;
+    #if {@get_percent{$neili;$neili_max} < 10} {
+        #list list_skill find $type_lian _index_lian;
+        #nop multi-trigger will cause $type_lian==sleep;
+        #if {$_index_lian} {
+            #var _type_lian_bck $type_lian;
+        };
+        #var type_lian sleep;
+    } {
+        yun regenerate;
+    };
+};
 
 #act {^你太累了，先歇歇吧！} {look}; #nop mark room updated, in cases of failing jump down;
 #act {^你仰首望天，天上繁星点点，你顺着银河的方向看去，却发现部分的夜空被周围的树冠挡住了。} {jump zhuang}
@@ -142,6 +161,7 @@
 #act {{^(你(的)?内力不够|\( 你的内力已经枯竭，不能施用内功。\))}} {
     #if {@get_percent{$qi;$qi_max} < 5} {
         #list list_skill find $type_lian _index_lian;
+        #nop multi-trigger will cause $type_lian==sleep;
         #if {$_index_lian} {
             #var _type_lian_bck $type_lian;
         };
@@ -164,6 +184,17 @@
         do 3 halt;
         #var type_lian $_type_lian_bck;
     } {1};
+}
+
+#act {^你舔了舔干裂的嘴唇，看来是很久没有喝水了。} {
+    #list list_skill find $type_lian _index_lian;
+    #if {$_index_lian} {
+        #var _type_lian_bck $type_lian;
+    };
+    #var type_lian eat;
+}
+#act {^你拿起清水葫芦咕噜噜地喝了几口清水。} {
+    #var type_lian $_type_lian_bck;
 }
 
 #act {{^你的\S+进步了！}} {skbrief $type_lian}
