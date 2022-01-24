@@ -35,6 +35,7 @@
 #list _list_room_lian cre {"密室";"花园";"花园";"花园";"观星台";"花园";"花园";"花园";"休息室";"休息室";"膳房"};
 
 #var type_lian $list_skill[1];
+#var _type_lian_bck $type_lian;
 
 #nop func-------------------------------------------------------------------;
 #func mapType2Room { #nop %1 type_lian;
@@ -56,7 +57,7 @@
     #elseif { "%1%2" == "花园观星台" } {
         #var result {cai huanshi; westup; yun regenerate; #delay 3 {jump zhuang}} };
     #elseif { "%1%2" == "观星台%S" } {
-        #var result {#delay 3 {jump down; eastdown; out}} };
+        #var result {yun regenerate; #delay 3 {jump down; eastdown; out}} };
     #elseif { "%1%2" == "花园休息室" } {
         #var result {hp;w;w;n;n;e} };
     #elseif { {"%1%2"} == {"休息室%S"} } {
@@ -75,7 +76,7 @@
 
     #if {"$_look_room_name" == "$_target_room_name"} {
         #nop #echo {do action of $type_lian};
-        @getLianAction{$type_lian};
+        #if {!$isBusy} {@getLianAction{$type_lian}};
     };
     #else {
         #untick _tic_lian;
@@ -96,7 +97,8 @@
 
 #func getLianAction { #nop %1 type_lian;
     #if {{%1} == {shenyuan-gong}} {
-        #var result {xue bo for shenyuan-gong 20};
+        #nop #var result {xue bo for shenyuan-gong 20};
+        #var result {xiulian shenyuan-gong};
     }; #elseif {{%1} == {force}} {
         #var result {lingwu force 50};
     }; #elseif {{%1} == {sword}} {
@@ -116,7 +118,7 @@
     }; #elseif {{%1} == {dazuo}} {
         #var result {dazuo max};
     }; #elseif {{%1} == {eat}} {
-        #var result {eat fentiao; eat baicai; eat doufu; eat qiezi; drink hulu};
+        #var result {eat fentiao; eat baicai; eat doufu; eat qiezi; get hulu; drink hulu};
     };
 }
 #nop prepare-------------------------------------------------------------;
@@ -139,11 +141,6 @@
 #act {^可惜你太累了，无法集中精神来研究夜空中的星斗。} {
     #nop stuck on zhuang...;
     #if {@get_percent{$neili;$neili_max} < 10} {
-        #list list_skill find $type_lian _index_lian;
-        #nop multi-trigger will cause $type_lian==sleep;
-        #if {$_index_lian} {
-            #var _type_lian_bck $type_lian;
-        };
         #var type_lian sleep;
     } {
         yun regenerate;
@@ -160,21 +157,12 @@
 }
 #act {{^(你(的)?内力不够|\( 你的内力已经枯竭，不能施用内功。\))}} {
     #if {@get_percent{$qi;$qi_max} < 5} {
-        #list list_skill find $type_lian _index_lian;
-        #nop multi-trigger will cause $type_lian==sleep;
-        #if {$_index_lian} {
-            #var _type_lian_bck $type_lian;
-        };
         #var type_lian sleep;
     } {
         dazuo max
     }
 }
 #act {{^(你现在精不够，无法控制内息的流动！|你现在气血严重不足，无法满足打坐最小要求。)}} {
-    #list list_skill find $type_lian _index_lian;
-    #if {$_index_lian} {
-        #var _type_lian_bck $type_lian;
-    };
     #var type_lian sleep;
 }
 
@@ -186,11 +174,7 @@
     } {1};
 }
 
-#act {^你舔了舔干裂的嘴唇，看来是很久没有喝水了。} {
-    #list list_skill find $type_lian _index_lian;
-    #if {$_index_lian} {
-        #var _type_lian_bck $type_lian;
-    };
+#act {^{你饿得头昏眼花，直冒冷汗|你渴得眼冒金星，全身无力。}} {
     #var type_lian eat;
 }
 #act {^你拿起清水葫芦咕噜噜地喝了几口清水。} {
@@ -210,6 +194,7 @@
         #if {$index < @sizeof{list_skill}} {
             #line quiet #math index {$index+1};
             #var type_lian {$list_skill[$index]};
+            #var _type_lian_bck $type_lian;
 
             skbrief $type_lian;
         } {

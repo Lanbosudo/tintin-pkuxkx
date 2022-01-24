@@ -1,6 +1,6 @@
 #nop include multiplayer;
 
-#nop LoQ debug alias---------------------------------------------;
+#nop QoL debug alias---------------------------------------------;
 #ali {^t+%1} {#class %1 read %1.tin; #var class_opened $class_opened|%1;}
 #ali {^t-%1} {#class %1 kill; #repl class_opened {%1} {}; #repl class_opened {||} {}}
 #ali {^t@%1} {#class %1 kill; #class %1 read %1.tin;}
@@ -110,7 +110,7 @@
     kill $target_id;
 }
 
-#nop LoQ---------------------------------------------------------------;
+#nop QoL---------------------------------------------------------------;
 #ali {^hf %1} {
     helpme find %1;
     helpme* thanks;
@@ -152,6 +152,7 @@
     #unvar _armor_index, _armor_cnt;
 }
 
+#ali {^rew$} {remove all;wear all}
 #nop map related-------------------------------------------------------;
 #ali {^map} {help map-pkuxkx}
 
