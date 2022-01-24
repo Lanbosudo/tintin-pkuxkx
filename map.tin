@@ -2,7 +2,9 @@
 
 #act {^{((?!°æ)(=»Í—ÙÕı∏Æ= )?\S+) - \[\S+\]}} {
     #if {@sizeof{_list_dir_input}} {
+        #var _last_room_name {$_current_room_name};
         #var _current_room_name {%2};
+        #var _moved_by_macro 1;
     };
 
     #var _look_room_name {%2};

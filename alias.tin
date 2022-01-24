@@ -299,6 +299,12 @@
         $_list_db_look_id[$index];
     };
 }
+
+#ali {^hb$} {
+    #nop check ganche prefix;
+    #if {!@length{$_walk_prefix}} {gc};
+    t+hubiao;
+};
 #nop aobai-------------------------------------------------------;
 #ali {^aobai %1$} {
     #format class_opened $class_opened|aobai;

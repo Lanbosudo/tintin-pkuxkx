@@ -515,6 +515,12 @@
             #list _list_dir_input del 1;
         };
     };
+
+    #nop hubiao log================================;
+    #if {{$_walk_prefix} == {gan che to }} {
+        #nop #system {touch hubiao.log; echo "$job_loc {@eval{1d100}$_current_room_name-$_hubiao_dir} {%1}" >> hubiao.log};
+    };
+    #nop hubiao log================================;
 }
 #eve {VARIABLE UPDATED _is_echo_back} {
     #if {$_is_echo_back} {

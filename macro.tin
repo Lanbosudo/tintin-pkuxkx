@@ -14,7 +14,11 @@
             $_walk_prefix$direction;
             #format flag 1;
 
-            #nop break inside regexp doesn't work...;
+            #nop hubiao log================================;
+            #var _hubiao_dir $direction;
+            #nop hubiao log================================;
+
+            #nop CAUTION: break inside regexp doesn't work...;
             #nop break;
         };
         #if {$flag} {

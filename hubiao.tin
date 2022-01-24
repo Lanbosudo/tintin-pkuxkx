@@ -1,0 +1,275 @@
+#var list_hb_wrongDir {};
+#var list_exit_bk {};
+#var _stack_walk {};
+#var room_trans_map {};
+#var encountered_robber 0;
+
+#func setRoomTransMap {
+    #if {{$job_loc} == {%+归云庄%*}} {
+        #var room_trans_map $room_trans_map_gy;
+    }; #elseif {{$job_loc} == {%+岳王墓%*}} {
+        #var room_trans_map $room_trans_map_ywm;
+    }; #elseif {{$job_loc} == {%+镇江%*}} {
+        #var room_trans_map $room_trans_map_zj;
+    }; #elseif {{$job_loc} == {%+苏州%*}} {
+        #var room_trans_map $room_trans_map_sz;
+    };
+
+}
+
+#func hb_nextStep { #nop current_room, list_exit (maybe can use look exits to further check);
+    p _moved_by_macro;
+    #if {$_moved_by_macro} {
+        #var _moved_by_macro 0;
+        #var _room_updated 0;
+        #var list_exit_bk $list_exit;
+    };
+    p _moved_by_macro;
+    plist list_exit_bk;
+
+    #foreach *room_trans_map[%*] key_rtmap {
+        #local flag 0;
+
+        #regex {$key_rtmap} {%d$_current_room_name-%+} {
+            #echo {$key_rtmap, dir: &2};
+            #list list_exit_bk find {&2} index_exit;
+            #list list_hb_wrongDir find {$key_rtmap} isWrongDir;
+
+            #nop look again after robber comes;
+            #if {$encountered_robber} {#var _room_updated 0; #var encountered_robber 0};
+
+            #echo {index in exit: $index_exit, wrong dir index: $isWrongDir, room: $_room_updated};
+
+            #if {{&2} == {ride %+}} {#var flag 1; #var result {&2}; @locateCurrentRoom{}};
+            #elseif {{&2} == {wait}} {#var flag 1; #var result {1}; @locateCurrentRoom{}};
+            #elseif {$index_exit && !$isWrongDir && !$_room_updated} {
+
+                look &2;
+                #var flag 1;
+                #var result {1};
+            };
+            #elseif {$index_exit && !$isWrongDir && $_room_updated} {
+
+                #echo {look room: $_look_room_name, target: $room_trans_map[$key_rtmap], walk stack top: $_stack_walk[1]};
+                #if {{$_look_room_name} == {$room_trans_map[$key_rtmap]} && {&2} != {@getReverseDir{$_stack_walk[1]}}} {
+                    #var list_hb_wrongDir {};
+                    #echo {dir: &2};
+
+                    #var list_exit $list_exit_bk;
+                    #var result {&2};
+                } {
+                    #list list_hb_wrongDir ins 1 {$key_rtmap};
+                    #var result {1};
+                };
+
+                #var _room_updated 0;
+                #var flag 1;
+            };
+        };
+
+        #if {$flag} { #break};
+    };
+
+    #if {!$flag} {
+        #var result {};
+    };
+};
+
+#tic _tic_hb_getStep {
+    #nop if not inbattle or inbusy;
+    #if {$inBattle} { #var encountered_robber 1; #return};
+    #if {$isBusy || {$class_opened} == {%*daman%*}} {
+        #nop CAUTION: tailing space will also be sent;
+        #nop { dazhu };
+        #if {@get_percent{$neili;$neili_max} > 80} { dazhu};
+
+        #return;
+    };
+
+    #nop if neili > 20% && hp > 85;
+    #if {@get_percent{$neili;$neili_max} < 40 || $percent_qi < 85} { daman; #return };
+
+    #local hb_dir @hb_nextStep{};
+    #echo {func returns: $hb_dir};
+    #if {@length{$hb_dir}} {
+
+        #if {$hb_dir == 1} {
+            #echo {waiting for look result...};
+        } {
+            #if {{$hb_dir} == {ride %+}} {$hb_dir};
+            #local tmp @findExit{$hb_dir};
+        };
+
+    } {
+        #echo {<faa>===========================<eee>};
+        #echo {No step found in map};
+        #echo {<faa>===========================<eee>};
+
+        t-hubiao;
+    };
+} 2;
+
+#act {^劫匪突然从暗处跳了出来，阴笑道：“红货和人命都留下来吧！。”} {
+    #var target_name {$myName的 劫匪};
+    look;
+} 2;
+
+#nop path (path set is at the end)-------------------;
+#nop 镇江飞龙镖局:;
+
+#var room_trans_map_zj {
+    {01正厅-south} {福威镖局}
+    {02福威镖局-south} {东大街}
+    {03东大街-west} {城中心}
+    {04城中心-north} {北大街}
+    {05北大街-north} {北门}
+    {06北门-north} {山路}
+    {08山路-northup} {山路}
+    {09山路-northwest} {山路}
+    {11山路-northwest} {钱塘东渡口}
+    {12钱塘东渡口-ride north} {钱塘北渡口}
+    {12小船-wait} {钱塘北渡口}
+    {13钱塘北渡口-east} {山路}
+    {15山路-northeast} {山路}
+    {16山路-west} {青石官道}
+    {17青石官道-northeast} {盐官镇}
+    {18盐官镇-northeast} {盐官县城}
+    {19盐官县城-north} {盐官县北门}
+    {20盐官县北门-north} {官道}
+    {21官道-north} {官道}
+    {23官道-northwest} {城南官道}
+    {24城南官道-north} {嘉兴南门}
+    {25嘉兴南门-north} {嘉兴城}
+    {26嘉兴城-west} {山路}
+    {27山路-northup} {山路}
+    {28山路-northwest} {太湖边}
+    {29太湖边-northwest} {太湖边}
+    {31太湖边-north} {江南小道}
+    {32江南小道-northwest} {江南小道}
+    {33江南小道-northeast} {土路}
+    {36土路-northeast} {土路}
+    {37土路-east} {登云门}
+    {38登云门-east} {西大街}
+    {40西大街-east} {西大街}
+    {41西大街-east} {广场}
+    {42广场-north} {北大街}
+    {43北大街-north} {北大街}
+    {44北大街-east} {飞龙镖局}
+};
+
+#nop 岳王墓;
+#var room_trans_map_ywm {
+    {01正厅-south} {福威镖局}
+    {02福威镖局-south} {东大街}
+    {03东大街-west} {城中心}
+    {04城中心-north} {北大街}
+    {05北大街-north} {北门}
+    {06北门-north} {山路}
+    {08山路-northup} {山路}
+    {09山路-northwest} {山路}
+    {11山路-northwest} {钱塘东渡口}
+    {1212钱塘东渡口-ride north} {钱塘北渡口}
+    {1212小船-wait} {钱塘北渡口}
+    {1313钱塘北渡口-east} {山路}
+    {15山路-northeast} {山路}
+    {16山路-west} {青石官道}
+    {17青石官道-west} {东青门}
+    {18东青门-west} {东大街}
+    {19东大街-west} {东大街}
+    {20东大街-west} {众安桥}
+    {21众安桥-west} {东大街}
+    {23东大街-west} {大理寺}
+    {24大理寺-west} {西大街}
+    {25西大街-west} {钱塘门}
+    {26钱塘门-west} {段家桥}
+    {27段家桥-southwest} {孤山路}
+    {28孤山路-southwest} {孤山路}
+    {29孤山路-northup} {小道}
+    {31小道-north} {小道}
+    {32小道-north} {小道}
+    {33小道-east} {墓前小道}
+    {36墓前小道-northeast} {墓前小道}
+    {37墓前小道-north} {墓前广场}
+};
+#nop 归云庄;
+#var room_trans_map_gy {
+    {01正厅-south} {福威镖局}
+    {02福威镖局-south} {东大街}
+    {03东大街-west} {城中心}
+    {04城中心-north} {北大街}
+    {05北大街-north} {北门}
+    {06北门-north} {山路}
+    {08山路-northup} {山路}
+    {09山路-northwest} {山路}
+    {11山路-northwest} {钱塘东渡口}
+    {12钱塘东渡口-ride north} {小船}
+    {12小船-wait} {钱塘北渡口}
+    {13钱塘北渡口-east} {山路}
+    {15山路-northeast} {山路}
+    {16山路-west} {青石官道}
+    {17青石官道-northeast} {盐官镇}
+    {18盐官镇-northeast} {盐官县城}
+    {19盐官县城-north} {盐官县北门}
+    {20盐官县北门-north} {官道}
+    {21官道-north} {官道}
+    {23官道-northwest} {城南官道}
+    {24城南官道-north} {嘉兴南门}
+    {25嘉兴南门-north} {嘉兴城}
+    {26嘉兴城-north} {青石官道}
+    {27青石官道-north} {青石官道}
+    {28青石官道-north} {南门}
+    {29南门-north} {南大街}
+    {31南大街-north} {南大街}
+    {32南大街-north} {宝带桥}
+    {33宝带桥-northwest} {西大街}
+    {36西大街-west} {西大街}
+    {37西大街-west} {西门}
+    {38西门-west} {青石官道}
+    {40青石官道-west} {青石官道}
+    {41青石官道-west} {青石官道}
+    {42青石官道-west} {太湖湖边}
+    {43太湖湖边-northwest} {太湖湖边}
+    {44太湖湖边-northeast} {草地}
+    {45草地-southeast} {草地}
+    {46草地-north} {草地}
+    {47草地-west} {草地}
+    {48草地-north} {草地}
+    {49草地-east} {太湖街}
+    {50太湖街-east} {太湖街}
+    {51太湖街-east} {太湖边}
+};
+#nop 苏州;
+#var room_trans_map_sz {
+    {01正厅-south} {福威镖局}
+    {02福威镖局-south} {东大街}
+    {03东大街-west} {城中心}
+    {04城中心-north} {北大街}
+    {05北大街-north} {北门}
+    {06北门-north} {山路}
+    {08山路-northup} {山路}
+    {09山路-northwest} {山路}
+    {11山路-northwest} {钱塘东渡口}
+    {12钱塘东渡口-ride north} {小船}
+    {12小船-wait} {钱塘北渡口}
+    {13钱塘北渡口-east} {山路}
+    {15山路-northeast} {山路}
+    {16山路-west} {青石官道}
+    {17青石官道-northeast} {盐官镇}
+    {18盐官镇-northeast} {盐官县城}
+    {19盐官县城-north} {盐官县北门}
+    {20盐官县北门-north} {官道}
+    {21官道-north} {官道}
+    {23官道-northwest} {城南官道}
+    {24城南官道-north} {嘉兴南门}
+    {25嘉兴南门-north} {嘉兴城}
+    {26嘉兴城-north} {青石官道}
+    {27青石官道-north} {青石官道}
+    {28青石官道-north} {南门}
+    {29南门-north} {南大街}
+    {31南大街-north} {南大街}
+    {32南大街-north} {宝带桥}
+}
+
+#nop #var room_trans_map $room_trans_map_gy;
+#local tmp @setRoomTransMap{};
+#local tmp @locateCurrentRoom{};
