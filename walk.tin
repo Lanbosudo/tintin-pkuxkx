@@ -539,6 +539,9 @@
         #var _cnt_cntin_walk 9;
         #delay 1 walk;
     };
+
+    #reset auto resume walk;
+    #delay _continue_walk {#var _cnt_cntin_walk 10} 10;
 }
 
 #act {{^^\s+这里明显的\S+有\s((\w+、)*\w+)\s和\s(\w+)。}} {

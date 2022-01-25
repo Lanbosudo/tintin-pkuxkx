@@ -152,6 +152,7 @@
 
 #act {^一阵风吹过，把枯乾的骸骨化成骨灰吹散了。} {look}
 #act {^丑雕神情冷漠地拦住了你的去路。} {ask diao about 独孤求败}
+#act {^小毛拦住你说道：这是我的家，爸爸说不能给陌生人进去的} {ask mao about 老朋友}
 #act {^    绿衣女郎(Girl)} {ask girl about 拜庄}
 #act {^    姑苏慕容侍女 阿碧(A bi)} {ask bi about 听香剑}
 #act {^    武林名宿 大轮寺掌门 金轮法王(Jinlun fawang)} {ask fawang about 风火轮}
@@ -469,6 +470,7 @@
     #var target_name {$myName的 劫匪};
     look;
 }
+
 #act {^你按照%+的指示，打开密信……} {
     #line oneshot #act {^    卷走%1财物的伙计 %+(%+)} {
         #format tmp_id %l %%2;
