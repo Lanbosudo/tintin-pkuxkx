@@ -2,7 +2,7 @@
 #act {^你全身放松，运转真气进行疗伤。} {
     #if {$jing_efft*100/$jing_max < 98} {
         #delay 1 {yun inspire}};
-    #else {yun heal};
+    #else {#delay 1 {yun heal}};
 }
 #act {^你根本就没有受伤} {yun heal}
 

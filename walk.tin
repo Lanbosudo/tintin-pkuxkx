@@ -546,7 +546,7 @@
         #delay 1 walk;
     };
 
-    #reset auto resume walk;
+    #nop reset auto resume walk;
     #delay _continue_walk {#var _cnt_cntin_walk 10} 10;
 }
 

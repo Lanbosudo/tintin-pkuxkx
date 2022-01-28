@@ -101,6 +101,7 @@
 #act {^    %S{☆精金|★木灵|☆玄冰|★炎晶|◎玉髓|☆月魄|★日魂|☆玄武甲|☆麒麟角|☆凤凰羽|★神龙骨}(%S {jin|mu|bing|yan|sui|yue|ri|jia|jiao|yu|gu})} {
     #format id %l {%3 %4}; get $id; #delay pickup {look} 1;
 }
+#nop 劣质白色瑕疵绿色普通蓝色优秀黄色完美紫色;
 #act {{^    \S+【(普通|优秀|完美)】\(([^()]+)\)}} {
     #format id %l {%3}; get $id; #line quiet #unvar id; #delay pickup {look} 1;
 }

@@ -18,6 +18,9 @@
 }
 
 #func hb_nextStep { #nop current_room, list_exit (maybe can use look exits to further check);
+    #nop look again after robber comes;
+    #if {$encountered_robber} {#local tmp @locateCurrentRoom{}; #var encountered_robber 0; #return 1};
+
     p _moved_by_macro;
     #if {$_moved_by_macro} {
         #var _moved_by_macro 0;
@@ -35,14 +38,11 @@
             #list list_exit_bk find {&2} index_exit;
             #list list_hb_wrongDir find {$key_rtmap} isWrongDir;
 
-            #nop look again after robber comes;
-            #if {$encountered_robber} {#var _room_updated 0; #var encountered_robber 0};
-
             #echo {index in exit: $index_exit, wrong dir index: $isWrongDir, room: $_room_updated};
 
-            #if {{&2} == {ride %+}} {#var flag 1; #var result {&2}; @locateCurrentRoom{}};
-            #elseif {{&2} == {wait}} {#var flag 1; #var result {1}; @locateCurrentRoom{}};
-            #elseif {$index_exit && !$isWrongDir && !$_room_updated} {
+            #if {{&2} == {ride %+}} {#var flag 1; #var result {&2}; #local tmp @locateCurrentRoom{}};
+            #elseif {{&2} == {wait}} {#var flag 1; #var result {1}; #local tmp @locateCurrentRoom{}};
+            #elseif {$index_exit && !$isWrongDir && !$_room_updated && {&2} != {@getReverseDir{$_stack_walk[1]}}} {
 
                 look &2;
                 #var flag 1;
@@ -51,19 +51,19 @@
             #elseif {$index_exit && !$isWrongDir && $_room_updated} {
 
                 #echo {look room: $_look_room_name, target: $room_trans_map[$key_rtmap], walk stack top: $_stack_walk[1]};
-                #if {{$_look_room_name} == {$room_trans_map[$key_rtmap]} && {&2} != {@getReverseDir{$_stack_walk[1]}}} {
+                #if {{$_look_room_name} == {$room_trans_map[$key_rtmap]}} {
                     #var list_hb_wrongDir {};
                     #echo {dir: &2};
 
                     #var list_exit $list_exit_bk;
                     #var result {&2};
+                    #var flag 1;
                 } {
                     #list list_hb_wrongDir ins 1 {$key_rtmap};
-                    #var result {1};
+                    #nop #var result {1};
                 };
 
                 #var _room_updated 0;
-                #var flag 1;
             };
         };
 
@@ -112,6 +112,8 @@
 #act {^劫匪突然从暗处跳了出来，阴笑道：“红货和人命都留下来吧！。”} {
     #var target_name {$myName的 劫匪};
     look;
+
+    #delay 2 {k};
 } 2;
 
 #nop path (path set is at the end)-------------------;

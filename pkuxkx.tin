@@ -19,11 +19,11 @@
     #CONFIG {WORDWRAP} OFF;
     #CONFIG {REPEAT CHAR} {;};
 
-    /*
+    #nop {
     TODO: 
       1. move variables and functions in always-on classes to a common Util class
       2. global variables naming convention: begin with _, followed with data struct name (e.g., _list_names)
-     */
+    };
     #nop dependency tree (up->down: dependencies->class requiring dependencies);
     #nop                                            ;
     #nop      multiplayer                           ;

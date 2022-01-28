@@ -73,7 +73,9 @@
     @getPowerUp{};
     kill %1;
 }
-#ali {^ka%1$} {killall%1}
+#ali {^ka%1$} {killall%1;
+    #echo {killall%1};
+}
 #ali {^h %1} {
     @getPowerUp{};
     hit %1;
